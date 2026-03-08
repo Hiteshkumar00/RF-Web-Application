@@ -1,9 +1,16 @@
 <div class="d-flex flex-column vh-100">
+    @if (!isAuthPage) {
     <app-header></app-header>
+    }
     <div class="d-flex flex-grow-1 overflow-hidden">
+        @if (!isAuthPage && (isLoggedIn$ | async)) {
         <app-sidebar></app-sidebar>
-        <main class="flex-grow-1 p-3 overflow-auto">
+        }
+        <main class="flex-grow-1 overflow-auto" [class.p-3]="!isAuthPage">
             <router-outlet></router-outlet>
         </main>
     </div>
 </div>
+
+<app-loader></app-loader>
+<app-error-dialog></app-error-dialog>

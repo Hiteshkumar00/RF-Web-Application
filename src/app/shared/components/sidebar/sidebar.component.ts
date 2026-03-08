@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -10,9 +11,13 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class SidebarComponent implements OnInit {
     items: MenuItem[] = [];
+    superAdminItems: MenuItem[] = [];
     visible: boolean = false;
 
-    constructor(private sidebarService: SidebarService) { }
+    constructor(
+        private sidebarService: SidebarService,
+        private authService: AuthService
+    ) { }
 
     ngOnInit() {
         this.sidebarService.sidebarVisible$.subscribe(isVisible => {
@@ -69,6 +74,63 @@ export class SidebarComponent implements OnInit {
                 ]
             }
         ];
+
+        this.superAdminItems = [
+            {
+                label: 'Account Management',
+                icon: 'pi pi-fw pi-home',
+                routerLink: ['/account-management'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
+                label: 'User Management',
+                icon: 'pi pi-fw pi-star',
+                items: [
+                    {
+                        label: 'Submenu 1',
+                        icon: 'pi pi-fw pi-bookmark',
+                        routerLink: ['/user-management'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Submenu 2',
+                        icon: 'pi pi-fw pi-video',
+                        routerLink: ['/user-management2'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
+            },
+            {
+                label: 'Entity',
+                icon: 'pi pi-fw pi-star',
+                items: [
+                    {
+                        label: 'Submenu 1',
+                        icon: 'pi pi-fw pi-bookmark',
+                        routerLink: ['/entity1'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Submenu 2',
+                        icon: 'pi pi-fw pi-video',
+                        routerLink: ['/entity2'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
+            }
+        ];
+    }
+
+    get menuModel(): MenuItem[] {
+        if (this.authService.isPureSuperAdmin) {
+            return this.superAdminItems;
+        }
+
+        if (this.authService.isAccountUser) {
+            return this.items;
+        }
+
+        return [];
     }
 
     onHide() {

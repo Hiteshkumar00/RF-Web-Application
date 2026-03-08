@@ -13,9 +13,14 @@ import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { ErrorDialogComponent } from './components/error-dialog/error-dialog.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
-  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent],
+  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -26,7 +31,10 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     StyleClassModule,
     ToolbarModule,
     DrawerModule,
-    PanelMenuModule
+    PanelMenuModule,
+    ProgressSpinnerModule,
+    DialogModule,
+    MessageModule
   ],
   exports: [
     RouterModule,
@@ -39,7 +47,9 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     DrawerModule,
     PanelMenuModule,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    LoaderComponent,
+    ErrorDialogComponent
   ]
 })
 export class SharedModule { }

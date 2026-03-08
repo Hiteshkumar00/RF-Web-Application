@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HeaderService } from '../../services/header.service';
 import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-header',
@@ -12,15 +13,18 @@ import { SidebarService } from '../../services/sidebar.service';
 export class HeaderComponent implements OnInit {
     logo$!: Observable<string>;
     title$!: Observable<string>;
+    isLoggedIn$!: Observable<boolean>;
 
     constructor(
         private headerService: HeaderService,
-        private sidebarService: SidebarService
+        private sidebarService: SidebarService,
+        private authService: AuthService
     ) { }
 
     ngOnInit() {
         this.logo$ = this.headerService.logo$;
         this.title$ = this.headerService.title$;
+        this.isLoggedIn$ = this.authService.isLoggedIn$;
     }
 
     toggleSidebar() {
@@ -28,7 +32,6 @@ export class HeaderComponent implements OnInit {
     }
 
     logout() {
-        console.log('Logout clicked');
-        // Implement actual logout logic here
+        this.authService.logout();
     }
 }
