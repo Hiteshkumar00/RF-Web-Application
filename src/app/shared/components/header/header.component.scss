@@ -1,0 +1,13 @@
+:host {
+    display: block;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+// Override primeng default padding inside toolbar
+::ng-deep .p-toolbar {
+    border: none;
+    border-radius: 0;
+}

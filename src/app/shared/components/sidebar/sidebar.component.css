@@ -1,0 +1,20 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+.sidebar-wrapper {
+    width: 280px;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar-wrapper.sidebar-hidden {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+    border: none !important;
+}
+
+::ng-deep .p-panelmenu .p-panelmenu-panel {
+    border: none;
+}

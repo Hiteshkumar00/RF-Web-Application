@@ -1,0 +1,23 @@
+/* styles.scss */
+@import "primeflex/primeflex.css";
+@import "primeicons/primeicons.css";
+
+/* This class is what the ThemeSwitcher toggles */
+.p-dark {
+    --bg-color: #121212;
+    --surface-ground: #0a0a0a;
+    color: #ffffff;
+}
+
+body {
+    transition: background-color 0.4s ease;
+    background-color: var(--surface-ground, #f8f9fa);
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    /* Prevent full body scroll */
+}
