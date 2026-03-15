@@ -19,6 +19,19 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 
+// New PrimeNG Imports
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { TooltipModule } from 'primeng/tooltip';
+import { DividerModule } from 'primeng/divider';
+import { PasswordModule } from 'primeng/password';
+import { SelectModule } from 'primeng/select';
+import { ImageModule } from 'primeng/image';
+import { ConfirmationService, MessageService } from 'primeng/api';
+
 @NgModule({
   declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent],
   imports: [
@@ -34,10 +47,22 @@ import { MessageModule } from 'primeng/message';
     PanelMenuModule,
     ProgressSpinnerModule,
     DialogModule,
-    MessageModule
+    MessageModule,
+    TableModule,
+    ConfirmDialogModule,
+    ToastModule,
+    InputTextModule,
+    FloatLabelModule,
+    TooltipModule,
+    DividerModule,
+    PasswordModule,
+    SelectModule,
+    ImageModule
   ],
   exports: [
+    CommonModule,
     RouterModule,
+    FormsModule,
     ThemeSwitcher,
     SelectButtonModule,
     ButtonModule,
@@ -49,7 +74,24 @@ import { MessageModule } from 'primeng/message';
     HeaderComponent,
     SidebarComponent,
     LoaderComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    ProgressSpinnerModule,
+    DialogModule,
+    MessageModule,
+    TableModule,
+    ConfirmDialogModule,
+    ToastModule,
+    InputTextModule,
+    FloatLabelModule,
+    TooltipModule,
+    DividerModule,
+    PasswordModule,
+    SelectModule,
+    ImageModule
+  ],
+  providers: [
+    ConfirmationService,
+    MessageService
   ]
 })
 export class SharedModule { }

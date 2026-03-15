@@ -101,22 +101,10 @@ export class SidebarComponent implements OnInit {
                 ]
             },
             {
-                label: 'Entity',
-                icon: 'pi pi-fw pi-star',
-                items: [
-                    {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-bookmark',
-                        routerLink: ['/entity1'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-video',
-                        routerLink: ['/entity2'],
-                        routerLinkActiveOptions: { exact: true }
-                    }
-                ]
+                label: 'Entity Management',
+                icon: 'pi pi-fw pi-database',
+                routerLink: ['/entity'],
+                routerLinkActiveOptions: { exact: true }
             }
         ];
     }

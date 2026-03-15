@@ -1,11 +1,20 @@
-<p-dialog header="Error" [visible]="(errorService.visible | async) ?? false" (onHide)="errorService.close()"
-    [modal]="true" [closable]="true" [style]="{ width: '420px' }" [draggable]="false" [resizable]="false">
-    <div class="d-flex flex-column gap-2">
+<p-dialog [visible]="(errorService.visible | async) ?? false" (onHide)="errorService.close()" [modal]="true"
+    [closable]="false" [style]="{ width: '420px' }" [draggable]="false" [resizable]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0 text-danger">Error</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary"
+                (onClick)="errorService.close()" styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <div class="d-flex flex-column gap-2 pt-2">
         @for (msg of errorService.messages | async; track msg) {
         <p-message severity="error" [text]="msg" styleClass="w-100"></p-message>
         }
     </div>
     <ng-template pTemplate="footer">
-        <p-button label="Close" icon="pi pi-times" (onClick)="errorService.close()" />
+        <p-button label="Close" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="errorService.close()" />
     </ng-template>
 </p-dialog>

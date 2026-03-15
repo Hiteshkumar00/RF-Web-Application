@@ -1,0 +1,65 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3 pt-2" *ngIf="form">
+
+        <!-- Profile Name -->
+        <div>
+            <p-floatlabel variant="on">
+                <input id="profileName" type="text" pInputText formControlName="profileName" class="w-100" />
+                <label for="profileName">{{ labels.PROFILE_NAME }}</label>
+            </p-floatlabel>
+            @if (form.get('profileName')?.invalid && form.get('profileName')?.touched) {
+            @if (form.get('profileName')?.hasError('required')) {
+            <p-message severity="error" size="small" variant="simple" [text]="labels.PROFILE_NAME_REQUIRED"
+                class="mt-1 d-block" />
+            } @else if (form.get('profileName')?.hasError('maxlength')) {
+            <p-message severity="error" size="small" variant="simple" [text]="labels.PROFILE_NAME_MAX"
+                class="mt-1 d-block" />
+            }
+            }
+        </div>
+
+        <!-- Profile Logo Link -->
+        <div class="d-flex flex-column gap-2">
+            <p-floatlabel variant="on">
+                <input id="profileLogoLink" type="text" pInputText formControlName="profileLogoLink" class="w-100" />
+                <label for="profileLogoLink">{{ labels.PROFILE_LOGO_LINK }}</label>
+            </p-floatlabel>
+            @if (form.get('profileLogoLink')?.value) {
+            <div class="mt-1 text-center border rounded p-2 shadow-sm d-flex align-items-center justify-content-center"
+                style="min-height: 100px;">
+                <p-image [src]="form.get('profileLogoLink')?.value" height="80" [preview]="true"
+                    styleClass="border rounded shadow-sm" />
+            </div>
+            }
+        </div>
+
+        <!-- Currency Type -->
+        <div>
+            <p-floatlabel>
+                <p-select id="currencyType" [options]="currencyOptions" formControlName="currencyType"
+                    optionLabel="label" optionValue="value" [placeholder]="labels.CURRENCY_TYPE" class="w-100"
+                    appendTo="body" [showClear]="true" />
+            </p-floatlabel>
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="requestClose()" />
+            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>

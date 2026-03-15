@@ -5,13 +5,6 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './components/login/login.component';
 import { SharedModule } from '../../shared/shared-module';
 
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { ButtonModule } from 'primeng/button';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { MessageModule } from 'primeng/message';
-
 @NgModule({
     declarations: [LoginComponent],
     imports: [
@@ -19,12 +12,6 @@ import { MessageModule } from 'primeng/message';
         AuthRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        CardModule,
-        InputTextModule,
-        PasswordModule,
-        ButtonModule,
-        FloatLabelModule,
-        MessageModule,
         SharedModule
     ]
 })

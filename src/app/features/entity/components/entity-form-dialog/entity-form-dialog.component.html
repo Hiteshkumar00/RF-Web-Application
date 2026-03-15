@@ -1,0 +1,94 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '600px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <div class="pt-2" *ngIf="form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-4">
+
+            <!-- Entity Basic Info -->
+            <div class="row g-4">
+                <div class="col-12 col-md-6">
+                    <p-floatlabel variant="on">
+                        <input id="entityName" type="text" pInputText formControlName="entityName" class="w-100" />
+                        <label for="entityName">{{ labels.ENTITY_NAME }}</label>
+                    </p-floatlabel>
+                    @if (form.get('entityName')?.invalid && form.get('entityName')?.touched) {
+                    @if (form.get('entityName')?.hasError('required')) {
+                    <p-message severity="error" size="small" variant="simple" [text]="labels.ENTITY_NAME_REQUIRED"
+                        class="mt-1 d-block" />
+                    } @else if (form.get('entityName')?.hasError('maxlength')) {
+                    <p-message severity="error" size="small" variant="simple" [text]="labels.ENTITY_NAME_MAX"
+                        class="mt-1 d-block" />
+                    }
+                    }
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <p-floatlabel variant="on">
+                        <input id="displayName" type="text" pInputText formControlName="displayName" class="w-100" />
+                        <label for="displayName">{{ labels.DISPLAY_NAME }}</label>
+                    </p-floatlabel>
+                    @if (form.get('displayName')?.invalid && form.get('displayName')?.touched) {
+                    @if (form.get('displayName')?.hasError('maxlength')) {
+                    <p-message severity="error" size="small" variant="simple" [text]="labels.DISPLAY_NAME_MAX"
+                        class="mt-1 d-block" />
+                    }
+                    }
+                </div>
+            </div>
+
+            <p-divider align="left" type="solid">
+                <span class="opacity-50 small fw-bold text-uppercase">{{ labels.RELATED_ENTITIES }}</span>
+            </p-divider>
+
+            <!-- Related Entities FormArray -->
+            <div formArrayName="relatedEntities" class="d-flex flex-column gap-3">
+                @for (reGroup of relatedEntities.controls; track $index) {
+                <div [formGroupName]="$index" class="p-3 border rounded position-relative">
+                    <div class="row g-3">
+                        <div class="col-12 col-md-5">
+                            <p-floatlabel variant="on">
+                                <input id="re_name_{{$index}}" type="text" pInputText
+                                    formControlName="relatedEntityName" class="w-100" />
+                                <label for="re_name_{{$index}}">{{ labels.RELATED_ENTITY_NAME }}</label>
+                            </p-floatlabel>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <p-floatlabel variant="on">
+                                <input id="re_display_{{$index}}" type="text" pInputText
+                                    formControlName="relatedDisplayName" class="w-100" />
+                                <label for="re_display_{{$index}}">{{ labels.RELATED_DISPLAY_NAME }}</label>
+                            </p-floatlabel>
+                        </div>
+                        <div class="col-12 col-md-2 d-flex align-items-center justify-content-end">
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                [pTooltip]="labels.REMOVE_RELATED_ENTITY" tooltipPosition="top"
+                                (onClick)="removeRelatedEntity($index)" />
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <p-button [label]="labels.ADD_RELATED_ENTITY" icon="pi pi-plus" [text]="true" severity="primary"
+                    size="small" (onClick)="addRelatedEntity()" class="align-self-start" />
+            </div>
+
+        </form>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="requestClose()" />
+            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>

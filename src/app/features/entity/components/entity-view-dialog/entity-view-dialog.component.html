@@ -1,0 +1,96 @@
+<p-dialog
+    [visible]="visible"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    (onHide)="closed.emit()">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ labels.VIEW_DIALOG_TITLE }}</span>
+            <p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                (onClick)="closed.emit()"
+                styleClass="p-0"
+                [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <div class="d-flex flex-column gap-3 py-2" *ngIf="entity">
+
+        <!-- Entity ID -->
+        <div class="row align-items-center">
+            <div class="col-5">
+                <span class="fw-semibold text-muted small">{{ labels.ENTITY_ID }}</span>
+            </div>
+            <div class="col-7">
+                <span>{{ entity.id }}</span>
+            </div>
+        </div>
+
+        <p-divider />
+
+        <!-- Entity Name -->
+        <div class="row align-items-center">
+            <div class="col-5">
+                <span class="fw-semibold text-muted small">{{ labels.ENTITY_NAME }}</span>
+            </div>
+            <div class="col-7">
+                <span>{{ entity.entityName || '—' }}</span>
+            </div>
+        </div>
+
+        <p-divider />
+
+        <!-- Display Name -->
+        <div class="row align-items-center">
+            <div class="col-5">
+                <span class="fw-semibold text-muted small">{{ labels.DISPLAY_NAME }}</span>
+            </div>
+            <div class="col-7">
+                <span>{{ entity.displayName || '—' }}</span>
+            </div>
+        </div>
+
+        @if (entity.relatedEntities && entity.relatedEntities.length > 0) {
+            <p-divider align="left">
+                <span class="opacity-50 small fw-bold text-uppercase">{{ labels.RELATED_ENTITIES }}</span>
+            </p-divider>
+
+            <div class="d-flex flex-column gap-2">
+                @for (re of entity.relatedEntities; track re.id || $index) {
+                    <div class="p-2 border rounded">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="text-muted small fw-semibold">{{ labels.RELATED_ENTITY_NAME }}</div>
+                                <div>{{ re.relatedEntityName }}</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-muted small fw-semibold">{{ labels.RELATED_DISPLAY_NAME }}</div>
+                                <div>{{ re.relatedDisplayName || '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex justify-content-end">
+            <p-button
+                [label]="labels.CANCEL"
+                icon="pi pi-times"
+                severity="secondary"
+                [text]="true"
+                (onClick)="closed.emit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>

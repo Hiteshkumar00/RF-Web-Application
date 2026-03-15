@@ -74,8 +74,13 @@ export class ThemeSwitcher implements OnInit {
     handleDarkModeTransition(state: ThemeState) {
         if (isPlatformBrowser(this.platformId)) {
             const root = this.document.documentElement;
-            if (state.darkTheme) root.classList.add('p-dark');
-            else root.classList.remove('p-dark');
+            if (state.darkTheme) {
+                root.classList.add('p-dark');
+                root.setAttribute('data-bs-theme', 'dark');
+            } else {
+                root.classList.remove('p-dark');
+                root.removeAttribute('data-bs-theme');
+            }
         }
     }
 
