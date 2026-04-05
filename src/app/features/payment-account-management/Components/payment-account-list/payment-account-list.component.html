@@ -1,0 +1,114 @@
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">{{ labels.PAGE_TITLE }}</h4>
+        </div>
+        <p-button 
+            [label]="labels.ADD_PAYMENT_ACCOUNT" 
+            icon="pi pi-plus" 
+            (onClick)="openCreateDialog()" />
+    </div>
+
+    <!-- Table -->
+    <p-table 
+        [value]="paymentAccounts" 
+        [paginator]="true" 
+        [rows]="10" 
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records" 
+        [rowsPerPageOptions]="[10, 25, 50]"
+        [sortMode]="'multiple'" 
+        styleClass="p-datatable-striped p-datatable-sm" 
+        [tableStyle]="{'min-width': '50rem'}">
+
+        <ng-template pTemplate="header">
+            <tr>
+                @for (col of columns; track col.field) {
+                    @if (col.field === 'actions') {
+                        <th style="width: 10rem; text-align: center;">{{ col.header }}</th>
+                    } @else {
+                        <th [pSortableColumn]="col.field">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
+                    }
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-account>
+            <tr>
+                @for (col of columns; track col.field) {
+                    @if (col.field === 'actions') {
+                        <td class="text-center">
+                            <div class="d-flex gap-2 justify-content-center">
+                                <p-button 
+                                    icon="pi pi-eye" 
+                                    [rounded]="true" 
+                                    [text]="true" 
+                                    severity="info" 
+                                    size="small"
+                                    [pTooltip]="labels.VIEW" 
+                                    tooltipPosition="top" 
+                                    (onClick)="openViewDialog(account)" />
+                                <p-button 
+                                    icon="pi pi-pencil" 
+                                    [rounded]="true" 
+                                    [text]="true" 
+                                    severity="warn" 
+                                    size="small"
+                                    [pTooltip]="labels.EDIT" 
+                                    tooltipPosition="top" 
+                                    (onClick)="openEditDialog(account)" />
+                                <p-button 
+                                    icon="pi pi-trash" 
+                                    [rounded]="true" 
+                                    [text]="true" 
+                                    severity="danger" 
+                                    size="small"
+                                    [pTooltip]="labels.DELETE" 
+                                    tooltipPosition="top" 
+                                    (onClick)="confirmDelete(account)" />
+                            </div>
+                        </td>
+                    } @else {
+                        <td>
+                            @if (account[col.field] != null && account[col.field] !== '') {
+                                {{ account[col.field] }}
+                            } @else {
+                                <span class="opacity-50">—</span>
+                            }
+                        </td>
+                    }
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                    <i class="pi pi-database me-2" style="font-size: 1.5rem;"></i>
+                    {{ labels.NO_RECORDS }}
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+    <!-- Form Dialog -->
+    <app-payment-account-form-dialog 
+        [visible]="showFormDialog" 
+        [mode]="formDialogMode"
+        [account]="selectedAccount" 
+        (saved)="onFormSaved()" 
+        (closed)="onFormDialogClosed()" />
+
+    <!-- View Dialog -->
+    <app-payment-account-view-dialog 
+        [visible]="showViewDialog" 
+        [account]="selectedAccount"
+        (closed)="showViewDialog = false" />
+
+</div>

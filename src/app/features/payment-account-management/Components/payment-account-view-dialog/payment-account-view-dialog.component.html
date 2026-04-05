@@ -1,0 +1,40 @@
+<p-dialog 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [header]="labels.VIEW_PAYMENT_ACCOUNT" 
+    [style]="{ width: '400px' }" 
+    [draggable]="false"
+    [resizable]="false" 
+    (onHide)="closed.emit()">
+
+    @if (account) {
+        <div class="p-3">
+            <div class="mb-3">
+                <label class="fw-bold opacity-50 d-block small mb-1">{{ labels.METHOD_NAME }}</label>
+                <div class="fs-5">{{ account.methodName }}</div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="fw-bold opacity-50 d-block small mb-1">{{ labels.ACCOUNT_PERSON }}</label>
+                <div class="fs-5">
+                    @if (accountPersonName) {
+                        {{ accountPersonName }}
+                    } @else if (account.accountPersonId) {
+                        <p-progressSpinner styleClass="w-1rem h-1rem" strokeWidth="4" fill="transparent" animationDuration=".5s" />
+                    } @else {
+                        <span class="opacity-50">—</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <ng-template pTemplate="footer">
+        <p-button 
+            [label]="labels.CANCEL" 
+            severity="secondary" 
+            [text]="true" 
+            (onClick)="closed.emit()" />
+    </ng-template>
+
+</p-dialog>

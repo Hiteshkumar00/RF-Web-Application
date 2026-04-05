@@ -79,6 +79,12 @@ export class SidebarComponent implements OnInit {
                 routerLink: ['/account-person-management'],
                 routerLinkActiveOptions: { exact: true }
             },
+            {
+                label: 'Payment Account',
+                icon: 'pi pi-fw pi-wallet',
+                routerLink: ['/payment-account-management'],
+                routerLinkActiveOptions: { exact: true }
+            },
         ];
 
         this.superAdminItems = [

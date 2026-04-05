@@ -51,6 +51,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/account-person-management/account-person-management-module').then(m => m.AccountPersonManagementModule)
   },
   {
+    path: 'payment-account-management',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/payment-account-management/payment-account-management.module').then(m => m.PaymentAccountManagementModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

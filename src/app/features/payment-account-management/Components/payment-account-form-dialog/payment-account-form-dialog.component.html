@@ -1,0 +1,83 @@
+<p-dialog 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [header]="dialogTitle" 
+    [style]="{ width: '450px' }" 
+    [draggable]="false"
+    [resizable]="false" 
+    [closable]="false" 
+    [closeOnEscape]="false" 
+    (onHide)="closed.emit()">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button 
+                icon="pi pi-times" 
+                [rounded]="true" 
+                [text]="true" 
+                severity="secondary" 
+                styleClass="p-0"
+                [style]="{ width: '2rem', height: '2rem' }" 
+                (onClick)="requestClose()" />
+        </div>
+    </ng-template>
+
+    <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-3">
+        <div class="row g-3">
+            <!-- Method Name -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input 
+                        pInputText 
+                        id="methodName" 
+                        formControlName="methodName" 
+                        class="w-100" />
+                    <label for="methodName">{{ labels.METHOD_NAME }}</label>
+                </p-floatlabel>
+                @if (form.get('methodName')?.invalid && form.get('methodName')?.touched) {
+                    <p-message 
+                        severity="error" 
+                        size="small" 
+                        variant="simple" 
+                        [text]="labels.FIELD_REQUIRED" 
+                        class="mt-1 d-block" />
+                }
+            </div>
+
+            <!-- Account Person -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <p-select 
+                        [options]="personOptions" 
+                        formControlName="accountPersonId" 
+                        optionLabel="label" 
+                        optionValue="value"
+                        [showClear]="true" 
+                        [filter]="true" 
+                        class="w-100" 
+                        appendTo="body" 
+                        inputId="person" />
+                    <label for="person">{{ labels.ACCOUNT_PERSON }}</label>
+                </p-floatlabel>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button 
+                [label]="labels.CANCEL" 
+                icon="pi pi-times" 
+                severity="secondary" 
+                [text]="true" 
+                (onClick)="requestClose()" />
+            <p-button 
+                [label]="labels.SAVE" 
+                icon="pi pi-check" 
+                [disabled]="form.invalid" 
+                (onClick)="onSubmit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>
