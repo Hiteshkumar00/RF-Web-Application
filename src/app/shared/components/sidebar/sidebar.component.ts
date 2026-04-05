@@ -85,20 +85,8 @@ export class SidebarComponent implements OnInit {
             {
                 label: 'User Management',
                 icon: 'pi pi-fw pi-star',
-                items: [
-                    {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-bookmark',
-                        routerLink: ['/user-management'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-video',
-                        routerLink: ['/user-management2'],
-                        routerLinkActiveOptions: { exact: true }
-                    }
-                ]
+                routerLink: ['/user-management'],
+                routerLinkActiveOptions: { exact: true }
             },
             {
                 label: 'Entity Management',

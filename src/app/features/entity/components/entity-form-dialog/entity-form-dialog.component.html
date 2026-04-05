@@ -50,31 +50,32 @@
 
             <!-- Related Entities FormArray -->
             <div formArrayName="relatedEntities" class="d-flex flex-column gap-3">
-                @for (reGroup of relatedEntities.controls; track $index) {
-                <div [formGroupName]="$index" class="p-3 border rounded position-relative">
+                @for (reGroup of relatedEntities.controls; track reGroup; let i = $index) {
+                <div [formGroupName]="i" class="p-3 border rounded position-relative">
                     <div class="row g-3">
                         <div class="col-12 col-md-5">
                             <p-floatlabel variant="on">
-                                <input id="re_name_{{$index}}" type="text" pInputText
+                                <input id="re_name_{{i}}" type="text" pInputText
                                     formControlName="relatedEntityName" class="w-100" />
-                                <label for="re_name_{{$index}}">{{ labels.RELATED_ENTITY_NAME }}</label>
+                                <label for="re_name_{{i}}">{{ labels.RELATED_ENTITY_NAME }}</label>
                             </p-floatlabel>
                         </div>
                         <div class="col-12 col-md-5">
                             <p-floatlabel variant="on">
-                                <input id="re_display_{{$index}}" type="text" pInputText
+                                <input id="re_display_{{i}}" type="text" pInputText
                                     formControlName="relatedDisplayName" class="w-100" />
-                                <label for="re_display_{{$index}}">{{ labels.RELATED_DISPLAY_NAME }}</label>
+                                <label for="re_display_{{i}}">{{ labels.RELATED_DISPLAY_NAME }}</label>
                             </p-floatlabel>
                         </div>
                         <div class="col-12 col-md-2 d-flex align-items-center justify-content-end">
                             <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
                                 [pTooltip]="labels.REMOVE_RELATED_ENTITY" tooltipPosition="top"
-                                (onClick)="removeRelatedEntity($index)" />
+                                (onClick)="removeRelatedEntity(i)" />
                         </div>
                     </div>
                 </div>
                 }
+
 
                 <p-button [label]="labels.ADD_RELATED_ENTITY" icon="pi pi-plus" [text]="true" severity="primary"
                     size="small" (onClick)="addRelatedEntity()" class="align-self-start" />

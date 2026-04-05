@@ -8,5 +8,6 @@ export class AccountTableColumns {
         { field: 'id', header: 'ID' },
         { field: 'profileName', header: 'Profile Name' },
         { field: 'currencyType', header: 'Currency' },
+        { field: 'login', header: 'Login' }
     ];
 }

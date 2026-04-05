@@ -28,7 +28,7 @@ export class AccountLabels {
 
     // Confirm dialogs
     public static readonly DELETE_CONFIRM_HEADER = 'Confirm Delete';
-    public static readonly DELETE_CONFIRM_MESSAGE = 'Are you sure you want to delete this account? This action cannot be undone.';
+    public static readonly DELETE_CONFIRM_MESSAGE = 'Are you sure you want to delete this account?';
     public static readonly UNSAVED_CONFIRM_HEADER = 'Unsaved Changes';
     public static readonly UNSAVED_CONFIRM_MESSAGE = 'You have unsaved changes. Do you want to discard them and close?';
 

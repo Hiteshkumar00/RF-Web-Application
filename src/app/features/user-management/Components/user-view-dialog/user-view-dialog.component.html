@@ -1,0 +1,91 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '520px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ labels.VIEW_DIALOG_TITLE }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="closed.emit()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <div *ngIf="user" class="d-flex flex-column gap-3 pt-2">
+
+        <div class="row g-3">
+
+            <!-- User ID -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.USER_ID }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ user.id }}</div>
+            </div>
+
+            <!-- Status -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.STATUS }}</label>
+                <div>
+                    <p-tag
+                        [value]="user.isActive ? labels.ACTIVE : labels.INACTIVE"
+                        [severity]="user.isActive ? 'success' : 'danger'" />
+                </div>
+            </div>
+
+            <!-- First Name -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.FIRST_NAME }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ user.firstName }}</div>
+            </div>
+
+            <!-- Middle Name -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.MIDDLE_NAME }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ user.middleName || '—' }}
+                </div>
+            </div>
+
+            <!-- Surname -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.SURNAME }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ user.surname }}</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.PHONE_NO }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ user.phoneNo || '—' }}
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-12">
+                <label class="form-label small text-muted mb-1">{{ labels.EMAIL }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ user.email }}</div>
+            </div>
+
+            <!-- Role -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.ROLE }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ user.role }}</div>
+            </div>
+
+            <!-- Account ID -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.ACCOUNT_ID }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ user.accountId ?? '—' }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="closed.emit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>

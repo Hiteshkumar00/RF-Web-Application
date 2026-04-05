@@ -33,11 +33,8 @@
                         {{ col.header }}
                         <p-sortIcon [field]="col.field" />
                     </th>
-
-                    @if (col.field === 'id') {
-                        <th style="width: 10rem; text-align: center;">Actions</th>
-                    }
                 }
+                <th style="width: 10rem; text-align: center;">Actions</th>
             </tr>
         </ng-template>
 
@@ -51,41 +48,38 @@
                             <span class="opacity-50">—</span>
                         }
                     </td>
-
-                    @if (col.field === 'id') {
-                        <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
-                                <p-button
-                                    icon="pi pi-eye"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="info"
-                                    size="small"
-                                    [pTooltip]="labels.VIEW"
-                                    tooltipPosition="top"
-                                    (onClick)="openViewDialog(entity)" />
-                                <p-button
-                                    icon="pi pi-pencil"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="warn"
-                                    size="small"
-                                    [pTooltip]="labels.EDIT"
-                                    tooltipPosition="top"
-                                    (onClick)="openEditDialog(entity)" />
-                                <p-button
-                                    icon="pi pi-trash"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="danger"
-                                    size="small"
-                                    [pTooltip]="labels.DELETE"
-                                    tooltipPosition="top"
-                                    (onClick)="confirmDelete(entity)" />
-                            </div>
-                        </td>
-                    }
                 }
+                <td class="text-center">
+                    <div class="d-flex gap-2 justify-content-center">
+                        <p-button
+                            icon="pi pi-eye"
+                            [rounded]="true"
+                            [text]="true"
+                            severity="info"
+                            size="small"
+                            [pTooltip]="labels.VIEW"
+                            tooltipPosition="top"
+                            (onClick)="openViewDialog(entity)" />
+                        <p-button
+                            icon="pi pi-pencil"
+                            [rounded]="true"
+                            [text]="true"
+                            severity="warn"
+                            size="small"
+                            [pTooltip]="labels.EDIT"
+                            tooltipPosition="top"
+                            (onClick)="openEditDialog(entity)" />
+                        <p-button
+                            icon="pi pi-trash"
+                            [rounded]="true"
+                            [text]="true"
+                            severity="danger"
+                            size="small"
+                            [pTooltip]="labels.DELETE"
+                            tooltipPosition="top"
+                            (onClick)="confirmDelete(entity)" />
+                    </div>
+                </td>
             </tr>
         </ng-template>
 

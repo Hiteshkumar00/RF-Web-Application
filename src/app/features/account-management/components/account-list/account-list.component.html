@@ -45,7 +45,17 @@
             <tr>
                 @for (col of columns; track col.field) {
                     <td>
-                        @if (account[col.field] != null && account[col.field] !== '') {
+                        @if (col.field === 'login') {
+                            <p-button
+                                icon="pi pi-sign-in"
+                                [rounded]="true"
+                                [text]="true"
+                                severity="primary"
+                                size="small"
+                                pTooltip="Login as this account"
+                                tooltipPosition="top"
+                                (onClick)="loginAsAdmin(account.id)" />
+                        } @else if (account[col.field] != null && account[col.field] !== '') {
                             {{ account[col.field] }}
                         } @else {
                             <span class="opacity-50">—</span>

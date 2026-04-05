@@ -5,6 +5,9 @@ import { AccountDto } from '../../models/account.model';
 import { AccountLabels } from '../../constants/account-labels.constants';
 import { AccountMessages } from '../../constants/account-messages.constants';
 import { AccountTableColumns } from '../../constants/account-table.constants';
+import { AuthApiService } from '../../../auth/services/auth-api.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-account-list',
@@ -15,6 +18,9 @@ export class AccountListComponent implements OnInit {
     private accountApiService = inject(AccountApiService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
+    private authApiService = inject(AuthApiService);
+    private authService = inject(AuthService);
+    private router = inject(Router);
 
     labels = AccountLabels;
     columns = AccountTableColumns.COLUMNS;
@@ -84,6 +90,19 @@ export class AccountListComponent implements OnInit {
             next: () => {
                 this.loadAccounts();
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: AccountMessages.DELETED });
+            }
+        });
+    }
+
+    loginAsAdmin(accountId: number): void {
+        this.authApiService.loginAsAdmin(accountId).subscribe({
+            next: (token) => {
+                this.authService.setAuthenticationToken(token);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Logged in as account successfully' });
+                this.router.navigate(['/dashboard']);
+            },
+            error: () => {
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Login failed' });
             }
         });
     }
