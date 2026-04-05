@@ -1,0 +1,107 @@
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">{{ labels.PAGE_TITLE }}</h4>
+        </div>
+        <p-button [label]="labels.ADD_BUSINESS_YEAR" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+    </div>
+
+    <!-- Table -->
+    <p-table [value]="years" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10, 25, 50]" styleClass="p-datatable-striped p-datatable-sm"
+        [tableStyle]="{'min-width': '60rem'}">
+
+        <ng-template pTemplate="header">
+            <tr>
+                @for (col of columns; track col.field) {
+                    @if (col.field === 'actions') {
+                        <th style="width: 14rem; text-align: center;">{{ col.header }}</th>
+                    } @else if (col.field === 'isSelected') {
+                        <th style="width: 10rem; text-align: center;">{{ col.header }}</th>
+                    } @else {
+                        <th [pSortableColumn]="col.field">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
+                    }
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-year>
+            <tr>
+                @for (col of columns; track col.field) {
+                    @if (col.field === 'actions') {
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <p-button
+                                    icon="pi pi-pencil"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="warn"
+                                    size="small"
+                                    [pTooltip]="labels.EDIT"
+                                    tooltipPosition="top"
+                                    (onClick)="openEditDialog(year)" />
+                                <p-button
+                                    icon="pi pi-check-circle"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="help"
+                                    size="small"
+                                    *ngIf="!year.isSelected"
+                                    [pTooltip]="labels.MAKE_SELECTED"
+                                    tooltipPosition="top"
+                                    (onClick)="confirmToggleSelected(year)" />
+                                <p-button
+                                    icon="pi pi-trash"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="danger"
+                                    size="small"
+                                    [pTooltip]="labels.DELETE"
+                                    tooltipPosition="top"
+                                    (onClick)="confirmDelete(year)" />
+                            </div>
+                        </td>
+                    } @else if (col.field === 'isSelected') {
+                        <td class="text-center">
+                            <i *ngIf="year.isSelected" class="pi pi-check text-success font-weight-bold" style="font-size: 1.25rem;"></i>
+                            <span *ngIf="!year.isSelected" class="opacity-50">—</span>
+                        </td>
+                    } @else if (col.field === 'startDate' || col.field === 'endDate') {
+                        <td>
+                            @if (year[col.field]) {
+                                {{ year[col.field] | date: 'dd-MMMM-yyyy' }}
+                            } @else {
+                                <span class="opacity-50">—</span>
+                            }
+                        </td>
+                    } @else {
+                        <td>
+                            {{ year[col.field] }}
+                        </td>
+                    }
+                }
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                    <i class="pi pi-calendar me-2" style="font-size: 1.5rem;"></i>
+                    {{ labels.NO_RECORDS }}
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+    <!-- Form Dialog -->
+    <app-business-year-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [businessYear]="selectedYear"
+        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
+
+</div>

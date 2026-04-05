@@ -85,6 +85,12 @@ export class SidebarComponent implements OnInit {
                 routerLink: ['/payment-account-management'],
                 routerLinkActiveOptions: { exact: true }
             },
+            {
+                label: 'Business Year',
+                icon: 'pi pi-fw pi-calendar-plus',
+                routerLink: ['/business-year'],
+                routerLinkActiveOptions: { exact: true }
+            },
         ];
 
         this.superAdminItems = [

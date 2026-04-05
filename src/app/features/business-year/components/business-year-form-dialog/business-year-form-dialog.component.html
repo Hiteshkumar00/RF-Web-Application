@@ -1,0 +1,53 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '400px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3 pt-2" *ngIf="form">
+
+        <div class="row g-3">
+            <!-- Year Name -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="yearName" type="text" pInputText formControlName="yearName" class="w-100" />
+                    <label for="yearName">{{ labels.YEAR_NAME }}</label>
+                </p-floatlabel>
+                @if (form.get('yearName')?.invalid && form.get('yearName')?.touched) {
+                    @if (form.get('yearName')?.hasError('required')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.YEAR_NAME_REQUIRED" class="mt-1 d-block" />
+                    }
+                }
+            </div>
+
+            <!-- Date -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <p-datepicker id="date" formControlName="date" [fluid]="true" [showIcon]="true" 
+                        appendTo="body" placeholder="Select Date" dateFormat="dd/mm/yy" />
+                    <label for="date">{{ labels.DATE }}</label>
+                </p-floatlabel>
+                @if (form.get('date')?.invalid && form.get('date')?.touched) {
+                    @if (form.get('date')?.hasError('required')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.DATE_REQUIRED" class="mt-1 d-block" />
+                    }
+                }
+            </div>
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="requestClose()" />
+            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>
