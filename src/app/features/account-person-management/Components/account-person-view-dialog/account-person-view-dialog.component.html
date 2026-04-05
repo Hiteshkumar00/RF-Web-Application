@@ -1,0 +1,74 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '450px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" (onHide)="closed.emit()">
+
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ labels.VIEW_DIALOG_TITLE }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (click)="closed.emit()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+
+        </div>
+    </ng-template>
+
+    <div *ngIf="person" class="d-flex flex-column gap-3 pt-2">
+
+        <div class="row g-3">
+
+            <!-- ID -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.ID }}</label>
+                <div class="form-control bg-transparent border-0 px-0">{{ person.id }}</div>
+            </div>
+
+            <!-- Name -->
+            <div class="col-12">
+                <label class="form-label small text-muted mb-1">{{ labels.NAME }}</label>
+                <div class="form-control bg-transparent border-0 px-0 fw-bold">{{ person.name }}</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.PHONE_NO }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ person.phoneNo || '—' }}
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-6">
+                <label class="form-label small text-muted mb-1">{{ labels.EMAIL }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ person.email || '—' }}
+                </div>
+            </div>
+
+            <!-- Occupation -->
+            <div class="col-12">
+                <label class="form-label small text-muted mb-1">{{ labels.OCCUPATION }}</label>
+                <div class="form-control bg-transparent border-0 px-0">
+                    {{ person.personOccupation || '—' }}
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+                <label class="form-label small text-muted mb-1">{{ labels.ADDRESS }}</label>
+                <div class="form-control bg-transparent border-0 px-0 text-wrap">
+                    {{ person.address || '—' }}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (click)="closed.emit()" />
+        </div>
+
+    </ng-template>
+
+</p-dialog>

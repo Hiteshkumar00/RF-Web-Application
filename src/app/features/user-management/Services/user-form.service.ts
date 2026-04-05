@@ -15,7 +15,7 @@ export class UserFormService {
             middleName: [null],
             surname: ['', [Validators.required, Validators.maxLength(100)]],
             email: ['', [Validators.required, Validators.email]],
-            phoneNo: [null],
+            phoneNo: [null, [Validators.maxLength(50)]],
             role: ['', [Validators.required]],
             password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
             isActive: [true, [Validators.required]]
@@ -29,7 +29,7 @@ export class UserFormService {
             middleName: [null],
             surname: ['', [Validators.required, Validators.maxLength(100)]],
             email: ['', [Validators.required, Validators.email]],
-            phoneNo: [null],
+            phoneNo: [null, [Validators.maxLength(50)]],
             role: ['', [Validators.required]],
             isActive: [true, [Validators.required]]
         });

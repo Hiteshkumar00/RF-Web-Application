@@ -72,7 +72,13 @@ export class SidebarComponent implements OnInit {
                         routerLinkActiveOptions: { exact: true }
                     }
                 ]
-            }
+            },
+            {
+                label: 'Account Person',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/account-person-management'],
+                routerLinkActiveOptions: { exact: true }
+            },
         ];
 
         this.superAdminItems = [

@@ -46,6 +46,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/inventory/inventory-module').then(m => m.InventoryModule)
   },
   {
+    path: 'account-person-management',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/account-person-management/account-person-management-module').then(m => m.AccountPersonManagementModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

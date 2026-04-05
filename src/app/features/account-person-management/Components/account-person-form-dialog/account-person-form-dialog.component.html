@@ -1,0 +1,84 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '450px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (click)="requestClose()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3 pt-2" *ngIf="form">
+
+        <div class="row g-3">
+
+            <!-- Name -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="name" type="text" pInputText formControlName="name" class="w-100" />
+                    <label for="name">{{ labels.NAME }}</label>
+                </p-floatlabel>
+                @if (form.get('name')?.invalid && form.get('name')?.touched) {
+                    @if (form.get('name')?.hasError('required')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.NAME_REQUIRED" class="mt-1 d-block" />
+                    } @else if (form.get('name')?.hasError('maxlength')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.NAME_MAX" class="mt-1 d-block" />
+                    }
+                }
+            </div>
+
+            <!-- Phone No -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="phoneNo" type="tel" pInputText formControlName="phoneNo" class="w-100" />
+                    <label for="phoneNo">{{ labels.PHONE_NO }}</label>
+                </p-floatlabel>
+                @if (form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched) {
+                    <p-message severity="error" size="small" variant="simple" [text]="labels.PHONE_MAX" class="mt-1 d-block" />
+                }
+            </div>
+
+            <!-- Email -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="email" type="email" pInputText formControlName="email" class="w-100" />
+                    <label for="email">{{ labels.EMAIL }}</label>
+                </p-floatlabel>
+                @if (form.get('email')?.invalid && form.get('email')?.touched) {
+                    <p-message severity="error" size="small" variant="simple" [text]="labels.EMAIL_INVALID" class="mt-1 d-block" />
+                }
+            </div>
+
+            <!-- Occupation -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="personOccupation" type="text" pInputText formControlName="personOccupation" class="w-100" />
+                    <label for="personOccupation">{{ labels.OCCUPATION }}</label>
+                </p-floatlabel>
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <textarea id="address" pInputTextarea formControlName="address" rows="3" class="w-100" [autoResize]="true"></textarea>
+                    <label for="address">{{ labels.ADDRESS }}</label>
+                </p-floatlabel>
+            </div>
+
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (click)="requestClose()" />
+            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (click)="onSubmit()" />
+
+        </div>
+    </ng-template>
+
+</p-dialog>

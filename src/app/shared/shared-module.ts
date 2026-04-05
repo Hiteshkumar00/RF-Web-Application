@@ -1,6 +1,7 @@
 
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { ThemeSwitcher } from './components/theme-switcher/theme-switcher';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -30,7 +31,12 @@ import { DividerModule } from 'primeng/divider';
 import { PasswordModule } from 'primeng/password';
 import { SelectModule } from 'primeng/select';
 import { ImageModule } from 'primeng/image';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TextareaModule } from 'primeng/textarea';
+import { TagModule } from 'primeng/tag';
+
 import { ConfirmationService, MessageService } from 'primeng/api';
+
 
 @NgModule({
   declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent],
@@ -57,7 +63,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     DividerModule,
     PasswordModule,
     SelectModule,
-    ImageModule
+    ImageModule,
+    CheckboxModule,
+    TextareaModule,
+    TagModule,
+
+    ReactiveFormsModule
+
   ],
   exports: [
     CommonModule,
@@ -87,11 +99,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     DividerModule,
     PasswordModule,
     SelectModule,
-    ImageModule
+    ImageModule,
+    CheckboxModule,
+    TextareaModule,
+    TagModule,
+
+    ReactiveFormsModule
+
   ],
-  providers: [
-    ConfirmationService,
-    MessageService
-  ]
+  providers: []
 })
 export class SharedModule { }

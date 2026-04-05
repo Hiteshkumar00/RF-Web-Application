@@ -1,7 +1,6 @@
 <div class="container-fluid py-4">
 
-    <p-toast />
-    <p-confirmDialog />
+
 
     <!-- Header -->
     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -29,63 +28,69 @@
         <ng-template pTemplate="header">
             <tr>
                 @for (col of columns; track col.field) {
-                    <th [pSortableColumn]="col.field">
-                        {{ col.header }}
-                        <p-sortIcon [field]="col.field" />
-                    </th>
+                    @if (col.field === 'actions') {
+                        <th style="width: 10rem; text-align: center;">{{ col.header }}</th>
+                    } @else {
+                        <th [pSortableColumn]="col.field">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
+                    }
                 }
-                <th style="width: 10rem; text-align: center;">Actions</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-entity>
             <tr>
                 @for (col of columns; track col.field) {
-                    <td>
-                        @if (entity[col.field] != null && entity[col.field] !== '') {
-                            {{ entity[col.field] }}
-                        } @else {
-                            <span class="opacity-50">—</span>
-                        }
-                    </td>
+                    @if (col.field === 'actions') {
+                        <td class="text-center">
+                            <div class="d-flex gap-2 justify-content-center">
+                                <p-button
+                                    icon="pi pi-eye"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="info"
+                                    size="small"
+                                    [pTooltip]="labels.VIEW"
+                                    tooltipPosition="top"
+                                    (onClick)="openViewDialog(entity)" />
+                                <p-button
+                                    icon="pi pi-pencil"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="warn"
+                                    size="small"
+                                    [pTooltip]="labels.EDIT"
+                                    tooltipPosition="top"
+                                    (onClick)="openEditDialog(entity)" />
+                                <p-button
+                                    icon="pi pi-trash"
+                                    [rounded]="true"
+                                    [text]="true"
+                                    severity="danger"
+                                    size="small"
+                                    [pTooltip]="labels.DELETE"
+                                    tooltipPosition="top"
+                                    (onClick)="confirmDelete(entity)" />
+                            </div>
+                        </td>
+                    } @else {
+                        <td>
+                            @if (entity[col.field] != null && entity[col.field] !== '') {
+                                {{ entity[col.field] }}
+                            } @else {
+                                <span class="opacity-50">—</span>
+                            }
+                        </td>
+                    }
                 }
-                <td class="text-center">
-                    <div class="d-flex gap-2 justify-content-center">
-                        <p-button
-                            icon="pi pi-eye"
-                            [rounded]="true"
-                            [text]="true"
-                            severity="info"
-                            size="small"
-                            [pTooltip]="labels.VIEW"
-                            tooltipPosition="top"
-                            (onClick)="openViewDialog(entity)" />
-                        <p-button
-                            icon="pi pi-pencil"
-                            [rounded]="true"
-                            [text]="true"
-                            severity="warn"
-                            size="small"
-                            [pTooltip]="labels.EDIT"
-                            tooltipPosition="top"
-                            (onClick)="openEditDialog(entity)" />
-                        <p-button
-                            icon="pi pi-trash"
-                            [rounded]="true"
-                            [text]="true"
-                            severity="danger"
-                            size="small"
-                            [pTooltip]="labels.DELETE"
-                            tooltipPosition="top"
-                            (onClick)="confirmDelete(entity)" />
-                    </div>
-                </td>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td [attr.colspan]="columns.length + 1" class="text-center py-5 opacity-50">
+                <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
                     <i class="pi pi-inbox me-2" style="font-size: 1.5rem;"></i>
                     {{ labels.NO_RECORDS }}
                 </td>

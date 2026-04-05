@@ -1,29 +1,27 @@
 <div class="container-fluid py-4">
 
-
-
     <!-- Header -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <h4 class="mb-0 fw-bold">{{ labels.PAGE_TITLE }}</h4>
         </div>
         <p-button
-            [label]="labels.ADD_ACCOUNT"
+            [label]="labels.ADD_PERSON"
             icon="pi pi-plus"
             (onClick)="openCreateDialog()" />
     </div>
 
     <!-- Table -->
     <p-table
-        [value]="accounts"
+        [value]="accountPersons"
         [paginator]="true"
         [rows]="10"
         [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} accounts"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
         [rowsPerPageOptions]="[10, 25, 50]"
         [sortMode]="'multiple'"
         styleClass="p-datatable-striped p-datatable-sm"
-        [tableStyle]="{'min-width': '50rem'}">
+        [tableStyle]="{'min-width': '60rem'}">
 
         <ng-template pTemplate="header">
             <tr>
@@ -40,12 +38,12 @@
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-account>
+        <ng-template pTemplate="body" let-person>
             <tr>
                 @for (col of columns; track col.field) {
                     @if (col.field === 'actions') {
                         <td class="text-center">
-                            <div class="d-flex gap-2 justify-content-center">
+                            <div class="d-flex gap-1 justify-content-center">
                                 <p-button
                                     icon="pi pi-eye"
                                     [rounded]="true"
@@ -54,7 +52,7 @@
                                     size="small"
                                     [pTooltip]="labels.VIEW"
                                     tooltipPosition="top"
-                                    (onClick)="openViewDialog(account)" />
+                                    (onClick)="openViewDialog(person)" />
                                 <p-button
                                     icon="pi pi-pencil"
                                     [rounded]="true"
@@ -63,7 +61,7 @@
                                     size="small"
                                     [pTooltip]="labels.EDIT"
                                     tooltipPosition="top"
-                                    (onClick)="openEditDialog(account)" />
+                                    (onClick)="openEditDialog(person)" />
                                 <p-button
                                     icon="pi pi-trash"
                                     [rounded]="true"
@@ -72,23 +70,13 @@
                                     size="small"
                                     [pTooltip]="labels.DELETE"
                                     tooltipPosition="top"
-                                    (onClick)="confirmDelete(account)" />
+                                    (onClick)="confirmDelete(person)" />
                             </div>
                         </td>
                     } @else {
                         <td>
-                            @if (col.field === 'login') {
-                                <p-button
-                                    icon="pi pi-sign-in"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="primary"
-                                    size="small"
-                                    pTooltip="Login as this account"
-                                    tooltipPosition="top"
-                                    (onClick)="loginAsAdmin(account.id)" />
-                            } @else if (account[col.field] != null && account[col.field] !== '') {
-                                {{ account[col.field] }}
+                            @if (person[col.field] != null && person[col.field] !== '') {
+                                {{ person[col.field] }}
                             } @else {
                                 <span class="opacity-50">—</span>
                             }
@@ -101,7 +89,7 @@
         <ng-template pTemplate="emptymessage">
             <tr>
                 <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
-                    <i class="pi pi-inbox me-2" style="font-size: 1.5rem;"></i>
+                    <i class="pi pi-users me-2" style="font-size: 1.5rem;"></i>
                     {{ labels.NO_RECORDS }}
                 </td>
             </tr>
@@ -110,17 +98,17 @@
     </p-table>
 
     <!-- Form Dialog -->
-    <app-account-form-dialog
+    <app-account-person-form-dialog
         [visible]="showFormDialog"
         [mode]="formDialogMode"
-        [account]="selectedAccount"
+        [person]="selectedPerson"
         (saved)="onFormSaved()"
         (closed)="onFormDialogClosed()" />
 
     <!-- View Dialog -->
-    <app-account-view-dialog
+    <app-account-person-view-dialog
         [visible]="showViewDialog"
-        [account]="selectedAccount"
+        [person]="selectedPerson"
         (closed)="showViewDialog = false" />
 
 </div>

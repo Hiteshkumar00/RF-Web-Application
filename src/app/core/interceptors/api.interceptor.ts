@@ -5,12 +5,15 @@ import { LoaderService } from '../services/loader.service';
 import { ErrorDialogService } from '../services/error-dialog.service';
 import { ServiceResponse } from '../../shared/models/service-response.model';
 
+
+
 export const apiInterceptor: HttpInterceptorFn = (
     req: HttpRequest<unknown>,
     next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
     const loader = inject(LoaderService);
     const errorDialog = inject(ErrorDialogService);
+
 
     // 1. Attach Bearer token
     const token = localStorage.getItem('accessToken');
