@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
+import { AccountDetailsService } from './core/services/account-details.service';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -15,7 +16,12 @@ export class App implements OnInit {
   isLoggedIn$: Observable<boolean>;
   isAuthPage = false;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService, 
+    private accountDetailsService: AccountDetailsService,
+    private router: Router
+  ) {
+    this.accountDetailsService.init();
     this.isLoggedIn$ = this.authService.isLoggedIn$;
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
