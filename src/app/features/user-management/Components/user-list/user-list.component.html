@@ -1,174 +1,121 @@
 <div class="container-fluid py-4">
-
-
-
-    <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">{{ labels.PAGE_TITLE }}</h4>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }} List</h5>
+                <p-button icon="pi pi-plus" [label]="labels.ADD_USER" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
         </div>
-        <p-button
-            [label]="labels.ADD_USER"
-            icon="pi pi-plus"
-            (onClick)="openCreateDialog()" />
-    </div>
 
-    <!-- Table -->
-    <p-table
-        [value]="users"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        [sortMode]="'multiple'"
-        styleClass="p-datatable-striped p-datatable-sm"
-        [tableStyle]="{'min-width': '60rem'}">
+        <div class="card-body p-0">
+            <!-- Table -->
+            <p-table [value]="users" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'"
+                styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '60rem'}">
 
-        <ng-template pTemplate="header">
-            <tr>
-                @for (col of columns; track col.field) {
-                    @if (col.field === 'actions') {
+                <ng-template pTemplate="header">
+                    <tr>
+                        @for (col of columns; track col.field) {
+                        @if (col.field === 'actions') {
                         <th style="width: 14rem; text-align: center;">{{ col.header }}</th>
-                    } @else if (col.field === 'isActive') {
+                        } @else if (col.field === 'isActive') {
                         <th>{{ col.header }}</th>
-                    } @else {
+                        } @else {
                         <th [pSortableColumn]="col.field">
                             {{ col.header }}
                             <p-sortIcon [field]="col.field" />
                         </th>
-                    }
-                }
-            </tr>
-        </ng-template>
+                        }
+                        }
+                    </tr>
+                </ng-template>
 
-        <ng-template pTemplate="body" let-user>
-            <tr>
-                @for (col of columns; track col.field) {
-                    @if (col.field === 'actions') {
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        @for (col of columns; track col.field) {
+                        @if (col.field === 'actions') {
                         <td class="text-center">
                             <div class="d-flex gap-1 justify-content-center">
-                                <p-button
-                                    icon="pi pi-eye"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="info"
-                                    size="small"
-                                    [pTooltip]="labels.VIEW"
-                                    tooltipPosition="top"
-                                    (onClick)="openViewDialog(user)" />
-                                <p-button
-                                    icon="pi pi-pencil"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="warn"
-                                    size="small"
-                                    [pTooltip]="labels.EDIT"
-                                    tooltipPosition="top"
-                                    (onClick)="openEditDialog(user)" />
-                                <p-button
-                                    icon="pi pi-key"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="help"
-                                    size="small"
-                                    [pTooltip]="labels.RESET_PASSWORD"
-                                    tooltipPosition="top"
+                                <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                    [pTooltip]="labels.VIEW" tooltipPosition="top" (onClick)="openViewDialog(user)" />
+                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small"
+                                    [pTooltip]="labels.EDIT" tooltipPosition="top" (onClick)="openEditDialog(user)" />
+                                <p-button icon="pi pi-key" [rounded]="true" [text]="true" severity="help" size="small"
+                                    [pTooltip]="labels.RESET_PASSWORD" tooltipPosition="top"
                                     (onClick)="openResetPasswordDialog(user)" />
-                                <p-button
-                                    [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check-circle'"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    [severity]="user.isActive ? 'warn' : 'success'"
-                                    size="small"
+                                <p-button icon="user.isActive ? 'pi pi-ban' : 'pi pi-check-circle'" [rounded]="true"
+                                    [text]="true" [severity]="user.isActive ? 'warn' : 'success'" size="small"
                                     [pTooltip]="user.isActive ? labels.DEACTIVATE : labels.ACTIVATE"
-                                    tooltipPosition="top"
-                                    (onClick)="confirmToggleActive(user)" />
-                                <p-button
-                                    icon="pi pi-trash"
-                                    [rounded]="true"
-                                    [text]="true"
-                                    severity="danger"
-                                    size="small"
-                                    [pTooltip]="labels.DELETE"
-                                    tooltipPosition="top"
+                                    tooltipPosition="top" (onClick)="confirmToggleActive(user)" />
+                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                    size="small" [pTooltip]="labels.DELETE" tooltipPosition="top"
                                     (onClick)="confirmDelete(user)" />
                             </div>
                         </td>
-                    } @else {
+                        } @else {
                         <td>
                             @if (col.field === 'isActive') {
-                                <p-tag
-                                    [value]="user.isActive ? labels.ACTIVE : labels.INACTIVE"
-                                    [severity]="user.isActive ? 'success' : 'danger'" />
+                            <p-tag [value]="user.isActive ? labels.ACTIVE : labels.INACTIVE"
+                                [severity]="user.isActive ? 'success' : 'danger'" />
                             } @else if (user[col.field] != null && user[col.field] !== '') {
-                                {{ user[col.field] }}
+                            {{ user[col.field] }}
                             } @else {
-                                <span class="opacity-50">—</span>
+                            <span class="opacity-50">—</span>
                             }
                         </td>
-                    }
-                }
-            </tr>
-        </ng-template>
+                        }
+                        }
+                    </tr>
+                </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
-                    <i class="pi pi-users me-2" style="font-size: 1.5rem;"></i>
-                    {{ labels.NO_RECORDS }}
-                </td>
-            </tr>
-        </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                            <i class="pi pi-users me-2" style="font-size: 1.5rem;"></i>
+                            {{ labels.NO_RECORDS }}
+                        </td>
+                    </tr>
+                </ng-template>
 
-    </p-table>
+            </p-table>
+        </div>
+    </div>
 
     <!-- Form Dialog -->
-    <app-user-form-dialog
-        [visible]="showFormDialog"
-        [mode]="formDialogMode"
-        [user]="selectedUser"
-        (saved)="onFormSaved()"
-        (closed)="onFormDialogClosed()" />
+    <app-user-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [user]="selectedUser"
+        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
 
     <!-- View Dialog -->
-    <app-user-view-dialog
-        [visible]="showViewDialog"
-        [user]="selectedUser"
-        (closed)="showViewDialog = false" />
+    <app-user-view-dialog [visible]="showViewDialog" [user]="selectedUser" (closed)="showViewDialog = false" />
 
     <!-- Reset Password Dialog -->
-    <p-dialog
-        [visible]="showResetPasswordDialog"
-        [modal]="true"
-        [style]="{ width: '400px' }"
-        [draggable]="false"
-        [resizable]="false"
-        [closable]="false"
-        [closeOnEscape]="false">
+    <p-dialog [visible]="showResetPasswordDialog" [modal]="true" [style]="{ width: '400px' }" [draggable]="false"
+        [resizable]="false" [closable]="false" [closeOnEscape]="false">
 
         <ng-template pTemplate="header">
             <div class="d-flex align-items-center justify-content-between w-100 pe-3">
                 <span class="p-dialog-title m-0">{{ labels.RESET_PASSWORD_HEADER }}</span>
-                <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary"
-                    styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }"
-                    (onClick)="showResetPasswordDialog = false" />
+                <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" styleClass="p-0"
+                    [style]="{ width: '2rem', height: '2rem' }" (onClick)="showResetPasswordDialog = false" />
             </div>
         </ng-template>
 
         <div class="pt-2" *ngIf="resetPasswordForm" [formGroup]="resetPasswordForm">
             <p-floatlabel variant="on">
-                <p-password inputId="newPassword" formControlName="newPassword" [toggleMask]="true"
-                    [feedback]="false" styleClass="w-100" inputStyleClass="w-100"
-                    autocomplete="new-password" />
+                <p-password inputId="newPassword" formControlName="newPassword" [toggleMask]="true" [feedback]="false"
+                    styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
                 <label for="newPassword">{{ labels.PASSWORD }}</label>
             </p-floatlabel>
             @if (resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched) {
-                @if (resetPasswordForm.get('newPassword')?.hasError('required')) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_REQUIRED" class="mt-1 d-block" />
-                } @else if (resetPasswordForm.get('newPassword')?.hasError('minlength')) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_MIN" class="mt-1 d-block" />
-                }
+            @if (resetPasswordForm.get('newPassword')?.hasError('required')) {
+            <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_REQUIRED"
+                class="mt-1 d-block" />
+            } @else if (resetPasswordForm.get('newPassword')?.hasError('minlength')) {
+            <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_MIN"
+                class="mt-1 d-block" />
+            }
             }
         </div>
 
@@ -176,8 +123,7 @@
             <div class="d-flex gap-2 justify-content-end">
                 <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                     (onClick)="showResetPasswordDialog = false" />
-                <p-button [label]="labels.SAVE" icon="pi pi-check" severity="help"
-                    (onClick)="submitResetPassword()" />
+                <p-button [label]="labels.SAVE" icon="pi pi-check" severity="help" (onClick)="submitResetPassword()" />
             </div>
         </ng-template>
 

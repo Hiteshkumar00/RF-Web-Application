@@ -1,15 +1,15 @@
 <div class="container-fluid py-4">
 
-    <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">{{ labels.PAGE_TITLE }}</h4>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }} List</h5>
+                <p-button icon="pi pi-plus" [label]="labels.ADD_AGENCY" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
         </div>
-        <p-button
-            [label]="labels.ADD_AGENCY"
-            icon="pi pi-plus"
-            (onClick)="openCreateDialog()" />
-    </div>
+
+        <div class="card-body p-0">
 
     <!-- Table -->
     <p-table
@@ -96,4 +96,6 @@
         (saved)="onFormSaved()"
         (closed)="onFormDialogClosed()" />
 
+    </div>
+</div>
 </div>

@@ -129,12 +129,11 @@
                             </td>
                             <td>
                                 <p-inputNumber formControlName="quantity" [showButtons]="false" styleClass="w-100"
-                                    inputStyleClass="w-100 text-center" class="p-inputtext-sm" [min]="1" />
+                                    inputStyleClass="w-100 text-center" class="p-inputtext-sm"/>
                             </td>
                             <td>
                                 <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm"
-                                    [min]="0.01" />
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td [formGroup]="$any(control.get('warrenty'))">
                                 <div class="d-flex gap-1">
@@ -203,7 +202,7 @@
                                 <p-iconField iconPosition="right">
                                     <p-inputNumber formControlName="amount" mode="currency" currency="INR"
                                         locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
-                                        class="p-inputtext-sm" [min]="0.01" />
+                                        class="p-inputtext-sm"/>
                                     <p-inputIcon
                                         *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
                                         class="pi pi-info-circle text-danger pe-2" pTooltip="Min 0.01"
@@ -239,8 +238,8 @@
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                            styleClass="text-end" inputStyleClass="text-end border-0 bg-white shadow-sm rounded p-1"
-                            class="p-inputtext-sm w-50" [min]="0" [max]="totalAmount" />
+                            styleClass="text-end" inputStyleClass="text-start border-0 shadow-sm rounded p-1"
+                            class="p-inputtext-sm w-50" [max]="totalAmount" />
                     </div>
  
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
@@ -253,7 +252,7 @@
                         <span class="fw-semibold small">{{ paidAmount | currency:'INR' }}</span>
                     </div>
 
-                    <div class="d-flex justify-content-between pt-2 border-top mt-1" [ngClass]="{'text-primary': remainingAmount > 0, 'text-success': remainingAmount === 0}">
+                    <div class="d-flex justify-content-between pt-2 border-top mt-1" [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
                         <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
                         <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
                     </div>

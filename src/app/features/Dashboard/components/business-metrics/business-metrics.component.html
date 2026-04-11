@@ -1,17 +1,19 @@
 <div class="container-fluid py-4">
 
     <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">{{ labels.YEARLY_SUMMARY }}</h4>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header py-3 border-0 rounded-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.YEARLY_SUMMARY }} Dashboard</h5>
+                <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary" (onClick)="loadData()"
+                    [pTooltip]="labels.RELOAD" [tooltipPosition]="'left'" />
+            </div>
         </div>
-        <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary"
-            (onClick)="loadData()" [pTooltip]="labels.RELOAD" />
     </div>
 
     <!-- Metrics Cards -->
     <div *ngIf="!loading && metrics" class="row g-4">
-        
+
         <div class="col-md-6 col-lg-4">
             <div class="card metric-card border-0 shadow-sm p-4 h-100 bg-success bg-opacity-10">
                 <div class="d-flex justify-content-between">
@@ -45,7 +47,8 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_BUYING }}</div>
-                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | number:'1.2-2'
+                            }}</div>
                     </div>
                     <div class="icon-circle bg-warning text-white mb-0">
                         <i class="pi pi-shopping-bag fs-4"></i>
@@ -87,7 +90,8 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.BUYING_PENDING }}</div>
-                        <div class="fs-2 fw-bold text-secondary-emphasis">{{ metrics.buyingPendingAmount | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-secondary-emphasis">{{ metrics.buyingPendingAmount | number:'1.2-2'
+                            }}</div>
                     </div>
                     <div class="icon-circle bg-secondary text-white mb-0">
                         <i class="pi pi-history fs-4"></i>

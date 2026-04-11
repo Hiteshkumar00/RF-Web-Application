@@ -1,84 +1,73 @@
 <div class="container-fluid py-4">
-
-    <!-- Header Section -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-8">
-            <h4 class="mb-1 fw-bold">{{ labels.PAGE_TITLE }}</h4>
-        </div>
-        <div class="col-md-4 text-md-end">
-            <p-button
-                [label]="labels.ADD_EXPENSE"
-                icon="pi pi-plus"
-                (onClick)="openCreateDialog()" />
-        </div>
-    </div>
-
-    <!-- Data Table -->
     <div class="card border-0 shadow-sm">
-        <p-table
-            [value]="expenses"
-            [paginator]="true"
-            [rows]="10"
-            [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            [sortMode]="'multiple'"
-            styleClass="p-datatable-striped p-datatable-sm"
-            [tableStyle]="{'min-width': '60rem'}">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }} List</h5>
+                <p-button icon="pi pi-plus" [label]="labels.ADD_EXPENSE" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
+        </div>
 
-            <ng-template pTemplate="header">
-                <tr>
-                    @for (col of columns; track col.field) {
+        <div class="card-body p-0">
+            <!-- Data Table -->
+            <p-table [value]="expenses" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
+                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'"
+                styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '60rem'}">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        @for (col of columns; track col.field) {
                         @if (col.field === 'actions') {
-                            <th style="width: 12rem; text-align: center;">{{ col.header }}</th>
+                        <th style="width: 12rem; text-align: center;">{{ col.header }}</th>
                         } @else {
-                            <th [pSortableColumn]="col.field">
-                                {{ col.header }}
-                                <p-sortIcon [field]="col.field" />
-                            </th>
+                        <th [pSortableColumn]="col.field">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
                         }
-                    }
-                </tr>
-            </ng-template>
+                        }
+                    </tr>
+                </ng-template>
 
-            <ng-template pTemplate="body" let-expense>
-                <tr>
-                    @for (col of columns; track col.field) {
+                <ng-template pTemplate="body" let-expense>
+                    <tr>
+                        @for (col of columns; track col.field) {
                         @if (col.field === 'actions') {
-                            <td class="text-center">
-                                <div class="d-flex gap-1 justify-content-center">
-                                    <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small" [pTooltip]="labels.VIEW" (onClick)="openViewDialog(expense)" />
-                                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small" [pTooltip]="labels.EDIT" (onClick)="openEditDialog(expense)" />
-                                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small" [pTooltip]="labels.DELETE" (onClick)="confirmDelete(expense)" />
-                                </div>
-                            </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                    [pTooltip]="labels.VIEW" (onClick)="openViewDialog(expense)" />
+                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small"
+                                    [pTooltip]="labels.EDIT" (onClick)="openEditDialog(expense)" />
+                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                    size="small" [pTooltip]="labels.DELETE" (onClick)="confirmDelete(expense)" />
+                            </div>
+                        </td>
                         } @else if (col.field === 'paidAmount') {
-                            <td class="fw-bold">{{ expense.paidAmount | number:'1.2-2' }}</td>
+                        <td class="fw-bold">{{ expense.paidAmount | number:'1.2-2' }}</td>
                         } @else {
-                            <td>{{ expense[col.field] }}</td>
+                        <td>{{ expense[col.field] }}</td>
                         }
-                    }
-                </tr>
-            </ng-template>
+                        }
+                    </tr>
+                </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
-                        <i class="pi pi-receipt me-2" style="font-size: 1.5rem;"></i>
-                        {{ labels.NO_RECORDS }}
-                    </td>
-                </tr>
-            </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                            <i class="pi pi-receipt me-2" style="font-size: 1.5rem;"></i>
+                            {{ labels.NO_RECORDS }}
+                        </td>
+                    </tr>
+                </ng-template>
 
-        </p-table>
+            </p-table>
+        </div>
     </div>
 
     <!-- Form Dialog -->
-    <app-expense-form-dialog
-        [visible]="showFormDialog"
-        [mode]="formDialogMode"
-        [expenseId]="selectedExpenseId"
-        (saved)="onFormSaved()"
-        (closed)="onFormDialogClosed()" />
+    <app-expense-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [expenseId]="selectedExpenseId"
+        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
 
 </div>

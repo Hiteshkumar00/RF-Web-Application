@@ -1,17 +1,19 @@
 <div class="container-fluid py-4">
 
     <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">{{ labels.PAYMENT_ACCOUNTS }}</h4>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header py-3 rounded-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAYMENT_ACCOUNTS }} Dashboard</h5>
+                <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary" (onClick)="loadData()"
+                    [pTooltip]="labels.RELOAD" [tooltipPosition]="'left'" />
+            </div>
         </div>
-        <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary"
-            (onClick)="loadData()" [pTooltip]="labels.RELOAD" />
     </div>
 
 
     <div *ngIf="!loading && metrics" class="row g-4">
-        
+
         <!-- Total Available Balance -->
         <div class="col-12">
             <div class="card border-0 shadow-sm p-5 text-center bg-success bg-opacity-80 text-white">
