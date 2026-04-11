@@ -1,41 +1,88 @@
 <div class="card border-0 shadow-sm">
     <div class="card-header py-3 border-0">
         <div class="d-flex align-items-center justify-content-between">
-            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }}</h5>
-            <p-button icon="pi pi-plus" label="New Selling Bill" (onClick)="openCreateDialog()"
-                styleClass="p-button-sm shadow-sm" />
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">{{ title }}</h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search customer, phone..."
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" />
+                </p-iconField>
+                <p-button icon="pi pi-plus" label="New Selling Bill" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
         </div>
     </div>
 
     <div class="card-body p-0">
-        <p-table [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
+        <p-table #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
             styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['customerName', 'phoneNo']">
             <ng-template pTemplate="header">
                 <tr class="text-uppercase small">
-                    <th pSortableColumn="id" style="min-width: 80px">ID <p-sortIcon field="id" /></th>
+                    <th pSortableColumn="id" style="min-width: 90px">
+                        <div class="d-flex align-items-center gap-1">
+                            ID <p-sortIcon field="id" />
+                            <p-columnFilter type="numeric" field="id" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
                     <th style="min-width: 200px" class="text-center">Action</th>
-                    <th pSortableColumn="billNo" style="min-width: 150px">{{ labels.BILL_NO }} <p-sortIcon
-                            field="billNo" /></th>
-                    <th pSortableColumn="customerName" style="min-width: 300px">{{ labels.CUSTOMER_NAME }} <p-sortIcon
-                            field="customerName" /></th>
-                    <th pSortableColumn="phoneNo" style="min-width: 200px">{{ labels.PHONE_NO }} <p-sortIcon
-                            field="phoneNo" /></th>
-                    <th pSortableColumn="date" style="min-width: 150px">{{ labels.DATE }} <p-sortIcon field="date" />
+                    <th pSortableColumn="billNo" style="min-width: 170px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.BILL_NO }} <p-sortIcon field="billNo" />
+                            <p-columnFilter type="text" field="billNo" display="menu" class="ms-auto" />
+                        </div>
                     </th>
-                    <th pSortableColumn="totalAmount" style="min-width: 150px" class="text-end">{{ labels.TOTAL_AMOUNT
-                        }} <p-sortIcon field="totalAmount" /></th>
-                    <th pSortableColumn="discount" style="min-width: 150px" class="text-end">{{ labels.DISCOUNT }}
-                        <p-sortIcon field="discount" />
+                    <th pSortableColumn="customerName" style="min-width: 300px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.CUSTOMER_NAME }} <p-sortIcon field="customerName" />
+                            <p-columnFilter type="text" field="customerName" display="menu" class="ms-auto" />
+                        </div>
                     </th>
-                    <th pSortableColumn="netAmount" style="min-width: 150px" class="text-end">{{ labels.NET_AMOUNT }}
-                        <p-sortIcon field="netAmount" />
+                    <th pSortableColumn="phoneNo" style="min-width: 200px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.PHONE_NO }} <p-sortIcon field="phoneNo" />
+                            <p-columnFilter type="text" field="phoneNo" display="menu" class="ms-auto" />
+                        </div>
                     </th>
-                    <th pSortableColumn="paidAmount" style="min-width: 150px" class="text-end">{{ labels.PAID_AMOUNT }}
-                        <p-sortIcon field="paidAmount" />
+                    <th pSortableColumn="date" style="min-width: 170px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.DATE }} <p-sortIcon field="date" />
+                            <p-columnFilter type="date" field="date" display="menu" class="ms-auto" />
+                        </div>
                     </th>
-                    <th pSortableColumn="remainingAmount" style="min-width: 150px" class="text-end">{{
-                        labels.REMAINING_AMOUNT }} <p-sortIcon field="remainingAmount" /></th>
+                    <th pSortableColumn="totalAmount" style="min-width: 190px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.TOTAL_AMOUNT }} <p-sortIcon field="totalAmount" />
+                            <p-columnFilter type="numeric" field="totalAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="discount" style="min-width: 190px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.DISCOUNT }} <p-sortIcon field="discount" />
+                            <p-columnFilter type="numeric" field="discount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="netAmount" style="min-width: 190px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.NET_AMOUNT }} <p-sortIcon field="netAmount" />
+                            <p-columnFilter type="numeric" field="netAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="paidAmount" style="min-width: 190px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.PAID_AMOUNT }} <p-sortIcon field="paidAmount" />
+                            <p-columnFilter type="numeric" field="paidAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="remainingAmount" style="min-width: 190px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.REMAINING_AMOUNT }} <p-sortIcon field="remainingAmount" />
+                            <p-columnFilter type="numeric" field="remainingAmount" display="menu" />
+                        </div>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-bill>

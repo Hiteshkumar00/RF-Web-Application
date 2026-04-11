@@ -28,7 +28,7 @@
 
 
             <!-- Bill No -->
-            <div class="col-md-4" *ngIf="mode !== 'create'">
+            <div class="col-md-4">
                 <div class="field">
                     <label for="billNo" class="block mb-2 font-semibold">{{ labels.BILL_NO }}</label>
                     <p-iconField iconPosition="right">
@@ -112,7 +112,7 @@
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="bg-light text-uppercase small bg-opacity-10">
-                            <th style="min-width: 250px">{{ labels.ITEM_NAME }}</th>
+                            <th style="min-width: 280px">{{ labels.ITEM_NAME }}</th>
                             <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
                             <th style="min-width: 130px">{{ labels.PRICE }}</th>
                             <th style="min-width: 220px" *ngIf="globalHasWarrenty">{{ labels.WARRENTY }}</th>
