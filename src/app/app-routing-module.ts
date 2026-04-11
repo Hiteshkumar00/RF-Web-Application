@@ -46,6 +46,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/inventory/inventory-module').then(m => m.InventoryModule)
   },
   {
+    path: 'expense',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/expense/expense.module').then(m => m.ExpenseModule)
+  },
+  {
     path: 'account-person-management',
     canActivate: [authGuard, adminGuard],
     loadChildren: () => import('./features/account-person-management/account-person-management-module').then(m => m.AccountPersonManagementModule)

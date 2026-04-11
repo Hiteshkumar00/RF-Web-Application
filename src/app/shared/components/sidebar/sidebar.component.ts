@@ -56,6 +56,12 @@ export class SidebarComponent implements OnInit {
                 routerLinkActiveOptions: { exact: true }
             },
             {
+                label: 'Expense',
+                icon: 'pi pi-fw pi-receipt',
+                routerLink: ['/expense'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
                 label: 'Agency',
                 icon: 'pi pi-fw pi-building',
                 items: [

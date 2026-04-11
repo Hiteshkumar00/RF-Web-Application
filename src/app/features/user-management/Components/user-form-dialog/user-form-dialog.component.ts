@@ -10,8 +10,8 @@ import { UpdateUserDto } from '../../models/user-update.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
-import { AccountApiService } from '../../../account-management/services/account-api.service';
 import { Subscription } from 'rxjs';
+import { DropdownService } from '../../../../shared/services/dropdown.service';
 
 @Component({
     selector: 'app-user-form-dialog',
@@ -24,7 +24,7 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
     private confirmationService = inject(ConfirmationService);
     private authApiService = inject(AuthApiService);
     private authService = inject(AuthService);
-    private accountApiService = inject(AccountApiService);
+    private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' = 'create';
@@ -64,7 +64,7 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
             // Match initial validation
             this.updateAccountValidator(this.form.get('role')?.value);
 
-            // Watch role changes to show/hide account field and update validation
+            // Watch role changes to hide account field and update validation
             this.formSub?.unsubscribe();
             this.formSub = this.form.get('role')?.valueChanges.subscribe((role) => {
                 this.updateAccountValidator(role);
@@ -85,12 +85,9 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
     }
 
     private loadAccountOptions(): void {
-        this.accountApiService.getAll().subscribe({
-            next: (accounts) => {
-                this.accountOptions = (accounts ?? []).map(a => ({
-                    label: a.profileName,
-                    value: a.id
-                }));
+        this.dropdownService.getAccountOptions().subscribe({
+            next: (options) => {
+                this.accountOptions = options;
             }
         });
     }

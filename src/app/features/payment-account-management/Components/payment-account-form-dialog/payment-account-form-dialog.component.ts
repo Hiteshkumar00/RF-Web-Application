@@ -7,7 +7,8 @@ import { PaymentAccountDto } from '../../models/payment-account.model';
 import { PaymentAccountLabels } from '../../constants/payment-account-labels.constants';
 import { CreatePaymentAccountDto } from '../../models/create-payment-account.dto';
 import { UpdatePaymentAccountDto } from '../../models/update-payment-account.dto';
-import { AccountPersonApiService } from '../../../account-person-management/Services/account-person-api.service';
+import { DropdownService } from '../../../../shared/services/dropdown.service';
+import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 
 @Component({
     selector: 'app-payment-account-form-dialog',
@@ -18,7 +19,7 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
     private paymentAccountApiService = inject(PaymentAccountApiService);
     private paymentAccountFormService = inject(PaymentAccountFormService);
     private confirmationService = inject(ConfirmationService);
-    private accountPersonApiService = inject(AccountPersonApiService);
+    private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' = 'create';
@@ -29,7 +30,7 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
 
     labels = PaymentAccountLabels;
     form!: FormGroup;
-    personOptions: { label: string, value: number }[] = [];
+    personOptions: DropdownOption[] = [];
     private isClosing = false;
 
     get dialogTitle(): string {
@@ -48,12 +49,9 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
     }
 
     private loadPersonOptions(): void {
-        this.accountPersonApiService.getAll().subscribe({
-            next: (persons) => {
-                this.personOptions = (persons ?? []).map(p => ({
-                    label: p.name,
-                    value: p.id
-                }));
+        this.dropdownService.getAccountPersonOptions().subscribe({
+            next: (options) => {
+                this.personOptions = options;
             }
         });
     }

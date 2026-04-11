@@ -3,12 +3,12 @@ import { FormGroup } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { AgencyPersonApiService } from '../../services/agency-person-api.service';
 import { AgencyPersonFormService } from '../../services/agency-person-form.service';
-import { AgencyApiService } from '../../services/agency-api.service';
 import { AgencyPersonDto } from '../../models/agency-person.model';
 import { AgencyPersonLabels } from '../../constants/agency-person-labels.constants';
 import { CreateAgencyPersonDto } from '../../models/agency-person-create.dto';
 import { UpdateAgencyPersonDto } from '../../models/agency-person-update.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
+import { DropdownService } from '../../../../shared/services/dropdown.service';
 
 @Component({
     selector: 'app-agency-person-form-dialog',
@@ -18,7 +18,7 @@ import { DropdownOption } from '../../../../shared/models/dropdown-option.model'
 export class AgencyPersonFormDialogComponent implements OnChanges, OnDestroy {
     private agencyPersonApiService = inject(AgencyPersonApiService);
     private agencyPersonFormService = inject(AgencyPersonFormService);
-    private agencyApiService = inject(AgencyApiService);
+    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
 
     @Input() visible = false;
@@ -60,12 +60,9 @@ export class AgencyPersonFormDialogComponent implements OnChanges, OnDestroy {
     ngOnDestroy(): void { }
 
     private loadAgencyOptions(): void {
-        this.agencyApiService.getAll().subscribe({
-            next: (agencies) => {
-                this.agencyOptions = (agencies ?? []).map(a => ({
-                    label: a.agencyName,
-                    value: a.id
-                }));
+        this.dropdownService.getAgencyOptions().subscribe({
+            next: (options) => {
+                this.agencyOptions = options;
             }
         });
     }
