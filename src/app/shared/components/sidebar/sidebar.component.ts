@@ -92,6 +92,24 @@ export class SidebarComponent implements OnInit {
                 routerLinkActiveOptions: { exact: true }
             },
             {
+                label: 'Contribution',
+                icon: 'pi pi-fw pi-money-bill',
+                items: [
+                    {
+                        label: 'Add',
+                        icon: 'pi pi-fw pi-plus',
+                        routerLink: ['/contribution/add'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Remove',
+                        icon: 'pi pi-fw pi-minus',
+                        routerLink: ['/contribution/remove'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
+            },
+            {
                 label: 'Account Person',
                 icon: 'pi pi-fw pi-users',
                 routerLink: ['/account-person-management'],
@@ -103,24 +121,6 @@ export class SidebarComponent implements OnInit {
                 routerLink: ['/business-year'],
                 routerLinkActiveOptions: { exact: true }
             },
-            {
-                label: 'Contribution',
-                icon: 'pi pi-fw pi-money-bill',
-                items: [
-                    {
-                        label: 'Add Contribution',
-                        icon: 'pi pi-fw pi-plus',
-                        routerLink: ['/contribution/add'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
-                        label: 'Remove Contribution',
-                        icon: 'pi pi-fw pi-minus',
-                        routerLink: ['/contribution/remove'],
-                        routerLinkActiveOptions: { exact: true }
-                    }
-                ]
-            }
         ];
 
         this.superAdminItems = [
