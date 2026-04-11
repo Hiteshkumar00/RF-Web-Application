@@ -1,0 +1,87 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }} List</h5>
+            <p-button icon="pi pi-plus" label="New Selling Bill" (onClick)="openCreateDialog()"
+                styleClass="p-button-sm shadow-sm" />
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
+            styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+            <ng-template pTemplate="header">
+                <tr class="text-uppercase small">
+                    <th pSortableColumn="id" style="min-width: 80px">ID <p-sortIcon field="id" /></th>
+                    <th style="min-width: 200px" class="text-center">Action</th>
+                    <th pSortableColumn="billNo" style="min-width: 150px">{{ labels.BILL_NO }} <p-sortIcon
+                            field="billNo" /></th>
+                    <th pSortableColumn="customerName" style="min-width: 300px">{{ labels.CUSTOMER_NAME }} <p-sortIcon
+                            field="customerName" /></th>
+                    <th pSortableColumn="phoneNo" style="min-width: 200px">{{ labels.PHONE_NO }} <p-sortIcon
+                            field="phoneNo" /></th>
+                    <th pSortableColumn="date" style="min-width: 150px">{{ labels.DATE }} <p-sortIcon field="date" />
+                    </th>
+                    <th pSortableColumn="totalAmount" style="min-width: 150px" class="text-end">{{ labels.TOTAL_AMOUNT
+                        }} <p-sortIcon field="totalAmount" /></th>
+                    <th pSortableColumn="discount" style="min-width: 150px" class="text-end">{{ labels.DISCOUNT }}
+                        <p-sortIcon field="discount" />
+                    </th>
+                    <th pSortableColumn="netAmount" style="min-width: 150px" class="text-end">{{ labels.NET_AMOUNT }}
+                        <p-sortIcon field="netAmount" />
+                    </th>
+                    <th pSortableColumn="paidAmount" style="min-width: 150px" class="text-end">{{ labels.PAID_AMOUNT }}
+                        <p-sortIcon field="paidAmount" />
+                    </th>
+                    <th pSortableColumn="remainingAmount" style="min-width: 150px" class="text-end">{{
+                        labels.REMAINING_AMOUNT }} <p-sortIcon field="remainingAmount" /></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bill>
+                <tr>
+                    <td class="fw-bold text-muted small">#{{ bill.id }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(bill)" pTooltip="View" tooltipPosition="top" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(bill)" pTooltip="Edit" tooltipPosition="top" />
+                            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                                (onClick)="confirmDelete(bill)" pTooltip="Delete" tooltipPosition="top" />
+                        </div>
+                    </td>
+                    <td><span class="fw-semibold">{{ bill.billNo }}</span></td>
+                    <td>
+                        <div class="fw-semibold">{{ bill.customerName }}</div>
+                    </td>
+                    <td>
+                        <div class="small text-muted"><i class="pi pi-phone small me-1"></i>{{ bill.phoneNo }}</div>
+                    </td>
+                    <td class="small">{{ bill.date | date:'dd-MMM-yyyy' }}</td>
+                    <td class="text-end small">{{ bill.totalAmount | currency:'INR' }}</td>
+                    <td class="text-end small text-warning">{{ bill.discount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
+                    <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-bold"
+                        [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
+                        {{ bill.remainingAmount | currency:'INR' }}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="11" class="text-center p-4">
+                        <div class="py-4">
+                            <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                            <span class="text-muted">No selling bills found.</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-selling-bill-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
+    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />

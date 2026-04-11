@@ -1,0 +1,273 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-2" *ngIf="form">
+        <div class="row g-4">
+            <!-- Customer Name -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="customerName" class="block mb-2 font-semibold">{{ labels.CUSTOMER_NAME }}</label>
+                    <p-iconField iconPosition="right">
+                        <input id="customerName" type="text" pInputText formControlName="customerName"
+                            class="w-100 p-inputtext-sm" />
+                        <p-inputIcon *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="labels.CUSTOMER_NAME + ' is required'" tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Bill No -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="billNo" class="block mb-2 font-semibold">{{ labels.BILL_NO }}</label>
+                    <p-iconField iconPosition="right">
+                        <input id="billNo" type="text" pInputText formControlName="billNo"
+                            class="w-100 p-inputtext-sm" />
+                        <p-inputIcon *ngIf="form.get('billNo')?.invalid && form.get('billNo')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.BILL_NO + ' is required'"
+                            tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Date -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="date" class="block mb-2 font-semibold">{{ labels.DATE }}</label>
+                    <p-iconField iconPosition="right">
+                        <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                            appendTo="body" styleClass="w-100" size="small" />
+                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
+                            class="pi pi-info-circle text-danger ps-2" [pTooltip]="labels.DATE + ' is required'"
+                            tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Phone No -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="phoneNo" class="block mb-2 font-semibold">{{ labels.PHONE_NO }}</label>
+                    <p-iconField iconPosition="right">
+                        <input id="phoneNo" type="text" pInputText formControlName="phoneNo"
+                            class="w-100 p-inputtext-sm" />
+                        <p-inputIcon *ngIf="form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.PHONE_NO + ' is required'"
+                            tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="email" class="block mb-2 font-semibold">{{ labels.EMAIL }} (Optional)</label>
+                    <p-iconField iconPosition="right">
+                        <input id="email" type="email" pInputText formControlName="email"
+                            class="w-100 p-inputtext-sm" />
+                        <p-inputIcon *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" pTooltip="Invalid email" tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-md-4">
+                <div class="field">
+                    <label for="address" class="block mb-2 font-semibold">{{ labels.ADDRESS }} (Optional)</label>
+                    <p-iconField iconPosition="right">
+                        <input id="address" type="text" pInputText formControlName="address"
+                            class="w-100 p-inputtext-sm" />
+                        <p-inputIcon *ngIf="form.get('address')?.invalid && form.get('address')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" pTooltip="Address is too long"
+                            tooltipPosition="top" />
+                    </p-iconField>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="col-12 mt-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <h6 class="mb-0 fw-bold text-primary"><i class="pi pi-shopping-cart me-2"></i>{{
+                        labels.ITEMS_SECTION }}</h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
+                        styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
+                </div>
+
+                <p-table [value]="items.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-light text-uppercase small bg-opacity-10">
+                            <th style="min-width: 250px">{{ labels.ITEM_NAME }}</th>
+                            <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
+                            <th style="min-width: 150px">{{ labels.PRICE }}</th>
+                            <th style="min-width: 200px">{{ labels.WARRENTY }} (Y/M/D)</th>
+                            <th style="min-width: 120px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th style="min-width: 50px" class="text-center" *ngIf="mode !== 'view'"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)" class="align-middle">
+                            <td>
+                                <p-iconField iconPosition="right">
+                                    <input pInputText formControlName="itemName" placeholder="Item Name"
+                                        class="w-100 p-inputtext-sm" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
+                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Required"
+                                        tooltipPosition="top" />
+                                </p-iconField>
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="quantity" [showButtons]="false" styleClass="w-100"
+                                    inputStyleClass="w-100 text-center" class="p-inputtext-sm" [min]="1" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm"
+                                    [min]="0.01" />
+                            </td>
+                            <td [formGroup]="$any(control.get('warrenty'))">
+                                <div class="d-flex gap-1">
+                                    <p-inputNumber formControlName="year" placeholder="Y" [min]="0" styleClass="w-100"
+                                        inputStyleClass="w-100 text-center" class="p-inputtext-sm" suffix="y" />
+                                    <p-inputNumber formControlName="month" placeholder="M" [min]="0" [max]="11"
+                                        styleClass="w-100" inputStyleClass="w-100 text-center" class="p-inputtext-sm"
+                                        suffix="m" />
+                                    <p-inputNumber formControlName="day" placeholder="D" [min]="0" [max]="31"
+                                        styleClass="w-100" inputStyleClass="w-100 text-center" class="p-inputtext-sm"
+                                        suffix="d" />
+                                </div>
+                            </td>
+                            <td class="text-end fw-bold">
+                                {{ (control.get('price')?.value * control.get('quantity')?.value) | currency:'INR' }}
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    (onClick)="removeItem(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 6 : 5"
+                                class="text-center p-4 text-muted small italic">
+                                No items added. Please add at least one item.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="col-md-7">
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
+                    <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>{{ labels.PAYMENTS_SECTION }}
+                    </h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Payment"
+                        styleClass="p-button-sm p-button-outlined p-button-success" (onClick)="addPayment()" />
+                </div>
+
+                <p-table [value]="payments.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-light text-uppercase small">
+                            <th style="min-width: 250px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 150px">{{ labels.AMOUNT }}</th>
+                            <th style="min-width: 50px" class="text-center" *ngIf="mode !== 'view'"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)" class="align-middle">
+                            <td>
+                                <p-iconField iconPosition="right">
+                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                        optionLabel="label" optionValue="value" placeholder="Select Account"
+                                        styleClass="w-100 text-start" appendTo="body" size="small" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched"
+                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
+                                        tooltipPosition="top" />
+                                </p-iconField>
+                            </td>
+                            <td>
+                                <p-iconField iconPosition="right">
+                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR"
+                                        locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
+                                        class="p-inputtext-sm" [min]="0.01" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
+                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Min 0.01"
+                                        tooltipPosition="top" />
+                                </p-iconField>
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    (onClick)="removePayment(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 3 : 2"
+                                class="text-center p-3 text-muted small italic">
+                                No payments added.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div class="col-md-5">
+                <div class="card border-0 p-4 mt-4 shadow-sm rounded-3 bg-light bg-opacity-10">
+                    <h6 class="fw-bold mb-4 border-bottom pb-2">Payment Summary</h6>
+ 
+                    <div class="d-flex justify-content-between mb-2 align-items-center">
+                        <span class="text-muted">Subtotal:</span>
+                        <span class="fw-semibold">{{ totalAmount | currency:'INR' }}</span>
+                    </div>
+ 
+                    <div class="d-flex justify-content-between mb-3 align-items-center">
+                        <span class="text-muted">{{ labels.DISCOUNT }}:</span>
+                        <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
+                            styleClass="text-end" inputStyleClass="text-end border-0 bg-white shadow-sm rounded p-1"
+                            class="p-inputtext-sm w-50" [min]="0" [max]="totalAmount" />
+                    </div>
+ 
+                    <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
+                        <span class="fw-semibold">{{ labels.NET_AMOUNT }}:</span>
+                        <span class="fw-bold">{{ finalAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2 align-items-center text-success">
+                        <span class="small">{{ labels.PAID_AMOUNT }}:</span>
+                        <span class="fw-semibold small">{{ paidAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between pt-2 border-top mt-1" [ngClass]="{'text-primary': remainingAmount > 0, 'text-success': remainingAmount === 0}">
+                        <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
+                        <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top" *ngIf="form">
+            <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
+            <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
+                [disabled]="form.invalid" severity="primary" class="shadow-sm" />
+        </div>
+    </ng-template>
+
+</p-dialog>
