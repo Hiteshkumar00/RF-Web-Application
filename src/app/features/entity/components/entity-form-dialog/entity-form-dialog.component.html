@@ -16,31 +16,27 @@
             <div class="row g-4">
                 <div class="col-12 col-md-6">
                     <p-floatlabel variant="on">
-                        <input id="entityName" type="text" pInputText formControlName="entityName" class="w-100" />
+                        <p-iconField iconPosition="right">
+                            <input id="entityName" type="text" pInputText formControlName="entityName" class="w-100" />
+                            <p-inputIcon *ngIf="form.get('entityName')?.invalid && form.get('entityName')?.touched" 
+                                class="pi pi-info-circle text-danger pe-2" 
+                                [pTooltip]="form.get('entityName')?.hasError('required') ? labels.ENTITY_NAME_REQUIRED : labels.ENTITY_NAME_MAX" 
+                                tooltipPosition="top" />
+                        </p-iconField>
                         <label for="entityName">{{ labels.ENTITY_NAME }}</label>
                     </p-floatlabel>
-                    @if (form.get('entityName')?.invalid && form.get('entityName')?.touched) {
-                    @if (form.get('entityName')?.hasError('required')) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.ENTITY_NAME_REQUIRED"
-                        class="mt-1 d-block" />
-                    } @else if (form.get('entityName')?.hasError('maxlength')) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.ENTITY_NAME_MAX"
-                        class="mt-1 d-block" />
-                    }
-                    }
                 </div>
 
                 <div class="col-12 col-md-6">
                     <p-floatlabel variant="on">
-                        <input id="displayName" type="text" pInputText formControlName="displayName" class="w-100" />
+                        <p-iconField iconPosition="right">
+                            <input id="displayName" type="text" pInputText formControlName="displayName" class="w-100" />
+                            <p-inputIcon *ngIf="form.get('displayName')?.invalid && form.get('displayName')?.touched" 
+                                class="pi pi-info-circle text-danger pe-2" 
+                                [pTooltip]="labels.DISPLAY_NAME_MAX" tooltipPosition="top" />
+                        </p-iconField>
                         <label for="displayName">{{ labels.DISPLAY_NAME }}</label>
                     </p-floatlabel>
-                    @if (form.get('displayName')?.invalid && form.get('displayName')?.touched) {
-                    @if (form.get('displayName')?.hasError('maxlength')) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.DISPLAY_NAME_MAX"
-                        class="mt-1 d-block" />
-                    }
-                    }
                 </div>
             </div>
 

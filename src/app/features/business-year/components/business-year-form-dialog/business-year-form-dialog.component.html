@@ -15,28 +15,28 @@
             <!-- Year Name -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="yearName" type="text" pInputText formControlName="yearName" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="yearName" type="text" pInputText formControlName="yearName" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('yearName')?.invalid && form.get('yearName')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.YEAR_NAME_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="yearName">{{ labels.YEAR_NAME }}</label>
                 </p-floatlabel>
-                @if (form.get('yearName')?.invalid && form.get('yearName')?.touched) {
-                    @if (form.get('yearName')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.YEAR_NAME_REQUIRED" class="mt-1 d-block" />
-                    }
-                }
             </div>
 
             <!-- Date -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <p-datepicker id="date" formControlName="date" [fluid]="true" [showIcon]="true" 
-                        appendTo="body" placeholder="Select Date" dateFormat="dd/mm/yy" />
+                    <p-iconField iconPosition="right">
+                        <p-datepicker id="date" formControlName="date" [fluid]="true" [showIcon]="true" appendTo="body"
+                            placeholder="Select Date" dateFormat="dd/mm/yy" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
+                            class="pi pi-info-circle text-danger ps-2" [pTooltip]="labels.DATE_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="date">{{ labels.DATE }}</label>
                 </p-floatlabel>
-                @if (form.get('date')?.invalid && form.get('date')?.touched) {
-                    @if (form.get('date')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.DATE_REQUIRED" class="mt-1 d-block" />
-                    }
-                }
             </div>
         </div>
 

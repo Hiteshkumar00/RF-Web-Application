@@ -16,65 +16,70 @@
             <!-- Agency -->
             <div class="col-12">
                 <p-floatlabel>
-                    <p-select id="agencyId" [options]="agencyOptions" formControlName="agencyId"
-                        optionLabel="label" optionValue="value" [placeholder]="labels.AGENCY"
-                        class="w-100" appendTo="body" />
+                    <p-iconField iconPosition="right">
+                        <p-select id="agencyId" [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
+                            optionValue="value" [placeholder]="labels.AGENCY" class="w-100" appendTo="body" />
+                        <p-inputIcon *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched"
+                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.AGENCY_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                 </p-floatlabel>
-                @if (form.get('agencyId')?.invalid && form.get('agencyId')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.AGENCY_REQUIRED" class="mt-1 d-block" />
-                }
             </div>
 
             <!-- Name -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="name" type="text" pInputText formControlName="name" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="name" type="text" pInputText formControlName="name" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="form.get('name')?.hasError('required') ? labels.NAME_REQUIRED : labels.NAME_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="name">{{ labels.NAME }}</label>
                 </p-floatlabel>
-                @if (form.get('name')?.invalid && form.get('name')?.touched) {
-                    @if (form.get('name')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.NAME_REQUIRED" class="mt-1 d-block" />
-                    } @else if (form.get('name')?.hasError('maxlength')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.NAME_MAX" class="mt-1 d-block" />
-                    }
-                }
             </div>
 
             <!-- Phone No -->
             <div class="col-6">
                 <p-floatlabel variant="on">
-                    <input id="phoneNo" type="tel" pInputText formControlName="phoneNo" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="phoneNo" type="tel" pInputText formControlName="phoneNo" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.PHONE_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="phoneNo">{{ labels.PHONE_NO }}</label>
                 </p-floatlabel>
-                @if (form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.PHONE_MAX" class="mt-1 d-block" />
-                }
             </div>
 
             <!-- Email -->
             <div class="col-6">
                 <p-floatlabel variant="on">
-                    <input id="email" type="email" pInputText formControlName="email" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="email" type="email" pInputText formControlName="email" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="form.get('email')?.hasError('email') ? labels.EMAIL_INVALID : labels.EMAIL_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="email">{{ labels.EMAIL }}</label>
                 </p-floatlabel>
-                @if (form.get('email')?.invalid && form.get('email')?.touched) {
-                    @if (form.get('email')?.hasError('email')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.EMAIL_INVALID" class="mt-1 d-block" />
-                    } @else if (form.get('email')?.hasError('maxlength')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.EMAIL_MAX" class="mt-1 d-block" />
-                    }
-                }
             </div>
 
             <!-- Occupation -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="personOccupation" type="text" pInputText formControlName="personOccupation" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="personOccupation" type="text" pInputText formControlName="personOccupation"
+                            class="w-100" />
+                        <p-inputIcon
+                            *ngIf="form.get('personOccupation')?.invalid && form.get('personOccupation')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.OCCUPATION_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="personOccupation">{{ labels.OCCUPATION }}</label>
                 </p-floatlabel>
-                @if (form.get('personOccupation')?.invalid && form.get('personOccupation')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.OCCUPATION_MAX" class="mt-1 d-block" />
-                }
             </div>
 
             <!-- Address -->
@@ -94,7 +99,8 @@
         <div class="d-flex gap-2 justify-content-end">
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button"
+                (onClick)="onSubmit()" />
         </div>
     </ng-template>
 

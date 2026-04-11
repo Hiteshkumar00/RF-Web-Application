@@ -25,11 +25,13 @@
             <div class="col-md-6">
                 <div class="field">
                     <label for="date" class="block mb-2 font-semibold">Date</label>
-                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
-                        styleClass="w-100" appendTo="body" size="small" />
-                    <small class="p-error block mt-1" *ngIf="form.get('date')?.invalid && form.get('date')?.touched">
-                        Date is required.
-                    </small>
+                    <p-iconField iconPosition="right">
+                        <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                            styleClass="w-100" appendTo="body" size="small" />
+                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
+                            class="pi pi-info-circle text-danger ps-2" pTooltip="Date is required"
+                            tooltipPosition="top" />
+                    </p-iconField>
                 </div>
             </div>
 
@@ -37,11 +39,13 @@
             <div class="col-12">
                 <div class="field">
                     <label for="description" class="block mb-2 font-semibold">Description (Optional)</label>
-                    <textarea id="description" pInputTextarea formControlName="description" rows="2"
-                        class="w-100 p-inputtext-sm" style="resize: none"></textarea>
-                    <small class="p-error block mt-1" *ngIf="form.get('description')?.hasError('maxlength')">
-                        Description cannot exceed 500 characters.
-                    </small>
+                    <p-iconField iconPosition="right">
+                        <textarea id="description" pInputTextarea formControlName="description" rows="2"
+                            class="w-100 p-inputtext-sm" style="resize: none"></textarea>
+                        <p-inputIcon *ngIf="form.get('description')?.hasError('maxlength')"
+                            class="pi pi-info-circle text-danger pe-2"
+                            pTooltip="Description cannot exceed 500 characters" tooltipPosition="top" />
+                    </p-iconField>
                 </div>
             </div>
 
@@ -65,22 +69,25 @@
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)">
                             <td>
-                                <p-select [options]="accountOptions" formControlName="paymentAccountId"
-                                    optionLabel="label" optionValue="value" placeholder="Select Account"
-                                    styleClass="w-100 text-start" appendTo="body" size="small" />
-                                @if (control.get('paymentAccountId')?.invalid &&
-                                control.get('paymentAccountId')?.touched) {
-                                <p-message severity="error" size="small" variant="simple" text="Required"
-                                    class="mt-1 d-block" />
-                                }
+                                <p-iconField iconPosition="right">
+                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                        optionLabel="label" optionValue="value" placeholder="Select Account"
+                                        styleClass="w-100 text-start" appendTo="body" size="small" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched"
+                                        class="pi pi-info-circle text-danger pe-8" pTooltip="Required"
+                                        tooltipPosition="top" />
+                                </p-iconField>
                             </td>
                             <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" placeholder="0.00" size="small" />
-                                @if (control.get('amount')?.invalid && control.get('amount')?.touched) {
-                                <p-message severity="error" size="small" variant="simple" text="Min 0.01"
-                                    class="mt-1 d-block" />
-                                }
+                                <p-iconField iconPosition="right">
+                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR"
+                                        locale="en-IN" styleClass="w-100" placeholder="0.00" size="small" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
+                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Min 0.01"
+                                        tooltipPosition="top" />
+                                </p-iconField>
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"

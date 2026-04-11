@@ -16,16 +16,15 @@
             <!-- First Name -->
             <div class="col-6">
                 <p-floatlabel variant="on">
-                    <input id="firstName" type="text" pInputText formControlName="firstName" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="firstName" type="text" pInputText formControlName="firstName" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="form.get('firstName')?.hasError('required') ? labels.FIRST_NAME_REQUIRED : labels.FIRST_NAME_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="firstName">{{ labels.FIRST_NAME }}</label>
                 </p-floatlabel>
-                @if (form.get('firstName')?.invalid && form.get('firstName')?.touched) {
-                    @if (form.get('firstName')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.FIRST_NAME_REQUIRED" class="mt-1 d-block" />
-                    } @else if (form.get('firstName')?.hasError('maxlength')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.FIRST_NAME_MAX" class="mt-1 d-block" />
-                    }
-                }
             </div>
 
             <!-- Middle Name -->
@@ -39,16 +38,15 @@
             <!-- Surname -->
             <div class="col-6">
                 <p-floatlabel variant="on">
-                    <input id="surname" type="text" pInputText formControlName="surname" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="surname" type="text" pInputText formControlName="surname" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('surname')?.invalid && form.get('surname')?.touched"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="form.get('surname')?.hasError('required') ? labels.SURNAME_REQUIRED : labels.SURNAME_MAX"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="surname">{{ labels.SURNAME }}</label>
                 </p-floatlabel>
-                @if (form.get('surname')?.invalid && form.get('surname')?.touched) {
-                    @if (form.get('surname')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.SURNAME_REQUIRED" class="mt-1 d-block" />
-                    } @else if (form.get('surname')?.hasError('maxlength')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.SURNAME_MAX" class="mt-1 d-block" />
-                    }
-                }
             </div>
 
             <!-- Phone No -->
@@ -62,37 +60,42 @@
             <!-- Email -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="email" type="email" pInputText formControlName="email" class="w-100" />
+                    <p-iconField iconPosition="right">
+                        <input id="email" type="email" pInputText formControlName="email" class="w-100" />
+                        <p-inputIcon *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.EMAIL_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="email">{{ labels.EMAIL }}</label>
                 </p-floatlabel>
-                @if (form.get('email')?.invalid && form.get('email')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.EMAIL_REQUIRED" class="mt-1 d-block" />
-                }
             </div>
 
             <!-- Role -->
             <div class="col-12">
                 <p-floatlabel>
-                    <p-select id="role" [options]="roleOptions" formControlName="role"
-                        optionLabel="label" optionValue="value" [placeholder]="labels.ROLE"
-                        class="w-100" appendTo="body" />
+                    <p-iconField iconPosition="right">
+                        <p-select id="role" [options]="roleOptions" formControlName="role" optionLabel="label"
+                            optionValue="value" [placeholder]="labels.ROLE" class="w-100" appendTo="body" />
+                        <p-inputIcon *ngIf="form.get('role')?.invalid && form.get('role')?.touched"
+                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ROLE_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                 </p-floatlabel>
-                @if (form.get('role')?.invalid && form.get('role')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.ROLE_REQUIRED" class="mt-1 d-block" />
-                }
             </div>
 
             <!-- Account (shown for Admin/SuperAdmin roles) -->
             @if (showAccountField) {
             <div class="col-12">
                 <p-floatlabel>
-                    <p-select id="accountId" [options]="accountOptions" formControlName="accountId"
-                        optionLabel="label" optionValue="value" [placeholder]="labels.ACCOUNT"
-                        [showClear]="true" class="w-100" appendTo="body" />
+                    <p-iconField iconPosition="right">
+                        <p-select id="accountId" [options]="accountOptions" formControlName="accountId"
+                            optionLabel="label" optionValue="value" [placeholder]="labels.ACCOUNT" [showClear]="true"
+                            class="w-100" appendTo="body" />
+                        <p-inputIcon *ngIf="form.get('accountId')?.invalid && form.get('accountId')?.touched"
+                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ACCOUNT_REQUIRED"
+                            tooltipPosition="top" />
+                    </p-iconField>
                 </p-floatlabel>
-                @if (form.get('accountId')?.invalid && form.get('accountId')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.ACCOUNT_REQUIRED" class="mt-1 d-block" />
-                }
             </div>
             }
 
@@ -100,17 +103,17 @@
             @if (mode === 'create') {
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <p-password inputId="password" formControlName="password" [toggleMask]="true" [feedback]="false"
-                        styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
+                    <p-iconField iconPosition="right">
+                        <p-password inputId="password" formControlName="password" [toggleMask]="true" [feedback]="false"
+                            styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
+                        <p-inputIcon
+                            *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)"
+                            class="pi pi-info-circle text-danger pe-2"
+                            [pTooltip]="form.get('password')?.hasError('required') ? labels.PASSWORD_REQUIRED : labels.PASSWORD_MIN"
+                            tooltipPosition="top" />
+                    </p-iconField>
                     <label for="password">{{ labels.PASSWORD }}</label>
                 </p-floatlabel>
-                @if (form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)) {
-                    @if (form.get('password')?.hasError('required')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_REQUIRED" class="mt-1 d-block" />
-                    } @else if (form.get('password')?.hasError('minlength')) {
-                        <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_MIN" class="mt-1 d-block" />
-                    }
-                }
             </div>
             }
 
