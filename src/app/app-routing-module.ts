@@ -71,6 +71,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/agency/agency-module').then(m => m.AgencyModule)
   },
   {
+    path: 'contribution',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/contribution/contribution.module').then(m => m.ContributionModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

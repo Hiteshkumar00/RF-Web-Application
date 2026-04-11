@@ -102,6 +102,24 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-calendar-plus',
                 routerLink: ['/business-year'],
                 routerLinkActiveOptions: { exact: true }
+            },
+            {
+                label: 'Contribution',
+                icon: 'pi pi-fw pi-money-bill',
+                items: [
+                    {
+                        label: 'Add Contribution',
+                        icon: 'pi pi-fw pi-plus',
+                        routerLink: ['/contribution/add'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Remove Contribution',
+                        icon: 'pi pi-fw pi-minus',
+                        routerLink: ['/contribution/remove'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
             }
         ];
 

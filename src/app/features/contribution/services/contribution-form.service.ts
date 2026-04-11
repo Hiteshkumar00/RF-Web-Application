@@ -1,0 +1,55 @@
+import { Injectable, inject } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AddContributionDto, AddContributionPaymentDto } from '../models/add-contribution.model';
+import { RemoveContributionDto, RemoveContributionPaymentDto } from '../models/remove-contribution.model';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ContributionFormService {
+    private fb = inject(FormBuilder);
+
+    createForm(): FormGroup {
+        return this.fb.group({
+            id: [0],
+            accountPersonId: [null],
+            description: [null, [Validators.maxLength(500)]],
+            date: [new Date(), [Validators.required]],
+            payments: this.fb.array([], [Validators.required, Validators.minLength(1)])
+        });
+    }
+
+    createPaymentForm(payment?: any): FormGroup {
+        return this.fb.group({
+            id: [payment?.id || 0],
+            amount: [payment?.amount || null, [Validators.required, Validators.min(0.01)]],
+            paymentAccountId: [payment?.paymentAccountId || null, [Validators.required]]
+        });
+    }
+
+    patchForm(form: FormGroup, data: AddContributionDto | RemoveContributionDto): void {
+        form.patchValue({
+            id: data.id,
+            accountPersonId: data.accountPersonId,
+            description: data.description,
+            date: new Date(data.date)
+        });
+
+        const paymentsArray = form.get('payments') as FormArray;
+        paymentsArray.clear();
+        data.payments.forEach(p => {
+            paymentsArray.push(this.createPaymentForm(p));
+        });
+    }
+
+    addPayment(form: FormGroup): void {
+        const paymentsArray = form.get('payments') as FormArray;
+        paymentsArray.push(this.createPaymentForm());
+    }
+
+    removePayment(form: FormGroup, index: number): void {
+        const paymentsArray = form.get('payments') as FormArray;
+        paymentsArray.removeAt(index);
+        paymentsArray.markAsDirty();
+    }
+}

@@ -16,7 +16,7 @@
             <!-- Expense Type -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="expenceType" type="text" pInputText formControlName="expenceType" class="w-100" />
+                    <input id="expenceType" type="text" pInputText formControlName="expenceType" class="w-100" size="small" />
                     <label for="expenceType">{{ labels.EXPENSE_TYPE }}</label>
                 </p-floatlabel>
                 @if (form.get('expenceType')?.invalid && form.get('expenceType')?.touched) {
@@ -28,7 +28,7 @@
             <div class="col-12">
                 <p-floatlabel variant="on">
                     <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy" 
-                        class="w-100" appendTo="body" />
+                        class="w-100" appendTo="body" size="small" />
                     <label for="date">{{ labels.DATE }}</label>
                 </p-floatlabel>
                 @if (form.get('date')?.invalid && form.get('date')?.touched) {
@@ -38,47 +38,51 @@
 
             <div class="col-12 mt-4">
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-                    <h6 class="mb-0 fw-bold">{{ labels.PAYMENTS_SECTION }}</h6>
+                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAYMENTS_SECTION }}</h6>
                     <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" [label]="labels.ADD_PAYMENT" 
                         size="small" [text]="true" (onClick)="addPayment()" />
                 </div>
 
-                <div formArrayName="payments" class="d-flex flex-column gap-3">
-                    @for (item of payments.controls; track item) {
-                        <div [formGroupName]="$index" class="p-4 bg-surface-50 border-round-xl border-1 surface-border shadow-sm animate-fadein">
-                            <div class="row g-3 align-items-center">
-                                <!-- Account -->
-                                <div class="col-6">
-                                    <p-floatlabel>
-                                        <p-select [options]="accountOptions" formControlName="paymentAccountId"
-                                            optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
-                                            class="w-100" appendTo="body" />
-                                    </p-floatlabel>
-                                    @if (item.get('paymentAccountId')?.invalid && item.get('paymentAccountId')?.touched) {
-                                        <p-message severity="error" size="small" variant="simple" [text]="labels.ACCOUNT_REQUIRED" class="mt-1 d-block" />
-                                    }
-                                </div>
-                                
-                                <!-- Amount -->
-                                <div class="col-5">
-                                    <p-floatlabel variant="on">
-                                        <p-inputnumber formControlName="amount" mode="currency" currency="INR" locale="en-IN" class="w-100" />
-                                        <label>{{ labels.AMOUNT }}</label>
-                                    </p-floatlabel>
-                                    @if (item.get('amount')?.invalid && item.get('amount')?.touched) {
-                                        <p-message severity="error" size="small" variant="simple" [text]="labels.AMOUNT_REQUIRED" class="mt-1 d-block" />
-                                    }
-                                </div>
+                <p-table [value]="payments.controls" styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-light">
+                            <th style="width: 50%">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="width: 40%">{{ labels.AMOUNT }}</th>
+                            <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)">
+                            <td>
+                                <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                                @if (control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched) {
+                                    <p-message severity="error" size="small" variant="simple" [text]="labels.ACCOUNT_REQUIRED" class="mt-1 d-block" />
+                                }
+                            </td>
+                            <td>
+                                <p-inputnumber formControlName="amount" mode="currency" currency="INR" locale="en-IN" 
+                                    styleClass="w-100" [placeholder]="labels.AMOUNT" size="small" />
+                                @if (control.get('amount')?.invalid && control.get('amount')?.touched) {
+                                    <p-message severity="error" size="small" variant="simple" [text]="labels.AMOUNT_REQUIRED" class="mt-1 d-block" />
+                                }
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" 
+                                    (onClick)="removePayment(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-4 text-muted small">
+                                No payments added.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
 
-                                <!-- Remove button -->
-                                <div class="col-1 ps-0 text-end" *ngIf="mode !== 'view'">
-                                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" 
-                                        (onClick)="removePayment($index)" />
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
                 @if (payments.invalid && payments.touched && payments.length === 0) {
                     <p-message severity="error" size="small" variant="simple" text="At least one payment source is required" class="mt-2 d-block" />
                 }

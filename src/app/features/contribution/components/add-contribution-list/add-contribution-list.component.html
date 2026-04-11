@@ -1,0 +1,65 @@
+<div class="container-fluid py-4">
+
+    <!-- Header Section -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-8">
+            <h4 class="mb-1 fw-bold">{{ title }}</h4>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <p-button label="Add Contribution" icon="pi pi-plus" (onClick)="openCreateDialog()" />
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card border-0 shadow-sm">
+        <p-table [value]="contributions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} contributions"
+            [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" styleClass="p-datatable-striped p-datatable-sm"
+            [tableStyle]="{'min-width': '60rem'}">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id" style="width: 5rem;">ID <p-sortIcon field="id" /></th>
+                    <th style="width: 12rem; text-align: center;">Actions</th>
+                    <th pSortableColumn="accountPersonName">Person Name <p-sortIcon field="accountPersonName" /></th>
+                    <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
+                    <th pSortableColumn="totalAmount">Total Amount <p-sortIcon field="totalAmount" /></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                pTooltip="View" (onClick)="openViewDialog(item)" />
+                            <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small"
+                                pTooltip="Edit" (onClick)="openEditDialog(item)" />
+                            <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small"
+                                pTooltip="Delete" (onClick)="confirmDelete(item)" />
+                        </div>
+                    </td>
+                    <td>{{ item.accountPersonName || '-' }}</td>
+                    <td>{{ item.date | date: 'dd-MMM-yyyy' }}</td>
+                    <td class="fw-bold">{{ item.totalAmount | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center py-5 opacity-50">
+                        <i class="pi pi-info-circle me-2" style="font-size: 1.5rem;"></i>
+                        No contributions found.
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+
+    <!-- Form Dialog -->
+    <app-add-contribution-form-dialog *ngIf="showFormDialog" [visible]="showFormDialog" [mode]="formDialogMode"
+        [id]="selectedId" (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
+
+</div>
