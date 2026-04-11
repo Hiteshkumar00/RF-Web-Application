@@ -46,4 +46,15 @@ export class DropdownService {
             })))
         );
     }
+
+    getOptionsByEntityName(entityName: string): Observable<DropdownOption[]> {
+        return this.http.get<any>(`${this.apiUrl}/Entity/GetByEntityName`, {
+            params: { entityName }
+        }).pipe(
+            map(data => (data?.relatedEntities ?? []).map((re: any) => ({
+                label: re.relatedDisplayName ? `${re.relatedEntityName} (${re.relatedDisplayName})` : re.relatedEntityName,
+                value: re.relatedEntityName
+            })))
+        );
+    }
 }

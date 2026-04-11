@@ -7,8 +7,8 @@ import { AccountDto } from '../../models/account.model';
 import { AccountLabels } from '../../constants/account-labels.constants';
 import { CreateAccountDto } from '../../models/account-create.dto';
 import { UpdateAccountDto } from '../../models/account-update.dto';
-import { EntityApiService } from '../../../entity/services/entity-api.service';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
+import { DropdownService } from '../../../../shared/services/dropdown.service';
 
 @Component({
     selector: 'app-account-form-dialog',
@@ -19,7 +19,7 @@ export class AccountFormDialogComponent implements OnChanges {
     private accountApiService = inject(AccountApiService);
     private accountFormService = inject(AccountFormService);
     private confirmationService = inject(ConfirmationService);
-    private entityApiService = inject(EntityApiService);
+    private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' = 'create';
@@ -49,14 +49,9 @@ export class AccountFormDialogComponent implements OnChanges {
     }
 
     private loadCurrencyOptions(): void {
-        this.entityApiService.getByEntityName('Currency').subscribe({
-            next: (entity) => {
-                if (entity.relatedEntities) {
-                    this.currencyOptions = entity.relatedEntities.map(re => ({
-                        label: `${re.relatedEntityName} (${re.relatedDisplayName})`,
-                        value: re.relatedEntityName
-                    }));
-                }
+        this.dropdownService.getOptionsByEntityName('Currency').subscribe({
+            next: (options) => {
+                this.currencyOptions = options;
             }
         });
     }
