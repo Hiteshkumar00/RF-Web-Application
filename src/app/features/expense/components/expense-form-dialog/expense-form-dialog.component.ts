@@ -13,14 +13,7 @@ import { DropdownService } from '../../../../shared/services/dropdown.service';
 @Component({
     selector: 'app-expense-form-dialog',
     standalone: false,
-    templateUrl: './expense-form-dialog.component.html',
-    styles: [`
-        .payment-row {
-            background-color: var(--p-surface-50);
-            border-radius: 8px;
-            border: 1px solid var(--p-surface-200);
-        }
-    `]
+    templateUrl: './expense-form-dialog.component.html'
 })
 export class ExpenseFormDialogComponent implements OnChanges {
     private expenseApiService = inject(ExpenseApiService);
@@ -85,11 +78,11 @@ export class ExpenseFormDialogComponent implements OnChanges {
     }
 
     addPayment(): void {
-        this.payments.push(this.expenseFormService.createPaymentForm());
+        this.expenseFormService.addPayment(this.form);
     }
 
     removePayment(index: number): void {
-        this.payments.removeAt(index);
+        this.expenseFormService.removePayment(this.form, index);
     }
 
     onSubmit(): void {

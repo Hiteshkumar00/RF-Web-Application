@@ -36,4 +36,15 @@ export class ExpenseFormService {
             paymentsArray.push(this.createPaymentForm(p));
         });
     }
+
+    addPayment(form: FormGroup): void {
+        const paymentsArray = form.get('payments') as FormArray;
+        paymentsArray.push(this.createPaymentForm());
+    }
+
+    removePayment(form: FormGroup, index: number): void {
+        const paymentsArray = form.get('payments') as FormArray;
+        paymentsArray.removeAt(index);
+        paymentsArray.markAsDirty();
+    }
 }

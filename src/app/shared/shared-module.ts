@@ -36,6 +36,9 @@ import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ChartModule } from 'primeng/chart';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -71,8 +74,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TagModule,
     DatePickerModule,
     ChartModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    IconFieldModule,
+    InputIconModule,
+    InputNumberModule
   ],
   exports: [
     CommonModule,
@@ -108,7 +113,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TagModule,
     DatePickerModule,
     ChartModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    IconFieldModule,
+    InputIconModule,
+    InputNumberModule
   ],
   providers: []
 })

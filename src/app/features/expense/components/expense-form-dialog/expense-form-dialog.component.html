@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '600px' }" [draggable]="false" [resizable]="false"
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '650px' }" [draggable]="false" [resizable]="false"
     [closable]="false" [closeOnEscape]="false">
 
     <ng-template pTemplate="header">
@@ -44,11 +44,11 @@
                 </div>
 
                 <div formArrayName="payments" class="d-flex flex-column gap-3">
-                    @for (item of payments.controls; track $index) {
-                        <div [formGroupName]="$index" class="p-3 payment-row shadow-sm border animate-fade-in">
+                    @for (item of payments.controls; track item) {
+                        <div [formGroupName]="$index" class="p-4 bg-surface-50 border-round-xl border-1 surface-border shadow-sm animate-fadein">
                             <div class="row g-3 align-items-center">
                                 <!-- Account -->
-                                <div class="col-md-7">
+                                <div class="col-6">
                                     <p-floatlabel>
                                         <p-select [options]="accountOptions" formControlName="paymentAccountId"
                                             optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
@@ -60,9 +60,9 @@
                                 </div>
                                 
                                 <!-- Amount -->
-                                <div class="col-md-4 col-10">
+                                <div class="col-5">
                                     <p-floatlabel variant="on">
-                                        <input type="number" pInputText formControlName="amount" class="w-100" />
+                                        <p-inputnumber formControlName="amount" mode="currency" currency="INR" locale="en-IN" class="w-100" />
                                         <label>{{ labels.AMOUNT }}</label>
                                     </p-floatlabel>
                                     @if (item.get('amount')?.invalid && item.get('amount')?.touched) {
@@ -71,7 +71,7 @@
                                 </div>
 
                                 <!-- Remove button -->
-                                <div class="col-md-1 col-2 text-end" *ngIf="mode !== 'view' && payments.length > 1">
+                                <div class="col-1 ps-0 text-end" *ngIf="mode !== 'view'">
                                     <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" 
                                         (onClick)="removePayment($index)" />
                                 </div>
@@ -89,7 +89,7 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 justify-content-end pt-3">
+        <div class="d-flex gap-2 justify-content-end pt-3" *ngIf="form">
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
             <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button" 
