@@ -11,7 +11,7 @@ export class SellingBillFormService {
     createForm(): FormGroup {
         return this.fb.group({
             id: [0],
-            billNo: [null, [Validators.required, Validators.maxLength(100)]],
+            billNo: [{ value: null, disabled: true }],
             customerName: [null, [Validators.required, Validators.maxLength(250)]],
             email: [null, [Validators.email, Validators.maxLength(250)]],
             phoneNo: [null, [Validators.required, Validators.maxLength(20)]],

@@ -25,16 +25,15 @@
                 </div>
             </div>
 
+
+
             <!-- Bill No -->
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="mode !== 'create'">
                 <div class="field">
                     <label for="billNo" class="block mb-2 font-semibold">{{ labels.BILL_NO }}</label>
                     <p-iconField iconPosition="right">
                         <input id="billNo" type="text" pInputText formControlName="billNo"
-                            class="w-100 p-inputtext-sm" />
-                        <p-inputIcon *ngIf="form.get('billNo')?.invalid && form.get('billNo')?.touched"
-                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.BILL_NO + ' is required'"
-                            tooltipPosition="top" />
+                            class="w-100 p-inputtext-sm text-muted bg-light" placeholder="Auto Generated" />
                     </p-iconField>
                 </div>
             </div>
