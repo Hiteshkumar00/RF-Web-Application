@@ -5,12 +5,12 @@
         <div>
             <h4 class="mb-0 fw-bold">{{ labels.PERFORMANCE_TRACKER }}</h4>
         </div>
-        <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary"
-            (onClick)="loadData()" [pTooltip]="labels.RELOAD" [tooltipPosition]="'right'" />
+        <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" severity="secondary" (onClick)="loadData()"
+            [pTooltip]="labels.RELOAD" [tooltipPosition]="'left'" />
     </div>
 
     <div *ngIf="!loading" class="row g-4">
-        
+
         <!-- Yearly Breakdown Cards -->
         <div class="col-md-12" *ngIf="metrics.length">
             <h6 class="fw-bold my-4">Detailed Performance by Year</h6>
@@ -19,16 +19,27 @@
                     <div class="card border-0 shadow-sm p-4">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="fw-bold mb-0 text-primary">{{ m.businessYearName }}</h5>
-                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ m.startDate | date:'dd-MMM-yy' }} To {{ m.endDate | date:'dd-MMM-yy' }}</span>
+                            <span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ m.startDate |
+                                date:'dd-MMM-yy' }} To {{ m.endDate | date:'dd-MMM-yy' }}</span>
                         </div>
-                        
+
                         <div class="row g-2 small">
                             <div class="col-6 text-muted">Selling:</div>
                             <div class="col-6 text-end fw-semibold">{{ m.totalSellingAmount | number:'1.2-2' }}</div>
                             <div class="col-6 text-muted">Buying:</div>
                             <div class="col-6 text-end fw-semibold">{{ m.totalBuyingAmount | number:'1.2-2' }}</div>
-                            <div class="col-6 text-muted">Profit:</div>
-                            <div class="col-6 text-end fw-bold text-success">{{ m.totalProfit | number:'1.2-2' }}</div>
+                            <div class="col-6 text-muted">Expense:</div>
+                            <div class="col-6 text-end fw-semibold text-danger">{{ m.totalExpenceAmount | number:'1.2-2'
+                                }}</div>
+                            <div class="col-6 text-muted">Selling Pending:</div>
+                            <div class="col-6 text-end fw-semibold text-warning">{{ m.sellingPendingAmount |
+                                number:'1.2-2' }}</div>
+                            <div class="col-6 text-muted">Buying Pending:</div>
+                            <div class="col-6 text-end fw-semibold text-info">{{ m.buyingPendingAmount | number:'1.2-2'
+                                }}</div>
+                            <div class="col-6 text-muted border-top pt-1 mt-1">Profit:</div>
+                            <div class="col-6 text-end fw-bold text-success border-top pt-1 mt-1">{{ m.totalProfit |
+                                number:'1.2-2' }}</div>
                         </div>
                     </div>
                 </div>

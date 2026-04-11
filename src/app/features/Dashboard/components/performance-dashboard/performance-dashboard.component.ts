@@ -53,6 +53,27 @@ export class PerformanceDashboardComponent implements OnInit {
                     fill: false,
                     borderColor: '#66BB6A',
                     tension: .4
+                },
+                {
+                    label: this.labels.TOTAL_EXPENSE,
+                    data: this.metrics.map(m => m.totalExpenceAmount),
+                    fill: false,
+                    borderColor: '#f44336',
+                    tension: .4
+                },
+                {
+                    label: this.labels.SELLING_PENDING,
+                    data: this.metrics.map(m => m.sellingPendingAmount),
+                    fill: false,
+                    borderColor: '#FF9800',
+                    tension: .4
+                },
+                {
+                    label: this.labels.BUYING_PENDING,
+                    data: this.metrics.map(m => m.buyingPendingAmount),
+                    fill: false,
+                    borderColor: '#9C27B0',
+                    tension: .4
                 }
             ]
         };
