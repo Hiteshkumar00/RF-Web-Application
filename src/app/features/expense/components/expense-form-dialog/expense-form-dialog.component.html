@@ -44,7 +44,7 @@
                     <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAYMENTS_SECTION }}
                     </h6>
                     <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" [label]="labels.ADD_PAYMENT"
-                        styleClass="p-button-sm p-button-outlined" [text]="true" (onClick)="addPayment()" />
+                        styleClass="p-button-sm p-button-outlined" (onClick)="addPayment()" />
                 </div>
 
                 <p-table [value]="payments.controls"
