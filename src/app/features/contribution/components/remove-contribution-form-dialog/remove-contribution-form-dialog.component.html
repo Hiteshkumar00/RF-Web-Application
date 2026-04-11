@@ -101,7 +101,7 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 justify-content-end pt-3 border-top mt-3" *ngIf="form">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3" *ngIf="form">
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
             <p-button *ngIf="mode !== 'view'" label="Save" icon="pi pi-check" (onClick)="onSubmit()"
                 [disabled]="form.invalid" severity="primary" class="shadow-sm" />
