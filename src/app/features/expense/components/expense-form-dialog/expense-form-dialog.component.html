@@ -16,34 +16,39 @@
             <!-- Expense Type -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <input id="expenceType" type="text" pInputText formControlName="expenceType" class="w-100" size="small" />
+                    <input id="expenceType" type="text" pInputText formControlName="expenceType" class="w-100"
+                        size="small" />
                     <label for="expenceType">{{ labels.EXPENSE_TYPE }}</label>
                 </p-floatlabel>
                 @if (form.get('expenceType')?.invalid && form.get('expenceType')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.EXPENSE_TYPE_REQUIRED" class="mt-1 d-block" />
+                <p-message severity="error" size="small" variant="simple" [text]="labels.EXPENSE_TYPE_REQUIRED"
+                    class="mt-1 d-block" />
                 }
             </div>
 
             <!-- Date -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy" 
-                        class="w-100" appendTo="body" size="small" />
+                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy" class="w-100"
+                        appendTo="body" size="small" />
                     <label for="date">{{ labels.DATE }}</label>
                 </p-floatlabel>
                 @if (form.get('date')?.invalid && form.get('date')?.touched) {
-                    <p-message severity="error" size="small" variant="simple" [text]="labels.DATE_REQUIRED" class="mt-1 d-block" />
+                <p-message severity="error" size="small" variant="simple" [text]="labels.DATE_REQUIRED"
+                    class="mt-1 d-block" />
                 }
             </div>
 
             <div class="col-12 mt-4">
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAYMENTS_SECTION }}</h6>
-                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" [label]="labels.ADD_PAYMENT" 
-                        size="small" [text]="true" (onClick)="addPayment()" />
+                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAYMENTS_SECTION }}
+                    </h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" [label]="labels.ADD_PAYMENT"
+                        styleClass="p-button-sm p-button-outlined" [text]="true" (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls" styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                <p-table [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
                             <th style="width: 50%">{{ labels.PAYMENT_ACCOUNT }}</th>
@@ -57,19 +62,22 @@
                                 <p-select [options]="accountOptions" formControlName="paymentAccountId"
                                     optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
                                     styleClass="w-100 text-start" appendTo="body" size="small" />
-                                @if (control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched) {
-                                    <p-message severity="error" size="small" variant="simple" [text]="labels.ACCOUNT_REQUIRED" class="mt-1 d-block" />
+                                @if (control.get('paymentAccountId')?.invalid &&
+                                control.get('paymentAccountId')?.touched) {
+                                <p-message severity="error" size="small" variant="simple"
+                                    [text]="labels.ACCOUNT_REQUIRED" class="mt-1 d-block" />
                                 }
                             </td>
                             <td>
-                                <p-inputnumber formControlName="amount" mode="currency" currency="INR" locale="en-IN" 
+                                <p-inputnumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
                                     styleClass="w-100" [placeholder]="labels.AMOUNT" size="small" />
                                 @if (control.get('amount')?.invalid && control.get('amount')?.touched) {
-                                    <p-message severity="error" size="small" variant="simple" [text]="labels.AMOUNT_REQUIRED" class="mt-1 d-block" />
+                                <p-message severity="error" size="small" variant="simple"
+                                    [text]="labels.AMOUNT_REQUIRED" class="mt-1 d-block" />
                                 }
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
-                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" 
+                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
                                     (onClick)="removePayment(i)" />
                             </td>
                         </tr>
@@ -84,7 +92,8 @@
                 </p-table>
 
                 @if (payments.invalid && payments.touched && payments.length === 0) {
-                    <p-message severity="error" size="small" variant="simple" text="At least one payment source is required" class="mt-2 d-block" />
+                <p-message severity="error" size="small" variant="simple" text="At least one payment source is required"
+                    class="mt-2 d-block" />
                 }
             </div>
 
@@ -96,7 +105,7 @@
         <div class="d-flex gap-2 justify-content-end pt-3" *ngIf="form">
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button" 
+            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button"
                 (onClick)="onSubmit()" [disabled]="form.invalid" />
         </div>
     </ng-template>

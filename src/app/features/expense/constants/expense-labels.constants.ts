@@ -13,7 +13,7 @@ export class ExpenseLabels {
     public static readonly DELETE = 'Delete';
     public static readonly YES = 'Yes';
     public static readonly NO = 'No';
-    public static readonly ADD_PAYMENT = 'Add Payment Source';
+    public static readonly ADD_PAYMENT = 'Add Payment';
     public static readonly REMOVE_PAYMENT = 'Remove';
 
     // Form fields
