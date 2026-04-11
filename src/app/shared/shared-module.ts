@@ -35,6 +35,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TextareaModule } from 'primeng/textarea';
 import { TagModule } from 'primeng/tag';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ChartModule } from 'primeng/chart';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -69,6 +70,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TextareaModule,
     TagModule,
     DatePickerModule,
+    ChartModule,
     ReactiveFormsModule
 
   ],
@@ -105,6 +107,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     TextareaModule,
     TagModule,
     DatePickerModule,
+    ChartModule,
     ReactiveFormsModule
   ],
   providers: []

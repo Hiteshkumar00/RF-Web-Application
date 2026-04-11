@@ -11,6 +11,6 @@ export const superAdminGuard: CanActivateFn = () => {
     }
 
     // If not SuperAdmin, redirect to dashboard or login
-    router.navigate(['/main-dashboard']);
+    router.navigate(['/dashboard']);
     return false;
 };

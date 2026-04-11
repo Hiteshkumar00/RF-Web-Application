@@ -27,7 +27,7 @@ export class LoginComponent {
         this.authApiService.login(this.loginForm.value).subscribe({
             next: (res) => {
                 this.authService.setAuthenticationToken(res);
-                this.router.navigate(['/main-dashboard']);
+                this.router.navigate(['/dashboard']);
             }
         });
     }

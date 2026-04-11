@@ -36,7 +36,7 @@ const routes: Routes = [
 
   // Admin and SuperAdmin Access Modules 
   {
-    path: 'main-dashboard',
+    path: 'dashboard',
     canActivate: [authGuard, adminGuard],
     loadChildren: () => import('./features/dashboard/dashboard-module').then(m => m.DashboardModule)
   },

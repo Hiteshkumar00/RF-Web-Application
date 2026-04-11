@@ -26,52 +26,34 @@ export class SidebarComponent implements OnInit {
 
         this.items = [
             {
-                label: 'Menu 1',
+                label: 'Dashboard',
                 icon: 'pi pi-fw pi-home',
-                routerLink: ['/main-dashboard'],
-                routerLinkActiveOptions: { exact: true }
-            },
-            {
-                label: 'Menu 2',
-                icon: 'pi pi-fw pi-star',
                 items: [
                     {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-bookmark',
-                        routerLink: ['/inventory'],
+                        label: 'Summary',
+                        icon: 'pi pi-fw pi-th-large',
+                        routerLink: ['/dashboard/business'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-video',
-                        routerLink: ['/menu2/submenu2'],
+                        label: 'Payment',
+                        icon: 'pi pi-fw pi-wallet',
+                        routerLink: ['/dashboard/payment'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Performance',
+                        icon: 'pi pi-fw pi-chart-line',
+                        routerLink: ['/dashboard/performance'],
                         routerLinkActiveOptions: { exact: true }
                     }
                 ]
             },
             {
-                label: 'Menu 3',
-                icon: 'pi pi-fw pi-calendar',
-                routerLink: ['/menu3'],
+                label: 'Inventory',
+                icon: 'pi pi-fw pi-box',
+                routerLink: ['/inventory'],
                 routerLinkActiveOptions: { exact: true }
-            },
-            {
-                label: 'Menu 4',
-                icon: 'pi pi-fw pi-cog',
-                items: [
-                    {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-user',
-                        routerLink: ['/menu4/submenu1'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-key',
-                        routerLink: ['/menu4/submenu2'],
-                        routerLinkActiveOptions: { exact: true }
-                    }
-                ]
             },
             {
                 label: 'Agency',

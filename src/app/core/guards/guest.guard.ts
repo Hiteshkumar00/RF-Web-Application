@@ -20,7 +20,7 @@ export const guestGuard: CanActivateFn = () => {
             router.navigate(['/account-management']);
         } else {
             // Otherwise, send to dashboard (where adminGuard can still intervene if needed)
-            router.navigate(['/main-dashboard']);
+            router.navigate(['/dashboard']);
         }
         return false;
     }
