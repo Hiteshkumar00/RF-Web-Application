@@ -74,10 +74,22 @@ export class SidebarComponent implements OnInit {
                 ]
             },
             {
-                label: 'Account Person',
-                icon: 'pi pi-fw pi-users',
-                routerLink: ['/account-person-management'],
-                routerLinkActiveOptions: { exact: true }
+                label: 'Agency',
+                icon: 'pi pi-fw pi-building',
+                items: [
+                    {
+                        label: 'Management',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/agency/manage'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Advanced View',
+                        icon: 'pi pi-fw pi-chart-bar',
+                        routerLink: ['/agency/advanced'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
             },
             {
                 label: 'Payment Account',
@@ -86,11 +98,17 @@ export class SidebarComponent implements OnInit {
                 routerLinkActiveOptions: { exact: true }
             },
             {
+                label: 'Account Person',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/account-person-management'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
                 label: 'Business Year',
                 icon: 'pi pi-fw pi-calendar-plus',
                 routerLink: ['/business-year'],
                 routerLinkActiveOptions: { exact: true }
-            },
+            }
         ];
 
         this.superAdminItems = [

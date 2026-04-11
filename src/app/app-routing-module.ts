@@ -61,6 +61,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/business-year/business-year.module').then(m => m.BusinessYearModule)
   },
   {
+    path: 'agency',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/agency/agency-module').then(m => m.AgencyModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

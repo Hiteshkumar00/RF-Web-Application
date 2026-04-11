@@ -20,10 +20,10 @@ export class BusinessYearListComponent implements OnInit {
   
   columns = [
     { field: 'yearName', header: this.labels.YEAR_NAME },
+    { field: 'actions', header: this.labels.ACTIONS },
     { field: 'startDate', header: this.labels.START_DATE },
     { field: 'endDate', header: this.labels.END_DATE },
     { field: 'isSelected', header: this.labels.IS_SELECTED },
-    { field: 'actions', header: this.labels.ACTIONS }
   ];
 
   constructor(

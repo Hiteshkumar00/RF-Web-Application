@@ -1,0 +1,52 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3 pt-2" *ngIf="form">
+
+        <div class="row g-3">
+
+            <!-- Agency Name -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <input id="agencyName" type="text" pInputText formControlName="agencyName" class="w-100" />
+                    <label for="agencyName">{{ labels.AGENCY_NAME }}</label>
+                </p-floatlabel>
+                @if (form.get('agencyName')?.invalid && form.get('agencyName')?.touched) {
+                    @if (form.get('agencyName')?.hasError('required')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.AGENCY_NAME_REQUIRED" class="mt-1 d-block" />
+                    } @else if (form.get('agencyName')?.hasError('maxlength')) {
+                        <p-message severity="error" size="small" variant="simple" [text]="labels.AGENCY_NAME_MAX" class="mt-1 d-block" />
+                    }
+                }
+            </div>
+
+            <!-- Address -->
+            <div class="col-12">
+                <p-floatlabel variant="on">
+                    <textarea id="address" pTextarea formControlName="address" class="w-100" rows="3"
+                        style="resize: none;"></textarea>
+                    <label for="address">{{ labels.ADDRESS }}</label>
+                </p-floatlabel>
+            </div>
+
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="requestClose()" />
+            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+        </div>
+    </ng-template>
+
+</p-dialog>
