@@ -88,6 +88,12 @@ export class SidebarComponent implements OnInit {
                         icon: 'pi pi-fw pi-chart-bar',
                         routerLink: ['/agency/advanced'],
                         routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Person',
+                        icon: 'pi pi-fw pi-user-plus',
+                        routerLink: ['/agency/person'],
+                        routerLinkActiveOptions: { exact: true }
                     }
                 ]
             },

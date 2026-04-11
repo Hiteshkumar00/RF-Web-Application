@@ -6,6 +6,8 @@ import { AgencyRoutingModule } from './agency-routing-module';
 import { AgencyListComponent } from './components/agency-list/agency-list.component';
 import { AgencyFormDialogComponent } from './components/agency-form-dialog/agency-form-dialog.component';
 import { AgencyAdvancedComponent } from './components/agency-advanced/agency-advanced.component';
+import { AgencyPersonListComponent } from './components/agency-person-list/agency-person-list.component';
+import { AgencyPersonFormDialogComponent } from './components/agency-person-form-dialog/agency-person-form-dialog.component';
 
 import { SharedModule } from '../../shared/shared-module';
 
@@ -13,7 +15,9 @@ import { SharedModule } from '../../shared/shared-module';
     declarations: [
         AgencyListComponent,
         AgencyFormDialogComponent,
-        AgencyAdvancedComponent
+        AgencyAdvancedComponent,
+        AgencyPersonListComponent,
+        AgencyPersonFormDialogComponent
     ],
     imports: [
         CommonModule,
