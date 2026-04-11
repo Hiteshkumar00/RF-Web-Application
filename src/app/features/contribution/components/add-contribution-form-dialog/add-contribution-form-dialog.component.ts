@@ -40,7 +40,7 @@ export class AddContributionFormDialogComponent implements OnChanges {
 
     get dialogTitle(): string {
         switch (this.mode) {
-            case 'create': return `Add ${this.title}`;
+            case 'create': return `${this.title}`;
             case 'update': return `Update ${this.title}`;
             case 'view': return `View ${this.title}`;
             default: return '';

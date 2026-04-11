@@ -3,7 +3,7 @@
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
-            <span class="p-dialog-title m-0 fw-bold text-primary">{{ dialogTitle }}</span>
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
             <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
                 styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
         </div>
@@ -103,7 +103,7 @@
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end pt-3 border-top mt-3" *ngIf="form">
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" label="Save {{ title }}" icon="pi pi-check" (onClick)="onSubmit()"
+            <p-button *ngIf="mode !== 'view'" label="Save" icon="pi pi-check" (onClick)="onSubmit()"
                 [disabled]="form.invalid" severity="primary" class="shadow-sm" />
         </div>
     </ng-template>
