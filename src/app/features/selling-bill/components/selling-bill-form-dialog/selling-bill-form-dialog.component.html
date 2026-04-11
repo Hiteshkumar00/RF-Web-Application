@@ -99,20 +99,26 @@
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold text-primary"><i class="pi pi-shopping-cart me-2"></i>{{
                         labels.ITEMS_SECTION }}</h6>
-                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
-                        styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
+                    <div class="d-flex gap-4 align-items-center">
+                        <div *ngIf="mode !== 'view'" class="d-flex align-items-center gap-2">
+                            <label class="small fw-semibold text-muted mb-0 cursor-pointer">Has Warranty?</label>
+                            <p-toggleswitch [(ngModel)]="globalHasWarrenty" [ngModelOptions]="{standalone: true}" styleClass="p-toggleswitch-sm" />
+                        </div>
+                        <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
+                            styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
+                    </div>
                 </div>
 
                 <p-table [value]="items.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="bg-light text-uppercase small bg-opacity-10">
                             <th style="min-width: 250px">{{ labels.ITEM_NAME }}</th>
-                            <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
-                            <th style="min-width: 150px">{{ labels.PRICE }}</th>
-                            <th style="min-width: 200px">{{ labels.WARRENTY }} (Y/M/D)</th>
-                            <th style="min-width: 120px" class="text-end">{{ labels.TOTAL }}</th>
-                            <th style="min-width: 50px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
+                            <th style="min-width: 130px">{{ labels.PRICE }}</th>
+                            <th style="min-width: 220px" *ngIf="globalHasWarrenty">{{ labels.WARRENTY }}</th>
+                            <th style="min-width: 100px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -129,22 +135,24 @@
                             </td>
                             <td>
                                 <p-inputNumber formControlName="quantity" [showButtons]="false" styleClass="w-100"
-                                    inputStyleClass="w-100 text-center" class="p-inputtext-sm"/>
+                                    inputStyleClass="w-100 text-center" class="p-inputtext-sm" />
                             </td>
                             <td>
                                 <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
                                     styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
-                            <td [formGroup]="$any(control.get('warrenty'))">
-                                <div class="d-flex gap-1">
-                                    <p-inputNumber formControlName="year" placeholder="Y" [min]="0" styleClass="w-100"
-                                        inputStyleClass="w-100 text-center" class="p-inputtext-sm" suffix="y" />
-                                    <p-inputNumber formControlName="month" placeholder="M" [min]="0" [max]="11"
-                                        styleClass="w-100" inputStyleClass="w-100 text-center" class="p-inputtext-sm"
-                                        suffix="m" />
-                                    <p-inputNumber formControlName="day" placeholder="D" [min]="0" [max]="31"
-                                        styleClass="w-100" inputStyleClass="w-100 text-center" class="p-inputtext-sm"
-                                        suffix="d" />
+                            <td *ngIf="globalHasWarrenty">
+                                <div class="d-flex gap-2 animate-fade-in w-100"
+                                    [formGroup]="$any(control.get('warrenty'))">
+                                    <p-inputNumber formControlName="year" placeholder="0y" [min]="0"
+                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
+                                        class="p-inputtext-sm" suffix="y" />
+                                    <p-inputNumber formControlName="month" placeholder="0m" [min]="0" [max]="11"
+                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
+                                        class="p-inputtext-sm" suffix="m" />
+                                    <p-inputNumber formControlName="day" placeholder="0d" [min]="0" [max]="31"
+                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
+                                        class="p-inputtext-sm" suffix="d" />
                                 </div>
                             </td>
                             <td class="text-end fw-bold">
@@ -158,7 +166,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 6 : 5"
+                            <td [attr.colspan]="mode !== 'view' ? (globalHasWarrenty ? 6 : 5) : (globalHasWarrenty ? 5 : 4)"
                                 class="text-center p-4 text-muted small italic">
                                 No items added. Please add at least one item.
                             </td>
@@ -202,7 +210,7 @@
                                 <p-iconField iconPosition="right">
                                     <p-inputNumber formControlName="amount" mode="currency" currency="INR"
                                         locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
-                                        class="p-inputtext-sm"/>
+                                        class="p-inputtext-sm" />
                                     <p-inputIcon
                                         *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
                                         class="pi pi-info-circle text-danger pe-2" pTooltip="Min 0.01"
@@ -229,19 +237,19 @@
             <div class="col-md-5">
                 <div class="card border-0 p-4 mt-4 shadow-sm rounded-3 bg-light bg-opacity-10">
                     <h6 class="fw-bold mb-4 border-bottom pb-2">Payment Summary</h6>
- 
+
                     <div class="d-flex justify-content-between mb-2 align-items-center">
                         <span class="text-muted">Subtotal:</span>
                         <span class="fw-semibold">{{ totalAmount | currency:'INR' }}</span>
                     </div>
- 
+
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                            styleClass="text-end" inputStyleClass="text-start border-0 shadow-sm rounded p-1"
-                            class="p-inputtext-sm w-50" [max]="totalAmount" />
+                            styleClass="text-end" inputStyleClass="text-end border-0 shadow-sm rounded p-1"
+                            class="p-inputtext-sm w-45" [max]="totalAmount" />
                     </div>
- 
+
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
                         <span class="fw-semibold">{{ labels.NET_AMOUNT }}:</span>
                         <span class="fw-bold">{{ finalAmount | currency:'INR' }}</span>
@@ -252,7 +260,8 @@
                         <span class="fw-semibold small">{{ paidAmount | currency:'INR' }}</span>
                     </div>
 
-                    <div class="d-flex justify-content-between pt-2 border-top mt-1" [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
+                    <div class="d-flex justify-content-between pt-2 border-top mt-1"
+                        [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
                         <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
                         <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
                     </div>

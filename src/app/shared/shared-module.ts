@@ -39,6 +39,7 @@ import { ChartModule } from 'primeng/chart';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -77,7 +78,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ReactiveFormsModule,
     IconFieldModule,
     InputIconModule,
-    InputNumberModule
+    InputNumberModule,
+    ToggleSwitchModule
   ],
   exports: [
     CommonModule,
@@ -116,7 +118,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ReactiveFormsModule,
     IconFieldModule,
     InputIconModule,
-    InputNumberModule
+    InputNumberModule,
+    ToggleSwitchModule
   ],
   providers: []
 })

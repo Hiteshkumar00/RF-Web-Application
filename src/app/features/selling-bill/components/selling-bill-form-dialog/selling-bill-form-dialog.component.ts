@@ -33,6 +33,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     labels = SellingBillConstants.LABELS;
     form!: FormGroup;
     accountOptions: DropdownOption[] = [];
+    globalHasWarrenty: boolean = false;
     private isClosing = false;
 
     get items(): FormArray {
@@ -88,12 +89,14 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.apiService.getById(this.id).subscribe({
                     next: (data) => {
                         this.formService.patchForm(this.form, data);
+                        this.globalHasWarrenty = data.items.some(i => !!(i.warrenty && (i.warrenty.year > 0 || i.warrenty.month > 0 || i.warrenty.day > 0)));
                         if (this.mode === 'view') {
                             this.form.disable();
                         }
                     }
                 });
             } else {
+                this.globalHasWarrenty = false;
                 this.addItem();
             }
         }
@@ -130,7 +133,11 @@ export class SellingBillFormDialogComponent implements OnChanges {
         const formValue = this.form.getRawValue();
         const payload = {
             ...formValue,
-            date: this.helperService.setDate(formValue.date)
+            date: this.helperService.setDate(formValue.date),
+            items: formValue.items.map((item: any) => ({
+                ...item,
+                warrenty: this.globalHasWarrenty ? item.warrenty : null
+            }))
         };
 
         if (this.mode === 'create') {

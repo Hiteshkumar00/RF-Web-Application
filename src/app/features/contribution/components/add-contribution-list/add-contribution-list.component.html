@@ -2,7 +2,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }} List</h5>
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }}</h5>
                 <p-button icon="pi pi-plus" label="Add Contribution" (onClick)="openCreateDialog()"
                     styleClass="p-button-sm shadow-sm" />
             </div>
@@ -39,7 +39,7 @@
                             </div>
                         </td>
                         <td>{{ item.accountPersonName || '-' }}</td>
-                        <td>{{ item.date | date: 'dd-MMM-yyyy' }}</td>
+                        <td>{{ item.date | date: 'dd-MMMM-yyyy' }}</td>
                         <td class="fw-bold">{{ item.totalAmount | number:'1.2-2' }}</td>
                     </tr>
                 </ng-template>
