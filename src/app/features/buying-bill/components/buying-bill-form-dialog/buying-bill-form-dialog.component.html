@@ -16,12 +16,12 @@
                 <div class="field">
                     <label for="agencyId" class="block mb-2 font-semibold">{{ labels.AGENCY }}</label>
                     <p-iconField iconPosition="right">
-                        <p-select [options]="agencyOptions" formControlName="agencyId"
-                            optionLabel="label" optionValue="value" placeholder="Select Agency"
-                            styleClass="w-100 text-start" appendTo="body" size="small" />
+                        <p-select [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
+                            optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start"
+                            appendTo="body" size="small" />
                         <p-inputIcon *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched"
-                            class="pi pi-info-circle text-danger pe-6"
-                            [pTooltip]="labels.AGENCY + ' is required'" tooltipPosition="top" />
+                            class="pi pi-info-circle text-danger pe-6" [pTooltip]="labels.AGENCY + ' is required'"
+                            tooltipPosition="top" />
                     </p-iconField>
                 </div>
             </div>
@@ -134,7 +134,8 @@
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
-                                <input pInputText formControlName="expenceType" placeholder="Type" class="w-100 p-inputtext-sm" />
+                                <input pInputText formControlName="expenceType" placeholder="Type"
+                                    class="w-100 p-inputtext-sm" />
                             </td>
                             <td>
                                 <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
@@ -142,13 +143,20 @@
                                     styleClass="w-100 text-start" appendTo="body" size="small" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR"
-                                    locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
-                                    class="p-inputtext-sm" />
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
                                     (onClick)="removeExpence(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
+                                class="text-center p-3 text-muted small italic">
+                                No expenses added.
                             </td>
                         </tr>
                     </ng-template>
@@ -179,9 +187,8 @@
                                     styleClass="w-100 text-start" appendTo="body" size="small" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR"
-                                    locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
-                                    class="p-inputtext-sm" />
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -213,7 +220,7 @@
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                                styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
+                            styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
@@ -249,8 +256,9 @@
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top" *ngIf="form">
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Bill' : 'Update Bill'" icon="pi pi-check" (onClick)="onSubmit()"
-                [disabled]="form.invalid" severity="primary" class="shadow-sm" />
+            <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Bill' : 'Update Bill'"
+                icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary"
+                class="shadow-sm" />
         </div>
     </ng-template>
 

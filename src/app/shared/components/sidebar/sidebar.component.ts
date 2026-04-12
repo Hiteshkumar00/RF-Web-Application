@@ -50,18 +50,6 @@ export class SidebarComponent implements OnInit {
                 ]
             },
             {
-                label: 'Inventory',
-                icon: 'pi pi-fw pi-box',
-                routerLink: ['/inventory'],
-                routerLinkActiveOptions: { exact: true }
-            },
-            {
-                label: 'Expense',
-                icon: 'pi pi-fw pi-receipt',
-                routerLink: ['/expense'],
-                routerLinkActiveOptions: { exact: true }
-            },
-            {
                 label: 'Selling Bill',
                 icon: 'pi pi-fw pi-shopping-bag',
                 routerLink: ['/selling-bill'],
@@ -72,6 +60,30 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-shopping-cart',
                 routerLink: ['/buying-bill'],
                 routerLinkActiveOptions: { exact: true }
+            },
+            {
+                label: 'Expense',
+                icon: 'pi pi-fw pi-receipt',
+                routerLink: ['/expense'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
+                label: 'Contribution',
+                icon: 'pi pi-fw pi-money-bill',
+                items: [
+                    {
+                        label: 'Add',
+                        icon: 'pi pi-fw pi-plus',
+                        routerLink: ['/contribution/add'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Remove',
+                        icon: 'pi pi-fw pi-minus',
+                        routerLink: ['/contribution/remove'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
             },
             {
                 label: 'Agency',
@@ -104,24 +116,6 @@ export class SidebarComponent implements OnInit {
                 routerLinkActiveOptions: { exact: true }
             },
             {
-                label: 'Contribution',
-                icon: 'pi pi-fw pi-money-bill',
-                items: [
-                    {
-                        label: 'Add',
-                        icon: 'pi pi-fw pi-plus',
-                        routerLink: ['/contribution/add'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
-                        label: 'Remove',
-                        icon: 'pi pi-fw pi-minus',
-                        routerLink: ['/contribution/remove'],
-                        routerLinkActiveOptions: { exact: true }
-                    }
-                ]
-            },
-            {
                 label: 'Account Person',
                 icon: 'pi pi-fw pi-users',
                 routerLink: ['/account-person-management'],
@@ -131,6 +125,12 @@ export class SidebarComponent implements OnInit {
                 label: 'Business Year',
                 icon: 'pi pi-fw pi-calendar-plus',
                 routerLink: ['/business-year'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
+                label: 'Inventory',
+                icon: 'pi pi-fw pi-box',
+                routerLink: ['/inventory'],
                 routerLinkActiveOptions: { exact: true }
             },
         ];
