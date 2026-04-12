@@ -238,15 +238,14 @@
                     <h6 class="fw-bold mb-4 border-bottom pb-2">Payment Summary</h6>
 
                     <div class="d-flex justify-content-between mb-2 align-items-center">
-                        <span class="text-muted">Subtotal:</span>
+                        <span class="text-muted">Total Amount:</span>
                         <span class="fw-semibold">{{ totalAmount | currency:'INR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                            styleClass="text-end" inputStyleClass="text-end border-0 shadow-sm rounded p-1"
-                            class="p-inputtext-sm w-45" [max]="totalAmount" />
+                                styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">

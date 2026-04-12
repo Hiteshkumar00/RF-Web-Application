@@ -98,7 +98,7 @@
                                 (onClick)="confirmDelete(bill)" pTooltip="Delete" tooltipPosition="top" />
                         </div>
                     </td>
-                    <td><span class="fw-semibold">{{ bill.billNo }}</span></td>
+                    <td><span class="fw-semibold text-muted">{{ bill.billNo }}</span></td>
                     <td>
                         <div class="fw-semibold">{{ bill.customerName }}</div>
                     </td>
@@ -106,8 +106,8 @@
                         <div class="small text-muted"><i class="pi pi-phone small me-1"></i>{{ bill.phoneNo }}</div>
                     </td>
                     <td class="small">{{ bill.date | date:'dd-MMMM-yyyy' }}</td>
-                    <td class="text-end small">{{ bill.totalAmount | currency:'INR' }}</td>
-                    <td class="text-end small text-warning">{{ bill.discount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold">{{ bill.totalAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-warning">{{ bill.discount | currency:'INR' }}</td>
                     <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
                     <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
                     <td class="text-end fw-bold"

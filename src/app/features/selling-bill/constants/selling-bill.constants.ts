@@ -21,7 +21,7 @@ export class SellingBillConstants {
         DAY: 'Day',
         PAYMENT_ACCOUNT: 'Payment Account',
         AMOUNT: 'Amount',
-        TOTAL_AMOUNT: 'Base Amount',
+        TOTAL_AMOUNT: 'Total Amount',
         NET_AMOUNT: 'Net Amount',
         PAID_AMOUNT: 'Paid Amount',
         REMAINING_AMOUNT: 'Remaining'
