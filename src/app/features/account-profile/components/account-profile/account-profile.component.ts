@@ -30,8 +30,8 @@ export class AccountProfileComponent implements OnInit {
   }
 
   private loadAccount(): void {
-    const routeId = this.route.snapshot.params['id'];
-    const accountId = routeId ? parseInt(routeId) : parseInt(this.authService.currentUser?.accountId || '0');
+    // const routeId = this.route.snapshot.params['id'];
+    const accountId = parseInt(this.authService.currentUser?.accountId || '0');
 
     if (!accountId) {
       if (!this.isLoading) {

@@ -8,4 +8,5 @@ export interface UserDto {
     phoneNo?: string | null;
     role: string;
     isActive: boolean;
+    accountName?: string;
 }

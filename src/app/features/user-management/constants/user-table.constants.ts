@@ -11,6 +11,7 @@ export class UserTableColumns {
         { field: 'surname', header: 'Surname' },
         { field: 'email', header: 'Email' },
         { field: 'role', header: 'Role' },
+        { field: 'accountName', header: 'Account' },
         { field: 'isActive', header: 'Status' }
     ];
 }

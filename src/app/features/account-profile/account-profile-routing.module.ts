@@ -7,10 +7,10 @@ const routes: Routes = [
     path: '',
     component: AccountProfileComponent
   },
-  {
-    path: ':id',
-    component: AccountProfileComponent
-  }
+  // {
+  //   path: ':id',
+  //   component: AccountProfileComponent
+  // }
 ];
 
 @NgModule({
