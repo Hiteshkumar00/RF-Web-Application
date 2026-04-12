@@ -8,6 +8,7 @@ export interface BuyingBillListDto {
     discount: number;
     netAmount: number;
     totalExpence: number;
+    finalAmount: number;
     paidAmount: number;
     remainingAmount: number;
 }
