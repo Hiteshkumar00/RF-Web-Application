@@ -16,7 +16,7 @@ export class AgencyTableColumns {
         { field: 'actions', header: 'Actions' },
         { field: 'agencyName', header: 'Agency Name' },
         { field: 'address', header: 'Address' },
-        { field: 'totalBillsAmount', header: 'Total Bills' },
+        { field: 'totalBillsAmount', header: 'Total Amount' },
         { field: 'totalPaidAmount', header: 'Total Paid' },
         { field: 'totalPendingAmount', header: 'Pending' }
     ];

@@ -45,7 +45,7 @@
                                 <p-button icon="pi pi-key" [rounded]="true" [text]="true" severity="help" size="small"
                                     [pTooltip]="labels.RESET_PASSWORD" tooltipPosition="top"
                                     (onClick)="openResetPasswordDialog(user)" />
-                                <p-button icon="user.isActive ? 'pi pi-ban' : 'pi pi-check-circle'" [rounded]="true"
+                                <p-button [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check-circle'" [rounded]="true"
                                     [text]="true" [severity]="user.isActive ? 'warn' : 'success'" size="small"
                                     [pTooltip]="user.isActive ? labels.DEACTIVATE : labels.ACTIVATE"
                                     tooltipPosition="top" (onClick)="confirmToggleActive(user)" />

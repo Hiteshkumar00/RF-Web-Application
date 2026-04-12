@@ -8,33 +8,28 @@
     </div>
 
     <!-- Table -->
-    <p-table
-        [value]="agencies"
-        [paginator]="true"
-        [rows]="10"
-        [showCurrentPageReport]="true"
+    <p-table [value]="agencies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} agencies"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        [sortMode]="'multiple'"
-        styleClass="p-datatable-striped p-datatable-sm"
+        [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" styleClass="p-datatable-striped p-datatable-sm"
         [tableStyle]="{'min-width': '70rem'}">
 
         <ng-template pTemplate="header">
             <tr>
                 @for (col of columns; track col.field) {
-                    @if (col.field === 'actions') {
-                        <th style="width: 8rem; text-align: center;">{{ col.header }}</th>
-                    } @else if (col.field === 'totalBillsAmount' || col.field === 'totalPaidAmount' || col.field === 'totalPendingAmount') {
-                        <th [pSortableColumn]="col.field" class="text-end">
-                            {{ col.header }}
-                            <p-sortIcon [field]="col.field" />
-                        </th>
-                    } @else {
-                        <th [pSortableColumn]="col.field">
-                            {{ col.header }}
-                            <p-sortIcon [field]="col.field" />
-                        </th>
-                    }
+                @if (col.field === 'actions') {
+                <th style="width: 8rem; text-align: center;">{{ col.header }}</th>
+                } @else if (col.field === 'totalBillsAmount' || col.field === 'totalPaidAmount' || col.field ===
+                'totalPendingAmount') {
+                <th [pSortableColumn]="col.field" class="text-end">
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field" />
+                </th>
+                } @else {
+                <th [pSortableColumn]="col.field">
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field" />
+                </th>
+                }
                 }
             </tr>
         </ng-template>
@@ -42,35 +37,28 @@
         <ng-template pTemplate="body" let-agency>
             <tr>
                 @for (col of columns; track col.field) {
-                    @if (col.field === 'actions') {
-                        <td class="text-center">
-                            <p-button
-                                icon="pi pi-eye"
-                                [rounded]="true"
-                                [text]="true"
-                                severity="info"
-                                size="small"
-                                [pTooltip]="labels.VIEW_DETAIL"
-                                tooltipPosition="top"
-                                (onClick)="openDetailDialog(agency)" />
-                        </td>
-                    } @else if (col.field === 'totalBillsAmount') {
-                        <td class="text-end fw-semibold">{{ agency.totalBillsAmount | number:'1.2-2' }}</td>
-                    } @else if (col.field === 'totalPaidAmount') {
-                        <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | number:'1.2-2' }}</td>
-                    } @else if (col.field === 'totalPendingAmount') {
-                        <td class="text-end fw-semibold" [class.text-danger]="agency.totalPendingAmount > 0">
-                            {{ agency.totalPendingAmount | number:'1.2-2' }}
-                        </td>
+                @if (col.field === 'actions') {
+                <td class="text-center">
+                    <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                        [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top" (onClick)="openDetailDialog(agency)" />
+                </td>
+                } @else if (col.field === 'totalBillsAmount') {
+                <td class="text-end fw-semibold">{{ agency.totalBillsAmount | number:'1.2-2' }}</td>
+                } @else if (col.field === 'totalPaidAmount') {
+                <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | number:'1.2-2' }}</td>
+                } @else if (col.field === 'totalPendingAmount') {
+                <td class="text-end fw-semibold" [class.text-danger]="agency.totalPendingAmount > 0">
+                    {{ agency.totalPendingAmount | number:'1.2-2' }}
+                </td>
+                } @else {
+                <td>
+                    @if (agency[col.field] != null && agency[col.field] !== '') {
+                    {{ agency[col.field] }}
                     } @else {
-                        <td>
-                            @if (agency[col.field] != null && agency[col.field] !== '') {
-                                {{ agency[col.field] }}
-                            } @else {
-                                <span class="opacity-50">—</span>
-                            }
-                        </td>
+                    <span class="opacity-50">—</span>
                     }
+                </td>
+                }
                 }
             </tr>
         </ng-template>
@@ -87,21 +75,14 @@
     </p-table>
 
     <!-- All Detail Dialog -->
-    <p-dialog
-        [visible]="showDetailDialog"
-        [modal]="true"
-        [style]="{ width: '800px', maxHeight: '90vh' }"
-        [draggable]="false"
-        [resizable]="false"
-        [closable]="false"
-        [closeOnEscape]="false">
+    <p-dialog [visible]="showDetailDialog" [modal]="true" [style]="{ width: '800px', maxHeight: '90vh' }"
+        [draggable]="false" [resizable]="false" [closable]="false" [closeOnEscape]="false">
 
         <ng-template pTemplate="header">
             <div class="d-flex align-items-center justify-content-between w-100 pe-3">
                 <span class="p-dialog-title m-0">{{ labels.VIEW_DIALOG_TITLE }}</span>
-                <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary"
-                    styleClass="p-0" [style]="{ width: '2rem', height: '2rem' }"
-                    (onClick)="closeDetailDialog()" />
+                <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" styleClass="p-0"
+                    [style]="{ width: '2rem', height: '2rem' }" (onClick)="closeDetailDialog()" />
             </div>
         </ng-template>
 
@@ -139,11 +120,13 @@
                 <div class="col-4">
                     <div class="border rounded p-3 text-center border-success">
                         <div class="text-muted small mb-1">{{ labels.TOTAL_PAID }}</div>
-                        <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | number:'1.2-2' }}</div>
+                        <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | number:'1.2-2' }}
+                        </div>
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="border rounded p-3 text-center" [class.border-danger]="selectedDetail.totalPendingAmount > 0">
+                    <div class="border rounded p-3 text-center"
+                        [class.border-danger]="selectedDetail.totalPendingAmount > 0">
                         <div class="text-muted small mb-1">{{ labels.TOTAL_PENDING }}</div>
                         <div class="fw-bold fs-5" [class.text-danger]="selectedDetail.totalPendingAmount > 0">
                             {{ selectedDetail.totalPendingAmount | number:'1.2-2' }}
@@ -184,10 +167,11 @@
                         <span class="fw-semibold">{{ yearGroup.yearName }}</span>
                         <span class="text-muted small" *ngIf="yearGroup.startDate">
                             ({{ yearGroup.startDate | date:'dd-MMM-yyyy' }}
-                            <span *ngIf="yearGroup.endDate"> – {{ yearGroup.endDate | date:'dd-MMM-yyyy' }}</span>)
+                            <span *ngIf="yearGroup.endDate"> To {{ yearGroup.endDate | date:'dd-MMM-yyyy' }}</span>)
                         </span>
                     </div>
-                    <p-table [value]="yearGroup.bills" styleClass="p-datatable-sm p-datatable-striped" *ngIf="yearGroup.bills?.length">
+                    <p-table [value]="yearGroup.bills" styleClass="p-datatable-sm p-datatable-striped"
+                        *ngIf="yearGroup.bills?.length">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>Bill No</th>
@@ -219,7 +203,8 @@
 
         <ng-template pTemplate="footer">
             <div class="d-flex justify-content-end">
-                <p-button [label]="labels.CLOSE" icon="pi pi-times" severity="secondary" (onClick)="closeDetailDialog()" />
+                <p-button [label]="labels.CLOSE" icon="pi pi-times" severity="secondary"
+                    (onClick)="closeDetailDialog()" />
             </div>
         </ng-template>
 
