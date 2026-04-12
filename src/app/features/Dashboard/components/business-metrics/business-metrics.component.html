@@ -19,7 +19,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_PROFIT }}</div>
-                        <div class="fs-2 fw-bold text-success">{{ metrics.totalProfit | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-success">{{ metrics.totalProfit | currency:'INR' }}</div>
                     </div>
                     <div class="icon-circle bg-success text-white mb-0">
                         <i class="pi pi-chart-line fs-4"></i>
@@ -33,7 +33,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_SELLING }}</div>
-                        <div class="fs-2 fw-bold text-primary">{{ metrics.totalSellingAmount | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-primary">{{ metrics.totalSellingAmount | currency:'INR' }}</div>
                     </div>
                     <div class="icon-circle bg-primary text-white mb-0">
                         <i class="pi pi-shopping-cart fs-4"></i>
@@ -47,7 +47,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_BUYING }}</div>
-                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | number:'1.2-2'
+                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | currency:'INR'
                             }}</div>
                     </div>
                     <div class="icon-circle bg-warning text-white mb-0">
@@ -62,7 +62,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_EXPENSE }}</div>
-                        <div class="fs-2 fw-bold text-info-emphasis">{{ metrics.totalExpenceAmount | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-info-emphasis">{{ metrics.totalExpenceAmount | currency:'INR' }}</div>
                     </div>
                     <div class="icon-circle bg-info text-white mb-0">
                         <i class="pi pi-wallet fs-4"></i>
@@ -76,7 +76,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.SELLING_PENDING }}</div>
-                        <div class="fs-2 fw-bold text-danger">{{ metrics.sellingPendingAmount | number:'1.2-2' }}</div>
+                        <div class="fs-2 fw-bold text-danger">{{ metrics.sellingPendingAmount | currency:'INR' }}</div>
                     </div>
                     <div class="icon-circle bg-danger text-white mb-0">
                         <i class="pi pi-hourglass fs-4"></i>
@@ -90,7 +90,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.BUYING_PENDING }}</div>
-                        <div class="fs-2 fw-bold text-secondary-emphasis">{{ metrics.buyingPendingAmount | number:'1.2-2'
+                        <div class="fs-2 fw-bold text-info">{{ metrics.buyingPendingAmount | currency:'INR'
                             }}</div>
                     </div>
                     <div class="icon-circle bg-secondary text-white mb-0">

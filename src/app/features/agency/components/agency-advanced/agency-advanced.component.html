@@ -43,12 +43,13 @@
                         [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top" (onClick)="openDetailDialog(agency)" />
                 </td>
                 } @else if (col.field === 'totalBillsAmount') {
-                <td class="text-end fw-semibold">{{ agency.totalBillsAmount | number:'1.2-2' }}</td>
+                <td class="text-end fw-semibold text-info">{{ agency.totalBillsAmount | currency:'INR' }}</td>
                 } @else if (col.field === 'totalPaidAmount') {
-                <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | number:'1.2-2' }}</td>
+                <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | currency:'INR' }}</td>
                 } @else if (col.field === 'totalPendingAmount') {
-                <td class="text-end fw-semibold" [class.text-danger]="agency.totalPendingAmount > 0">
-                    {{ agency.totalPendingAmount | number:'1.2-2' }}
+                <td class="text-end fw-bold"
+                    [ngClass]="{'text-danger': agency.totalPendingAmount > 0, 'text-success': agency.totalPendingAmount === 0}">
+                    {{ agency.totalPendingAmount | currency:'INR' }}
                 </td>
                 } @else {
                 <td>
@@ -112,24 +113,25 @@
             <h6 class="fw-bold mb-3">{{ labels.BILL_SUMMARY }}</h6>
             <div class="row g-3 mb-4">
                 <div class="col-4">
-                    <div class="border rounded p-3 text-center">
+                    <div class="border rounded p-3 text-center border-info border-opacity-25">
                         <div class="text-muted small mb-1">{{ labels.TOTAL_BILLS }}</div>
-                        <div class="fw-bold fs-5">{{ selectedDetail.totalBillsAmount | number:'1.2-2' }}</div>
+                        <div class="fw-bold fs-5 text-info">{{ selectedDetail.totalBillsAmount | currency:'INR' }}</div>
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="border rounded p-3 text-center border-success">
+                    <div class="border rounded p-3 text-center border-success border-opacity-25">
                         <div class="text-muted small mb-1">{{ labels.TOTAL_PAID }}</div>
-                        <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | number:'1.2-2' }}
+                        <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | currency:'INR' }}
                         </div>
                     </div>
                 </div>
                 <div class="col-4">
-                    <div class="border rounded p-3 text-center"
-                        [class.border-danger]="selectedDetail.totalPendingAmount > 0">
+                    <div class="border rounded p-3 text-center border-opacity-25"
+                        [ngClass]="{'border-danger': selectedDetail.totalPendingAmount > 0, 'border-success': selectedDetail.totalPendingAmount === 0}">
                         <div class="text-muted small mb-1">{{ labels.TOTAL_PENDING }}</div>
-                        <div class="fw-bold fs-5" [class.text-danger]="selectedDetail.totalPendingAmount > 0">
-                            {{ selectedDetail.totalPendingAmount | number:'1.2-2' }}
+                        <div class="fw-bold fs-5"
+                            [ngClass]="{'text-danger': selectedDetail.totalPendingAmount > 0, 'text-success': selectedDetail.totalPendingAmount === 0}">
+                            {{ selectedDetail.totalPendingAmount | currency:'INR' }}
                         </div>
                     </div>
                 </div>
@@ -183,12 +185,13 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-bill>
                             <tr>
-                                <td>{{ bill.billNo }}</td>
-                                <td>{{ bill.date | date:'dd-MMM-yyyy' }}</td>
-                                <td class="text-end">{{ bill.netAmount | number:'1.2-2' }}</td>
-                                <td class="text-end text-success">{{ bill.paidAmount | number:'1.2-2' }}</td>
-                                <td class="text-end" [class.text-danger]="bill.remainingAmount > 0">
-                                    {{ bill.remainingAmount | number:'1.2-2' }}
+                                <td class="fw-semibold text-muted">{{ bill.billNo }}</td>
+                                <td class="small">{{ bill.date | date:'dd-MMM-yyyy' }}</td>
+                                <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
+                                <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
+                                <td class="text-end fw-bold"
+                                    [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
+                                    {{ bill.remainingAmount | currency:'INR' }}
                                 </td>
                             </tr>
                         </ng-template>

@@ -45,7 +45,7 @@
                             </div>
                         </td>
                         } @else if (col.field === 'paidAmount') {
-                        <td class="fw-bold">{{ expense.paidAmount | number:'1.2-2' }}</td>
+                        <td class="fw-bold text-danger">{{ expense.paidAmount | currency:'INR' }}</td>
                         } @else if (col.field === 'date') {
                         <td>{{ expense.date | date: 'dd-MMMM-yyyy' }}</td>
                         } @else {
