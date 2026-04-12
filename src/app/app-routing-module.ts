@@ -81,6 +81,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/selling-bill/selling-bill.module').then(m => m.SellingBillModule)
   },
   {
+    path: 'buying-bill',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/buying-bill/buying-bill-module').then(m => m.BuyingBillModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

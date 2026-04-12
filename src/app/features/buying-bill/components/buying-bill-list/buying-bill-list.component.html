@@ -1,0 +1,132 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">{{ title }}</h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search agency, bill no..."
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" />
+                </p-iconField>
+                <p-button icon="pi pi-plus" label="New Buying Bill" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
+            styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['agencyName', 'billNo']">
+            <ng-template pTemplate="header">
+                <tr class="text-uppercase small">
+                    <th pSortableColumn="id" style="min-width: 90px">
+                        <div class="d-flex align-items-center gap-1">
+                            ID <p-sortIcon field="id" />
+                            <p-columnFilter type="numeric" field="id" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th style="min-width: 200px" class="text-center">Action</th>
+                    <th pSortableColumn="billNo" style="min-width: 170px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.BILL_NO }} <p-sortIcon field="billNo" />
+                            <p-columnFilter type="text" field="billNo" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="agencyName" style="min-width: 300px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.AGENCY }} <p-sortIcon field="agencyName" />
+                            <p-columnFilter type="text" field="agencyName" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="date" style="min-width: 170px">
+                        <div class="d-flex align-items-center gap-1">
+                            {{ labels.DATE }} <p-sortIcon field="date" />
+                            <p-columnFilter type="date" field="date" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="totalAmount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.TOTAL_AMOUNT }} <p-sortIcon field="totalAmount" />
+                            <p-columnFilter type="numeric" field="totalAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="discount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.DISCOUNT }} <p-sortIcon field="discount" />
+                            <p-columnFilter type="numeric" field="discount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="netAmount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.NET_AMOUNT }} <p-sortIcon field="netAmount" />
+                            <p-columnFilter type="numeric" field="netAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="totalExpence" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.TOTAL_EXPENCE }} <p-sortIcon field="totalExpence" />
+                            <p-columnFilter type="numeric" field="totalExpence" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="paidAmount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.PAID_AMOUNT }} <p-sortIcon field="paidAmount" />
+                            <p-columnFilter type="numeric" field="paidAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="remainingAmount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            {{ labels.REMAINING_AMOUNT }} <p-sortIcon field="remainingAmount" />
+                            <p-columnFilter type="numeric" field="remainingAmount" display="menu" />
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-bill>
+                <tr>
+                    <td class="fw-bold text-muted small">#{{ bill.id }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(bill)" pTooltip="View" tooltipPosition="top" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(bill)" pTooltip="Edit" tooltipPosition="top" />
+                            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                                (onClick)="confirmDelete(bill)" pTooltip="Delete" tooltipPosition="top" />
+                        </div>
+                    </td>
+                    <td><span class="fw-semibold text-muted">{{ bill.billNo }}</span></td>
+                    <td>
+                        <div class="fw-semibold">{{ bill.agencyName }}</div>
+                    </td>
+                    <td class="small">{{ bill.date | date:'dd-MMMM-yyyy' }}</td>
+                    <td class="text-end fw-semibold">{{ bill.totalAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-warning">{{ bill.discount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-secondary">{{ bill.totalExpence | currency:'INR' }}</td>
+                    <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-bold"
+                        [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
+                        {{ bill.remainingAmount | currency:'INR' }}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="11" class="text-center p-4">
+                        <div class="py-4">
+                            <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                            <span class="text-muted">No buying bills found.</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-buying-bill-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
+    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />

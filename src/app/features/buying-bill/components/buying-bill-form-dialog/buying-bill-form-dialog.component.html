@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="false" [resizable]="false"
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1100px' }" [draggable]="false" [resizable]="false"
     [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
@@ -11,21 +11,20 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-2" *ngIf="form">
         <div class="row g-4">
-            <!-- Customer Name -->
+            <!-- Agency -->
             <div class="col-md-4">
                 <div class="field">
-                    <label for="customerName" class="block mb-2 font-semibold">{{ labels.CUSTOMER_NAME }}</label>
+                    <label for="agencyId" class="block mb-2 font-semibold">{{ labels.AGENCY }}</label>
                     <p-iconField iconPosition="right">
-                        <input id="customerName" type="text" pInputText formControlName="customerName"
-                            class="w-100 p-inputtext-sm" />
-                        <p-inputIcon *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched"
-                            class="pi pi-info-circle text-danger pe-2"
-                            [pTooltip]="labels.CUSTOMER_NAME + ' is required'" tooltipPosition="top" />
+                        <p-select [options]="agencyOptions" formControlName="agencyId"
+                            optionLabel="label" optionValue="value" placeholder="Select Agency"
+                            styleClass="w-100 text-start" appendTo="body" size="small" />
+                        <p-inputIcon *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched"
+                            class="pi pi-info-circle text-danger pe-6"
+                            [pTooltip]="labels.AGENCY + ' is required'" tooltipPosition="top" />
                     </p-iconField>
                 </div>
             </div>
-
-
 
             <!-- Bill No -->
             <div class="col-md-4">
@@ -52,71 +51,23 @@
                 </div>
             </div>
 
-            <!-- Phone No -->
-            <div class="col-md-4">
-                <div class="field">
-                    <label for="phoneNo" class="block mb-2 font-semibold">{{ labels.PHONE_NO }}</label>
-                    <p-iconField iconPosition="right">
-                        <input id="phoneNo" type="text" pInputText formControlName="phoneNo"
-                            class="w-100 p-inputtext-sm" />
-                        <p-inputIcon *ngIf="form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched"
-                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.PHONE_NO + ' is required'"
-                            tooltipPosition="top" />
-                    </p-iconField>
-                </div>
-            </div>
-
-            <!-- Email -->
-            <div class="col-md-4">
-                <div class="field">
-                    <label for="email" class="block mb-2 font-semibold">{{ labels.EMAIL }} (Optional)</label>
-                    <p-iconField iconPosition="right">
-                        <input id="email" type="email" pInputText formControlName="email"
-                            class="w-100 p-inputtext-sm" />
-                        <p-inputIcon *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
-                            class="pi pi-info-circle text-danger pe-2" pTooltip="Invalid email" tooltipPosition="top" />
-                    </p-iconField>
-                </div>
-            </div>
-
-            <!-- Address -->
-            <div class="col-md-4">
-                <div class="field">
-                    <label for="address" class="block mb-2 font-semibold">{{ labels.ADDRESS }} (Optional)</label>
-                    <p-iconField iconPosition="right">
-                        <input id="address" type="text" pInputText formControlName="address"
-                            class="w-100 p-inputtext-sm" />
-                        <p-inputIcon *ngIf="form.get('address')?.invalid && form.get('address')?.touched"
-                            class="pi pi-info-circle text-danger pe-2" pTooltip="Address is too long"
-                            tooltipPosition="top" />
-                    </p-iconField>
-                </div>
-            </div>
-
             <!-- Items Table -->
             <div class="col-12 mt-4">
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold text-primary"><i class="pi pi-shopping-cart me-2"></i>{{
                         labels.ITEMS_SECTION }}</h6>
-                    <div class="d-flex gap-4 align-items-center">
-                        <div *ngIf="mode !== 'view'" class="d-flex align-items-center gap-2">
-                            <label class="small fw-semibold text-muted mb-0 cursor-pointer">Has Warranty?</label>
-                            <p-toggleswitch [(ngModel)]="globalHasWarrenty" [ngModelOptions]="{standalone: true}" styleClass="p-toggleswitch-sm" />
-                        </div>
-                        <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
-                            styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
-                    </div>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
+                        styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
                 </div>
 
                 <p-table [value]="items.controls" [scrollable]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="bg-light text-uppercase small bg-opacity-10">
-                            <th style="min-width: 280px">{{ labels.ITEM_NAME }}</th>
-                            <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
-                            <th style="min-width: 130px">{{ labels.PRICE }}</th>
-                            <th style="min-width: 220px" *ngIf="globalHasWarrenty">{{ labels.WARRENTY }}</th>
-                            <th style="min-width: 100px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
+                            <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
+                            <th style="min-width: 150px">{{ labels.PRICE }}</th>
+                            <th style="min-width: 150px" class="text-end">{{ labels.TOTAL }}</th>
                             <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
@@ -140,20 +91,6 @@
                                 <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
                                     styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
-                            <td *ngIf="globalHasWarrenty">
-                                <div class="d-flex gap-2 animate-fade-in w-100"
-                                    [formGroup]="$any(control.get('warrenty'))">
-                                    <p-inputNumber formControlName="year" placeholder="0y" [min]="0"
-                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
-                                        class="p-inputtext-sm" suffix="y" />
-                                    <p-inputNumber formControlName="month" placeholder="0m" [min]="0" [max]="11"
-                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
-                                        class="p-inputtext-sm" suffix="m" />
-                                    <p-inputNumber formControlName="day" placeholder="0d" [min]="0" [max]="31"
-                                        styleClass="flex-grow-1" inputStyleClass="w-100 text-center"
-                                        class="p-inputtext-sm" suffix="d" />
-                                </div>
-                            </td>
                             <td class="text-end fw-bold">
                                 {{ (control.get('price')?.value * control.get('quantity')?.value) | currency:'INR' }}
                             </td>
@@ -165,7 +102,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? (globalHasWarrenty ? 6 : 5) : (globalHasWarrenty ? 5 : 4)"
+                            <td [attr.colspan]="mode !== 'view' ? 5 : 4"
                                 class="text-center p-4 text-muted small italic">
                                 No items added. Please add at least one item.
                             </td>
@@ -174,8 +111,50 @@
                 </p-table>
             </div>
 
-            <!-- Payments Table -->
+            <!-- Expenses and Payments Section -->
             <div class="col-md-7">
+                <!-- Expenses Table -->
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
+                    <h6 class="mb-0 fw-bold text-warning"><i class="pi pi-truck me-2"></i>{{ labels.EXPENCES_SECTION }}
+                    </h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Expence"
+                        styleClass="p-button-sm p-button-outlined p-button-warning" (onClick)="addExpence()" />
+                </div>
+
+                <p-table [value]="expences.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-light text-uppercase small">
+                            <th style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
+                            <th style="min-width: 150px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 120px" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)" class="align-middle">
+                            <td>
+                                <input pInputText formControlName="expenceType" placeholder="Type" class="w-100 p-inputtext-sm" />
+                            </td>
+                            <td>
+                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR"
+                                    locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
+                                    class="p-inputtext-sm" />
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    (onClick)="removeExpence(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <!-- Payments Table -->
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>{{ labels.PAYMENTS_SECTION }}
                     </h6>
@@ -187,34 +166,22 @@
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="bg-light text-uppercase small">
-                            <th style="min-width: 250px">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="min-width: 150px">{{ labels.AMOUNT }}</th>
-                            <th style="min-width: 50px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th style="min-width: 200px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 150px" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
-                                <p-iconField iconPosition="right">
-                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
-                                        optionLabel="label" optionValue="value" placeholder="Select Account"
-                                        styleClass="w-100 text-start" appendTo="body" size="small" />
-                                    <p-inputIcon
-                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched"
-                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
-                                        tooltipPosition="top" />
-                                </p-iconField>
+                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select Account"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
                             </td>
                             <td>
-                                <p-iconField iconPosition="right">
-                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR"
-                                        locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
-                                        class="p-inputtext-sm" />
-                                    <p-inputIcon
-                                        *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
-                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Min 0.01"
-                                        tooltipPosition="top" />
-                                </p-iconField>
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR"
+                                    locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
+                                    class="p-inputtext-sm" />
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -233,29 +200,40 @@
                 </p-table>
             </div>
 
+            <!-- Summary Column -->
             <div class="col-md-5">
-                <div class="card border-1 p-4 mt-4 shadow-sm rounded-3">
-                    <h6 class="fw-bold mb-4 border-bottom pb-2">Payment Summary</h6>
+                <div class="card border-1 p-4 mb-4 shadow-sm rounded-3 mt-1 justify-content-center">
+                    <h6 class="fw-bold mb-4 border-bottom pb-2">Buying Bill Summary</h6>
 
                     <div class="d-flex justify-content-between mb-2 align-items-center">
-                        <span class="text-muted">Total Amount:</span>
-                        <span class="fw-semibold">{{ totalAmount | currency:'INR' }}</span>
+                        <span class="text-muted">{{ labels.TOTAL_AMOUNT }}:</span>
+                        <span class="fw-semibold">{{ totalItemsAmount | currency:'INR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                                styleClass="w-40 me-0" inputStyleClass="text-end" class="p-inputtext-sm" />
+                                styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
                         <span class="fw-semibold">{{ labels.NET_AMOUNT }}:</span>
-                        <span class="fw-bold">{{ finalAmount | currency:'INR' }}</span>
+                        <span class="fw-bold text-info">{{ netAmount | currency:'INR' }}</span>
                     </div>
 
-                    <div class="d-flex justify-content-between mb-2 align-items-center text-success">
-                        <span class="small">{{ labels.PAID_AMOUNT }}:</span>
-                        <span class="fw-semibold small">{{ paidAmount | currency:'INR' }}</span>
+                    <div class="d-flex justify-content-between mb-2 align-items-center">
+                        <span class="text-muted">{{ labels.TOTAL_EXPENCE }}:</span>
+                        <span class="fw-semibold text-secondary">{{ totalExpenceAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between text-info mb-2 pt-2 border-top align-items-center">
+                        <span class="fw-bold">{{ labels.FINAL_AMOUNT }}:</span>
+                        <span class="fw-bold h5 mb-0">{{ finalAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2 align-items-center text-success mt-3">
+                        <span class="fw-semibold">{{ labels.PAID_AMOUNT }}:</span>
+                        <span class="fw-semibold">{{ totalPaidAmount | currency:'INR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between pt-2 border-top mt-1"
@@ -271,7 +249,7 @@
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top" *ngIf="form">
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
+            <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Bill' : 'Update Bill'" icon="pi pi-check" (onClick)="onSubmit()"
                 [disabled]="form.invalid" severity="primary" class="shadow-sm" />
         </div>
     </ng-template>
