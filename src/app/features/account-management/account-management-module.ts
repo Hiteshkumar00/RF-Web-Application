@@ -22,6 +22,7 @@ import { SharedModule } from '../../shared/shared-module';
         AccountManagementRoutingModule,
         SharedModule
     ],
-    providers: []
+    providers: [],
+    exports: [AccountFormDialogComponent]
 })
 export class AccountManagementModule { }

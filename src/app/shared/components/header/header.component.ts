@@ -64,6 +64,12 @@ export class HeaderComponent implements OnInit {
     updateMenuItems() {
         this.impersonationMenuItems = [
             {
+                label: 'My Account',
+                icon: 'pi pi-user',
+                command: () => this.router.navigate(['/account-profile']),
+                visible: this.isAccountUser
+            },
+            {
                 label: 'Go to Account List',
                 icon: 'pi pi-list',
                 command: () => this.switchToSuperAdmin(),
