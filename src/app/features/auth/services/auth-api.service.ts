@@ -29,6 +29,10 @@ export class AuthApiService {
         });
     }
 
+    loginAsSuperAdmin(): Observable<string> {
+        return this.http.post<string>(`${this.authBasePath}/LoginAsSuperAdmin`, {});
+    }
+
     getUserRoleOptions(): Observable<DropdownOption[]> {
         return this.entityApiService.getByEntityName('UserRole').pipe(
             map(entity => {

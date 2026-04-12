@@ -12,6 +12,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import { MenuModule } from 'primeng/menu';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LoaderComponent } from './components/loader/loader.component';
@@ -79,7 +80,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     IconFieldModule,
     InputIconModule,
     InputNumberModule,
-    ToggleSwitchModule
+    ToggleSwitchModule,
+    MenuModule
   ],
   exports: [
     CommonModule,
@@ -119,7 +121,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     IconFieldModule,
     InputIconModule,
     InputNumberModule,
-    ToggleSwitchModule
+    ToggleSwitchModule,
+    MenuModule
   ],
   providers: []
 })

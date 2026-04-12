@@ -8,6 +8,8 @@ import { BusinessYearApiService } from '../../../features/business-year/services
 import { BusinessYearListDto } from '../../../features/business-year/models/business-year-list-dto.model';
 import { Router } from '@angular/router';
 import { ChangeUserSelectedYearDto } from '../../../features/business-year/models/change-user-selected-year-dto.model';
+import { MenuItem } from 'primeng/api';
+import { AuthApiService } from '../../../features/auth/services/auth-api.service';
 
 @Component({
     selector: 'app-header',
@@ -20,6 +22,10 @@ export class HeaderComponent implements OnInit {
     title$!: Observable<string>;
     isLoggedIn$!: Observable<boolean>;
     isAccountUser: boolean = false;
+    isSuperAdmin: boolean = false;
+    hasAccount: boolean = false;
+
+    impersonationMenuItems: MenuItem[] = [];
 
     years: BusinessYearListDto[] = [];
     selectedYearId: number | null = null;
@@ -35,6 +41,7 @@ export class HeaderComponent implements OnInit {
         private authService: AuthService,
         private confirmationService: ConfirmationService,
         private businessYearApiService: BusinessYearApiService,
+        private authApiService: AuthApiService,
         private router: Router
     ) { }
 
@@ -45,10 +52,29 @@ export class HeaderComponent implements OnInit {
 
         this.authService.currentUser$.subscribe(() => {
             this.isAccountUser = this.authService.isAccountUser;
+            this.isSuperAdmin = this.authService.isSuperAdmin;
+            this.hasAccount = this.authService.hasAccount;
+            this.updateMenuItems();
             if (this.isAccountUser) {
                 this.loadYears();
             }
         });
+    }
+
+    updateMenuItems() {
+        this.impersonationMenuItems = [
+            {
+                label: 'Go to Account List',
+                icon: 'pi pi-list',
+                command: () => this.switchToSuperAdmin(),
+                visible: this.isSuperAdmin && this.hasAccount
+            },
+            {
+                label: 'Logout',
+                icon: 'pi pi-sign-out',
+                command: () => this.logout()
+            }
+        ];
     }
 
     loadYears() {
@@ -106,6 +132,13 @@ export class HeaderComponent implements OnInit {
             accept: () => {
                 this.authService.logout();
             }
+        });
+    }
+
+    switchToSuperAdmin() {
+        this.authApiService.loginAsSuperAdmin().subscribe(token => {
+            this.authService.setAuthenticationToken(token);
+            this.router.navigate(['/account-management']);
         });
     }
 }
