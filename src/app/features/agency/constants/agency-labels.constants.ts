@@ -19,6 +19,7 @@ export class AgencyLabels {
     public static readonly CREATE_DIALOG_TITLE = 'Create Agency';
     public static readonly UPDATE_DIALOG_TITLE = 'Update Agency';
     public static readonly VIEW_DIALOG_TITLE = 'Agency Details';
+    public static readonly AGENCY_DETAILS = 'Agency Details';
 
     // Form fields
     public static readonly AGENCY_NAME = 'Agency Name';

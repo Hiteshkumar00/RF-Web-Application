@@ -1,82 +1,85 @@
 <div class="container-fluid py-4">
 
-    <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="mb-0 fw-bold">{{ labels.ADVANCED_PAGE_TITLE }}</h4>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.ADVANCED_PAGE_TITLE }}</h5>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <!-- Main Advanced Table -->
+            <p-table [value]="agencies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} agencies"
+                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" styleClass="p-datatable-striped p-datatable-sm"
+                [tableStyle]="{'min-width': '70rem'}">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        @for (col of columns; track col.field) {
+                        @if (col.field === 'actions') {
+                        <th style="width: 8rem; text-align: center;">{{ col.header }}</th>
+                        } @else if (col.field === 'totalBillsAmount' || col.field === 'totalPaidAmount' || col.field ===
+                        'totalPendingAmount') {
+                        <th [pSortableColumn]="col.field" class="text-end">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
+                        } @else {
+                        <th [pSortableColumn]="col.field">
+                            {{ col.header }}
+                            <p-sortIcon [field]="col.field" />
+                        </th>
+                        }
+                        }
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-agency>
+                    <tr>
+                        @for (col of columns; track col.field) {
+                        @if (col.field === 'actions') {
+                        <td class="text-center">
+                            <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top" (onClick)="openDetailDialog(agency)" />
+                        </td>
+                        } @else if (col.field === 'totalBillsAmount') {
+                        <td class="text-end fw-semibold text-info">{{ agency.totalBillsAmount | currency:'INR' }}</td>
+                        } @else if (col.field === 'totalPaidAmount') {
+                        <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | currency:'INR' }}</td>
+                        } @else if (col.field === 'totalPendingAmount') {
+                        <td class="text-end fw-bold"
+                            [ngClass]="{'text-danger': agency.totalPendingAmount > 0, 'text-success': agency.totalPendingAmount === 0}">
+                            {{ agency.totalPendingAmount | currency:'INR' }}
+                        </td>
+                        } @else {
+                        <td>
+                            @if (agency[col.field] != null && agency[col.field] !== '') {
+                            {{ agency[col.field] }}
+                            } @else {
+                            <span class="opacity-50">—</span>
+                            }
+                        </td>
+                        }
+                        }
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                            <i class="pi pi-building me-2" style="font-size: 1.5rem;"></i>
+                            {{ labels.NO_RECORDS }}
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
         </div>
     </div>
 
-    <!-- Table -->
-    <p-table [value]="agencies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} agencies"
-        [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" styleClass="p-datatable-striped p-datatable-sm"
-        [tableStyle]="{'min-width': '70rem'}">
-
-        <ng-template pTemplate="header">
-            <tr>
-                @for (col of columns; track col.field) {
-                @if (col.field === 'actions') {
-                <th style="width: 8rem; text-align: center;">{{ col.header }}</th>
-                } @else if (col.field === 'totalBillsAmount' || col.field === 'totalPaidAmount' || col.field ===
-                'totalPendingAmount') {
-                <th [pSortableColumn]="col.field" class="text-end">
-                    {{ col.header }}
-                    <p-sortIcon [field]="col.field" />
-                </th>
-                } @else {
-                <th [pSortableColumn]="col.field">
-                    {{ col.header }}
-                    <p-sortIcon [field]="col.field" />
-                </th>
-                }
-                }
-            </tr>
-        </ng-template>
-
-        <ng-template pTemplate="body" let-agency>
-            <tr>
-                @for (col of columns; track col.field) {
-                @if (col.field === 'actions') {
-                <td class="text-center">
-                    <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
-                        [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top" (onClick)="openDetailDialog(agency)" />
-                </td>
-                } @else if (col.field === 'totalBillsAmount') {
-                <td class="text-end fw-semibold text-info">{{ agency.totalBillsAmount | currency:'INR' }}</td>
-                } @else if (col.field === 'totalPaidAmount') {
-                <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | currency:'INR' }}</td>
-                } @else if (col.field === 'totalPendingAmount') {
-                <td class="text-end fw-bold"
-                    [ngClass]="{'text-danger': agency.totalPendingAmount > 0, 'text-success': agency.totalPendingAmount === 0}">
-                    {{ agency.totalPendingAmount | currency:'INR' }}
-                </td>
-                } @else {
-                <td>
-                    @if (agency[col.field] != null && agency[col.field] !== '') {
-                    {{ agency[col.field] }}
-                    } @else {
-                    <span class="opacity-50">—</span>
-                    }
-                </td>
-                }
-                }
-            </tr>
-        </ng-template>
-
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
-                    <i class="pi pi-building me-2" style="font-size: 1.5rem;"></i>
-                    {{ labels.NO_RECORDS }}
-                </td>
-            </tr>
-        </ng-template>
-
-    </p-table>
-
     <!-- All Detail Dialog -->
-    <p-dialog [visible]="showDetailDialog" [modal]="true" [style]="{ width: '800px', maxHeight: '90vh' }"
+    <p-dialog [(visible)]="showDetailDialog" [modal]="true" [style]="{ width: '800px', maxHeight: '90vh' }"
         [draggable]="false" [resizable]="false" [closable]="false" [closeOnEscape]="false">
 
         <ng-template pTemplate="header">
@@ -87,117 +90,159 @@
             </div>
         </ng-template>
 
-
         <!-- Detail content -->
-        <div *ngIf="selectedDetail">
-
-            <!-- Basic Info -->
-            <div class="row g-3 mb-3">
-                <div class="col-6">
-                    <label class="text-muted small fw-semibold">{{ labels.AGENCY_ID }}</label>
-                    <div class="fw-bold">{{ selectedDetail.id }}</div>
-                </div>
-                <div class="col-6">
-                    <label class="text-muted small fw-semibold">{{ labels.AGENCY_NAME }}</label>
-                    <div class="fw-bold">{{ selectedDetail.agencyName }}</div>
-                </div>
-                <div class="col-12" *ngIf="selectedDetail.address">
-                    <label class="text-muted small fw-semibold">{{ labels.ADDRESS }}</label>
-                    <div>{{ selectedDetail.address }}</div>
-                </div>
-            </div>
-
-            <p-divider />
-
-            <!-- Bill Summary -->
-            <h6 class="fw-bold mb-3">{{ labels.BILL_SUMMARY }}</h6>
-            <div class="row g-3 mb-4">
-                <div class="col-4">
-                    <div class="border rounded p-3 text-center border-info border-opacity-25">
-                        <div class="text-muted small mb-1">{{ labels.TOTAL_BILLS }}</div>
-                        <div class="fw-bold fs-5 text-info">{{ selectedDetail.totalBillsAmount | currency:'INR' }}</div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="border rounded p-3 text-center border-success border-opacity-25">
-                        <div class="text-muted small mb-1">{{ labels.TOTAL_PAID }}</div>
-                        <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | currency:'INR' }}
+        <div *ngIf="selectedDetail" class="p-1">
+            <!-- Basic Info Card -->
+            <div class="card border-0 mb-4 rounded-3 overflow-hidden shadow-sm bg-opacity-50">
+                <div class="card-body p-3">
+                    <div class="d-flex align-items-center gap-4">
+                        <!-- Profile Logo Placeholder -->
+                        <div class="agency-logo-wrapper d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-3 flex-shrink-0"
+                            style="width: 80px; height: 80px; border: 2px dashed rgba(var(--p-primary-rgb), 0.2);">
+                            <i class="pi pi-building fs-1 opacity-50"></i>
                         </div>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="border rounded p-3 text-center border-opacity-25"
-                        [ngClass]="{'border-danger': selectedDetail.totalPendingAmount > 0, 'border-success': selectedDetail.totalPendingAmount === 0}">
-                        <div class="text-muted small mb-1">{{ labels.TOTAL_PENDING }}</div>
-                        <div class="fw-bold fs-5"
-                            [ngClass]="{'text-danger': selectedDetail.totalPendingAmount > 0, 'text-success': selectedDetail.totalPendingAmount === 0}">
-                            {{ selectedDetail.totalPendingAmount | currency:'INR' }}
+
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h5 class="fw-bold mb-0 text-primary">{{ selectedDetail.agencyName }}</h5>
+                                <span class="badge text-primary border border-primary border-opacity-25 px-2 py-1 small">ID: {{ selectedDetail.id }}</span>
+                            </div>
+                            <div class="text-secondary small" *ngIf="selectedDetail.address">
+                                <i class="pi pi-map-marker me-1 opacity-75"></i>{{ selectedDetail.address }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Agency Persons -->
-            <div *ngIf="selectedDetail.agencyPersons?.length">
-                <h6 class="fw-bold mb-2">{{ labels.AGENCY_PERSONS }}</h6>
-                <p-table [value]="selectedDetail.agencyPersons" styleClass="p-datatable-sm p-datatable-striped mb-4">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Occupation</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-person>
-                        <tr>
-                            <td>{{ person.name }}</td>
-                            <td>{{ person.phoneNo || '—' }}</td>
-                            <td>{{ person.email || '—' }}</td>
-                            <td>{{ person.personOccupation || '—' }}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
+            <!-- Bill Summary Stats -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-3 px-1 text-primary">
+                    <i class="pi pi-chart-pie fw-bold"></i>
+                    <h6 class="fw-bold mb-0 small text-uppercase fw-bold">{{ labels.BILL_SUMMARY }}</h6>
+                </div>
+                <div class="row g-3">
+                    <div class="col-4">
+                        <div class="card h-100 border-0 shadow-sm border-start border-4 border-info">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-muted small mb-1 fw-semibold">{{ labels.TOTAL_BILLS }}</div>
+                                <div class="fw-bold fs-5 text-info">{{ selectedDetail.totalBillsAmount | currency:'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card h-100 border-0 shadow-sm border-start border-4 border-success">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-muted small mb-1 fw-semibold">{{ labels.TOTAL_PAID }}</div>
+                                <div class="fw-bold fs-5 text-success">{{ selectedDetail.totalPaidAmount | currency:'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card h-100 border-0 shadow-sm border-start border-4"
+                            [ngClass]="{'border-danger': selectedDetail.totalPendingAmount > 0, 'border-success': selectedDetail.totalPendingAmount === 0}">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-muted small mb-1 fw-semibold">{{ labels.TOTAL_PENDING }}</div>
+                                <div class="fw-bold fs-5"
+                                    [ngClass]="{'text-danger': selectedDetail.totalPendingAmount > 0, 'text-success': selectedDetail.totalPendingAmount === 0}">
+                                    {{ selectedDetail.totalPendingAmount | currency:'INR' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Bills By Year -->
-            <div *ngIf="selectedDetail.billsByYear?.length">
-                <h6 class="fw-bold mb-2">{{ labels.BILLS_BY_YEAR }}</h6>
-                <div *ngFor="let yearGroup of selectedDetail.billsByYear" class="mb-4">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <i class="pi pi-calendar text-primary"></i>
-                        <span class="fw-semibold">{{ yearGroup.yearName }}</span>
-                        <span class="text-muted small" *ngIf="yearGroup.startDate">
-                            ({{ yearGroup.startDate | date:'dd-MMM-yyyy' }}
-                            <span *ngIf="yearGroup.endDate"> To {{ yearGroup.endDate | date:'dd-MMM-yyyy' }}</span>)
-                        </span>
-                    </div>
-                    <p-table [value]="yearGroup.bills" styleClass="p-datatable-sm p-datatable-striped"
-                        *ngIf="yearGroup.bills?.length">
+            <!-- Agency Persons Section -->
+            <div *ngIf="selectedDetail.agencyPersons.length" class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-3 px-1 text-primary">
+                    <i class="pi pi-users fw-bold"></i>
+                    <h6 class="fw-bold mb-0 small text-uppercase fw-bold">{{ labels.AGENCY_PERSONS }}</h6>
+                </div>
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <p-table [value]="selectedDetail.agencyPersons" styleClass="p-datatable-sm p-datatable-striped shadow-none">
                         <ng-template pTemplate="header">
-                            <tr>
-                                <th>Bill No</th>
-                                <th>Date</th>
-                                <th class="text-end">Total</th>
-                                <th class="text-end">Paid</th>
-                                <th class="text-end">Remaining</th>
+                            <tr class="fs-xs text-uppercase opacity-75">
+                                <th class="py-3 px-3">Name</th>
+                                <th class="py-3 px-3">Phone</th>
+                                <th class="py-3 px-3">Email</th>
+                                <th class="py-3 px-3 text-center">Occupation</th>
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="body" let-bill>
-                            <tr>
-                                <td class="fw-semibold text-muted">{{ bill.billNo }}</td>
-                                <td class="small">{{ bill.date | date:'dd-MMM-yyyy' }}</td>
-                                <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
-                                <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
-                                <td class="text-end fw-bold"
-                                    [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
-                                    {{ bill.remainingAmount | currency:'INR' }}
+                        <ng-template pTemplate="body" let-person>
+                            <tr class="fs-xs">
+                                <td class="fw-bold py-3 px-3">{{ person.name }}</td>
+                                <td class="py-3 px-3">
+                                    <span class="small" *ngIf="person.phoneNo"><i class="pi pi-phone me-1 opacity-50"></i>{{ person.phoneNo }}</span>
+                                    <span class="opacity-25" *ngIf="!person.phoneNo">—</span>
+                                </td>
+                                <td class="py-3 px-3">
+                                    <span class="small" *ngIf="person.email"><i class="pi pi-envelope me-1 opacity-50"></i>{{ person.email }}</span>
+                                    <span class="opacity-25" *ngIf="!person.email">—</span>
+                                </td>
+                                <td class="py-3 px-3 text-center">
+                                    <span class="badge bg-secondary bg-opacity-10 text-secondary-emphasis rounded-pill px-2 py-1">{{ person.personOccupation || '—' }}</span>
                                 </td>
                             </tr>
                         </ng-template>
                     </p-table>
-                    <div *ngIf="!yearGroup.bills?.length" class="text-muted small text-center py-2 opacity-50">
-                        No bills for this year.
+                </div>
+            </div>
+
+            <!-- Bills By Year Section -->
+            <div *ngIf="selectedDetail.billsByYear.length">
+                <div class="d-flex align-items-center gap-2 mb-3 px-1 text-primary">
+                    <i class="pi pi-calendar fw-bold"></i>
+                    <h6 class="fw-bold mb-0 small text-uppercase fw-bold">{{ labels.BILLS_BY_YEAR }}</h6>
+                </div>
+
+                <div *ngFor="let yearGroup of selectedDetail.billsByYear" class="mb-4">
+                    <div class="card border-0 shadow-sm overflow-hidden">
+                        <div
+                            class="card-header bg-opacity-50 py-2 px-3 border-0 d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fw-bold text-primary">{{ yearGroup.yearName }}</span>
+                                <span class="text-muted fs-xs" *ngIf="yearGroup.startDate">
+                                    ({{ yearGroup.startDate | date:'dd-MMM-yyyy' }}
+                                    <span *ngIf="yearGroup.endDate"> To {{ yearGroup.endDate | date:'dd-MMM-yyyy'
+                                        }}</span>)
+                                </span>
+                            </div>
+                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2">
+                                {{ yearGroup.bills.length || 0 }} Bills
+                            </span>
+                        </div>
+
+                        <div class="p-0" *ngIf="yearGroup.bills.length">
+                            <p-table [value]="yearGroup.bills" styleClass="p-datatable-sm p-datatable-striped shadow-none">
+                                <ng-template pTemplate="header">
+                                    <tr class="fs-xs text-uppercase opacity-75">
+                                        <th class="py-2 px-3">Bill No</th>
+                                        <th class="py-2 px-3">Date</th>
+                                        <th class="text-end py-2 px-3">Total</th>
+                                        <th class="text-end py-2 px-3">Paid</th>
+                                        <th class="text-end py-2 px-3">Remaining</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-bill>
+                                    <tr class="fs-xs">
+                                        <td class="fw-semibold text-muted py-2 px-3">{{ bill.billNo }}</td>
+                                        <td class="small opacity-75 py-2 px-3">{{ bill.date | date:'dd-MMM-yyyy' }}</td>
+                                        <td class="text-end fw-semibold text-info py-2 px-3">{{ bill.netAmount |
+                                            currency:'INR' }}</td>
+                                        <td class="text-end text-success fw-semibold py-2 px-3">{{ bill.paidAmount |
+                                            currency:'INR' }}</td>
+                                        <td class="text-end fw-bold py-2 px-3"
+                                            [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
+                                            {{ bill.remainingAmount | currency:'INR' }}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <div *ngIf="!yearGroup.bills.length" class="text-muted small text-center py-4 bg-opacity-25 mt-0 border-top">
+                            <i class="pi pi-info-circle me-1 opacity-50"></i>No bills for this fiscal year.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -206,8 +251,7 @@
 
         <ng-template pTemplate="footer">
             <div class="d-flex justify-content-end">
-                <p-button [label]="labels.CLOSE" icon="pi pi-times" severity="secondary"
-                    (onClick)="closeDetailDialog()" />
+                <p-button [label]="labels.CLOSE" icon="pi pi-times" severity="secondary" (onClick)="closeDetailDialog()" />
             </div>
         </ng-template>
 
