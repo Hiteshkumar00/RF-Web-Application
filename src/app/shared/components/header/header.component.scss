@@ -11,30 +11,3 @@
     border: none;
     border-radius: 0;
 }
-
-::ng-deep .header-year-select {
-    .p-select {
-        background: var(--p-content-background) !important;
-        border: 1px solid var(--p-content-border-color) !important;
-        border-radius: 4px !important;
-        height: 20px !important;
-        display: flex !important;
-        align-items: center !important;
-
-        &:hover {
-            border-color: var(--p-primary-color) !important;
-        }
-
-        .p-select-label {
-            font-size: 0.8rem !important;
-            font-weight: 500 !important;
-            padding: 0 0.4rem !important;
-            color: var(--p-text-color) !important;
-        }
-
-        .p-select-dropdown {
-            width: 1rem !important;
-            font-size: 0.65rem !important;
-        }
-    }
-}
