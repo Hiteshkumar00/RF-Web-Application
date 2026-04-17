@@ -118,30 +118,33 @@
 
         <!-- Enable Advanced WhatsApp -->
         <div
-            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-light bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
+            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
             <div class="d-flex flex-column gap-1">
-                <span class="fw-bold text-info pe-2">{{ labels.ENABLE_ADVANCED_WHATSAPP }}</span>
+                <span class="fw-bold text-success pe-2">{{ labels.ENABLE_ADVANCED_WHATSAPP }}</span>
             </div>
             <p-toggleswitch formControlName="enableAdvancedWhatsApp" />
         </div>
 
         <!-- Advanced WhatsApp Details -->
-        <div *ngIf="form.get('enableAdvancedWhatsApp')?.value" class="d-flex flex-column gap-3 ps-3 border-start border-3 border-info">
+        <div *ngIf="form.get('enableAdvancedWhatsApp')?.value" class="d-flex flex-column gap-3 ps-3">
             <div>
                 <p-floatlabel variant="on">
-                    <input id="whatsAppPhoneNumberId" type="text" pInputText formControlName="whatsAppPhoneNumberId" class="w-100" />
+                    <input id="whatsAppPhoneNumberId" type="text" pInputText formControlName="whatsAppPhoneNumberId"
+                        class="w-100" />
                     <label for="whatsAppPhoneNumberId">{{ labels.WHATSAPP_PHONE_NUMBER_ID }}</label>
                 </p-floatlabel>
             </div>
             <div>
                 <p-floatlabel variant="on">
-                    <input id="whatsAppBusinessId" type="text" pInputText formControlName="whatsAppBusinessId" class="w-100" />
+                    <input id="whatsAppBusinessId" type="text" pInputText formControlName="whatsAppBusinessId"
+                        class="w-100" />
                     <label for="whatsAppBusinessId">{{ labels.WHATSAPP_BUSINESS_ID }}</label>
                 </p-floatlabel>
             </div>
             <div>
                 <p-floatlabel variant="on">
-                    <input id="whatsAppAccessToken" type="text" pInputText formControlName="whatsAppAccessToken" class="w-100" />
+                    <input id="whatsAppAccessToken" type="text" pInputText formControlName="whatsAppAccessToken"
+                        class="w-100" />
                     <label for="whatsAppAccessToken">{{ labels.WHATSAPP_ACCESS_TOKEN }}</label>
                 </p-floatlabel>
             </div>

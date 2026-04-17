@@ -96,16 +96,28 @@
                                     <span class="fw-bold small">{{ account.whatsAppNumber }}</span>
                                 </div>
                             </div>
-                            <div *ngIf="!account.enableWhatsApp" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                            <div *ngIf="!account.enableWhatsApp"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                 <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
                                 <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
                             </div>
 
                             <!-- Advanced WhatsApp Section -->
-                            <div *ngIf="account.enableAdvancedWhatsApp" class="bg-info bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-info">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <i class="pi pi-cog text-info"></i>
-                                    <span class="fw-bold text-info">Advanced API Enabled</span>
+                            <div *ngIf="!account.enableAdvancedWhatsApp"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>Advanced
+                                    WhatsApp</span>
+                                <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
+                            </div>
+                            <div *ngIf="account.enableAdvancedWhatsApp"
+                                class="bg-success bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-success">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>Advanced
+                                        WhatsApp</span>
+                                    <div class="text-end">
+                                        <p-tag severity="success" value="Enabled" icon="pi pi-check-circle"
+                                            class="mb-1 d-block" />
+                                    </div>
                                 </div>
                                 <div class="d-flex flex-column gap-2 small">
                                     <div class="d-flex justify-content-between">
