@@ -28,8 +28,7 @@
         <!-- Profile Logo Link -->
         <div class="d-flex flex-column gap-2">
             <p-floatlabel variant="on">
-                <input id="profileLogoLink" type="text" pInputText formControlName="profileLogoLink"
-                    class="w-100" />
+                <input id="profileLogoLink" type="text" pInputText formControlName="profileLogoLink" class="w-100" />
                 <label for="profileLogoLink">{{ labels.PROFILE_LOGO_LINK }}</label>
             </p-floatlabel>
             @if (form.get('profileLogoLink')?.value) {
@@ -50,13 +49,22 @@
             </p-floatlabel>
         </div>
 
+        <!-- Enable Suggestions -->
+        <div
+            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-light bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
+            <div class="d-flex flex-column gap-1">
+                <span class="fw-bold text-primary pe-2">{{ labels.ENABLE_SUGGESTIONS }}</span>
+            </div>
+            <p-toggleswitch formControlName="enableSuggestions" />
+        </div>
+
     </form>
 
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end">
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
-            <p-button [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
         </div>
     </ng-template>
 

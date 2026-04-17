@@ -22,7 +22,7 @@ export class AccountFormDialogComponent implements OnChanges {
     private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
-    @Input() mode: 'create' | 'update' = 'create';
+    @Input() mode: 'create' | 'update' | 'view' = 'create';
     @Input() account: AccountDto | null = null;
 
     @Output() saved = new EventEmitter<void>();
@@ -34,7 +34,12 @@ export class AccountFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     get dialogTitle(): string {
-        return this.mode === 'create' ? this.labels.CREATE_DIALOG_TITLE : this.labels.UPDATE_DIALOG_TITLE;
+        switch (this.mode) {
+            case 'create': return this.labels.CREATE_DIALOG_TITLE;
+            case 'update': return this.labels.UPDATE_DIALOG_TITLE;
+            case 'view': return this.labels.VIEW_DIALOG_TITLE;
+            default: return '';
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -42,8 +47,11 @@ export class AccountFormDialogComponent implements OnChanges {
             this.isClosing = false;
             this.loadCurrencyOptions();
             this.form = this.accountFormService.createAccountForm();
-            if (this.mode === 'update' && this.account) {
+            if ((this.mode === 'update' || this.mode === 'view') && this.account) {
                 this.accountFormService.patchForm(this.form, this.account);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
             }
         }
     }

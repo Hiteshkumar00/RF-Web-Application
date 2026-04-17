@@ -3,4 +3,5 @@ export interface UpdateAccountDto {
     profileName: string;
     profileLogoLink?: string | null;
     currencyType?: string | null;
+    enableSuggestions: boolean;
 }

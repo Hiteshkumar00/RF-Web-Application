@@ -21,6 +21,7 @@ export class AccountLabels {
     public static readonly PROFILE_NAME = 'Profile Name';
     public static readonly PROFILE_LOGO_LINK = 'Profile Logo Link';
     public static readonly CURRENCY_TYPE = 'Currency Type';
+    public static readonly ENABLE_SUGGESTIONS = 'Enable Suggestions';
 
     // Validation messages
     public static readonly PROFILE_NAME_REQUIRED = 'Profile name is required.';

@@ -12,7 +12,8 @@ export class AccountFormService {
         return this.fb.group({
             profileName: ['', [Validators.required, Validators.maxLength(100)]],
             profileLogoLink: [null],
-            currencyType: [null]
+            currencyType: [null],
+            enableSuggestions: [false]
         });
     }
 
@@ -20,7 +21,8 @@ export class AccountFormService {
         form.patchValue({
             profileName: account.profileName,
             profileLogoLink: account.profileLogoLink ?? null,
-            currencyType: account.currencyType ?? null
+            currencyType: account.currencyType ?? null,
+            enableSuggestions: account.enableSuggestions ?? false
         });
     }
 }

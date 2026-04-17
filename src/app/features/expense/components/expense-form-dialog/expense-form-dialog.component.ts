@@ -9,6 +9,7 @@ import { CreateExpenseDto } from '../../models/expense-create.dto';
 import { UpdateExpenseDto } from '../../models/expense-update.dto';
 import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-expense-form-dialog',
@@ -21,6 +22,7 @@ export class ExpenseFormDialogComponent implements OnChanges {
     private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
+    private accountDetailsService = inject(AccountDetailsService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -74,6 +76,7 @@ export class ExpenseFormDialogComponent implements OnChanges {
     }
 
     private loadSuggestions(): void {
+        if (!this.accountDetailsService.enableSuggestions) return;
         this.expenseApiService.getExpenceTypeSuggestions().subscribe({
             next: (data) => this.expenseTypeSuggestions = data
         });

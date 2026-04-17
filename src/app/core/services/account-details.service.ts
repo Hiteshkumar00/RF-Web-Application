@@ -12,11 +12,17 @@ export class AccountDetailsService {
     private authService = inject(AuthService);
     private accountApiService = inject(AccountApiService);
     private headerService = inject(HeaderService);
+    
+    private _enableSuggestions = false;
 
     private readonly defaultTitle = 'RF Application';
     private readonly defaultLogo = 'https://image2url.com/r2/default/images/1773590180920-3a186391-6a15-4289-8b28-223340a67f83.jpg';
 
     constructor() { }
+
+    get enableSuggestions(): boolean {
+        return this._enableSuggestions;
+    }
 
     init() {
         this.authService.currentUser$.pipe(
@@ -33,6 +39,7 @@ export class AccountDetailsService {
             })
         ).subscribe(account => {
             if (account) {
+                this._enableSuggestions = account.enableSuggestions;
                 this.headerService.setTitle(account.profileName);
                 if (account.profileLogoLink) {
                     this.headerService.setLogo(account.profileLogoLink);

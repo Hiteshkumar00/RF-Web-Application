@@ -28,8 +28,7 @@ export class AccountListComponent implements OnInit {
 
     // Dialog control
     showFormDialog = false;
-    showViewDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
+    formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedAccount: AccountDto | null = null;
 
     ngOnInit(): void {
@@ -56,7 +55,8 @@ export class AccountListComponent implements OnInit {
 
     openViewDialog(account: AccountDto): void {
         this.selectedAccount = account;
-        this.showViewDialog = true;
+        this.formDialogMode = 'view';
+        this.showFormDialog = true;
     }
 
     onFormSaved(): void {

@@ -10,6 +10,7 @@ import { CreateSellingBillDto } from '../../models/create-selling-bill.dto';
 import { UpdateSellingBillDto } from '../../models/update-selling-bill.dto';
 import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -22,6 +23,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
+    private accountDetailsService = inject(AccountDetailsService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -110,6 +112,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     }
 
     private loadSuggestions(): void {
+        if (!this.accountDetailsService.enableSuggestions) return;
         this.apiService.getItemSuggestions().subscribe({
             next: (data) => this.suggestions = data
         });
