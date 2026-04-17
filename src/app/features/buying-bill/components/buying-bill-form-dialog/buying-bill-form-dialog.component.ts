@@ -11,6 +11,7 @@ import { UpdateBuyingBillDto } from '../../models/update-buying-bill.dto';
 import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
 @Component({
     selector: 'app-buying-bill-form-dialog',
@@ -24,6 +25,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
+    private downloadService = inject(BillDownloadService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -264,5 +266,17 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         } else {
             this.onClose.emit();
         }
+    }
+
+    downloadPdf(): void {
+        if (!this.id) return;
+        
+        this.apiService.downloadInvoice(this.id).subscribe({
+            next: (blob) => {
+                const formValue = this.form.getRawValue();
+                const fileName = `Purchase_Bill_${formValue.billNo || this.id}.pdf`;
+                this.downloadService.downloadFile(blob, fileName);
+            }
+        });
     }
 }

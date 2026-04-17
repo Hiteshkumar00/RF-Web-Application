@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { BuyingBillApiService } from '../../services/buying-bill-api.service';
 import { BuyingBillListDto } from '../../models/buying-bill-list.dto';
 import { BuyingBillConstants } from '../../constants/buying-bill.constants';
+import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
 @Component({
     selector: 'app-buying-bill-list',
@@ -13,6 +14,7 @@ export class BuyingBillListComponent implements OnInit {
     private apiService = inject(BuyingBillApiService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
+    private downloadService = inject(BillDownloadService);
 
     title = BuyingBillConstants.BUYING_BILL_TITLE;
     labels = BuyingBillConstants.LABELS;
@@ -94,14 +96,8 @@ export class BuyingBillListComponent implements OnInit {
     downloadPdf(item: BuyingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Purchase_Bill_${item.billNo || item.id}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
+                const fileName = `Purchase_Bill_${item.billNo || item.id}.pdf`;
+                this.downloadService.downloadFile(blob, fileName);
             }
         });
     }

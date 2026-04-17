@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class HelperService {
-  constructor() {}
+  constructor() { }
 
   /**
    * Converts a Date object or string to a "DateOnly" string (YYYY-MM-DD).
@@ -12,7 +12,7 @@ export class HelperService {
    */
   setDate(date: Date | string | null | undefined): string | null {
     if (!date) return null;
-    
+
     const d = new Date(date);
     if (isNaN(d.getTime())) return null;
 

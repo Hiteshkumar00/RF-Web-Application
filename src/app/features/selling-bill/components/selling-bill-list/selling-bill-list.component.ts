@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillListDto } from '../../models/selling-bill.model';
 import { SellingBillConstants } from '../../constants/selling-bill.constants';
+import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -13,6 +14,7 @@ export class SellingBillListComponent implements OnInit {
     private apiService = inject(SellingBillApiService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
+    private downloadService = inject(BillDownloadService);
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
     labels = SellingBillConstants.LABELS;
@@ -94,14 +96,8 @@ export class SellingBillListComponent implements OnInit {
     downloadPdf(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
+                const fileName = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
+                this.downloadService.downloadFile(blob, fileName);
             }
         });
     }

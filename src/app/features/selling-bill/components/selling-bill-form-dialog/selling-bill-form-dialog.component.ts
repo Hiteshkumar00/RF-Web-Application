@@ -11,6 +11,7 @@ import { UpdateSellingBillDto } from '../../models/update-selling-bill.dto';
 import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -24,6 +25,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
+    private downloadService = inject(BillDownloadService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -217,5 +219,18 @@ export class SellingBillFormDialogComponent implements OnChanges {
         } else {
             this.onClose.emit();
         }
+    }
+
+    downloadPdf(): void {
+        if (!this.id) return;
+
+        this.apiService.downloadInvoice(this.id).subscribe({
+            next: (blob) => {
+                const formValue = this.form.getRawValue();
+                const dateStr = this.helperService.setDate(formValue.date);
+                const fileName = `Bill_${formValue.billNo || this.id}_${dateStr}_${formValue.customerName}.pdf`;
+                this.downloadService.downloadFile(blob, fileName);
+            }
+        });
     }
 }

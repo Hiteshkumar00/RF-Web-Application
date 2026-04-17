@@ -101,7 +101,8 @@
                     <div class="d-flex gap-4 align-items-center">
                         <div *ngIf="mode !== 'view'" class="d-flex align-items-center gap-2">
                             <label class="small fw-semibold text-muted mb-0 cursor-pointer">Has Warranty?</label>
-                            <p-toggleswitch [(ngModel)]="globalHasWarrenty" [ngModelOptions]="{standalone: true}" styleClass="p-toggleswitch-sm" />
+                            <p-toggleswitch [(ngModel)]="globalHasWarrenty" [ngModelOptions]="{standalone: true}"
+                                styleClass="p-toggleswitch-sm" />
                         </div>
                         <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Item"
                             styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
@@ -125,21 +126,26 @@
                             <td>
                                 <p-iconField iconPosition="right">
                                     <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions"
-                                        (completeMethod)="searchItems($event)" field="itemName" (onSelect)="onSelectItem($event, i)"
-                                        placeholder="Item Name" styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm"
-                                        appendTo="body" [dropdown]="true" [autofocus]="true" [delay]="100">
+                                        (completeMethod)="searchItems($event)" field="itemName"
+                                        (onSelect)="onSelectItem($event, i)" placeholder="Item Name" styleClass="w-100"
+                                        inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
+                                        [autofocus]="true" [delay]="100">
                                         <ng-template let-suggestion pTemplate="item">
                                             <div class="d-flex justify-content-between align-items-center w-100 gap-4">
                                                 <span class="fw-bold">{{ suggestion.itemName }}</span>
                                                 <div class="d-flex flex-column align-items-end">
-                                                    <span class="text-success small fw-semibold">{{ suggestion.price | currency:'INR' }}</span>
-                                                    <span class="text-muted extra-small" style="font-size: 0.7rem;">Sold {{ suggestion.count }} times</span>
+                                                    <span class="text-success small fw-semibold">{{ suggestion.price |
+                                                        currency:'INR' }}</span>
+                                                    <span class="text-muted extra-small" style="font-size: 0.7rem;">Sold
+                                                        {{ suggestion.count }} times</span>
                                                 </div>
                                             </div>
                                         </ng-template>
                                     </p-autoComplete>
-                                    <p-inputIcon *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
-                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required" tooltipPosition="top" />
+                                    <p-inputIcon
+                                        *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
+                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
+                                        tooltipPosition="top" />
                                 </p-iconField>
                             </td>
                             <td>
@@ -255,7 +261,7 @@
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
                         <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                                styleClass="w-40 me-0" inputStyleClass="text-end" class="p-inputtext-sm" />
+                            styleClass="w-40 me-0" inputStyleClass="text-end" class="p-inputtext-sm" />
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
@@ -279,7 +285,10 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top" *ngIf="form">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top w-100" *ngIf="form">
+            <p-button *ngIf="mode === 'view'" label="Download" icon="pi pi-download" (onClick)="downloadPdf()"
+                severity="info" class="shadow-sm me-auto" />
+
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
             <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
                 [disabled]="form.invalid" severity="primary" class="shadow-sm" />

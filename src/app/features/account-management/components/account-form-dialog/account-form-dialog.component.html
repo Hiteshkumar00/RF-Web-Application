@@ -26,18 +26,59 @@
         </div>
 
         <!-- Profile Logo Link -->
-        <div class="d-flex flex-column gap-2">
+        <div class="d-flex flex-column gap-2 border rounded p-3 bg-light bg-opacity-10">
             <p-floatlabel variant="on">
                 <input id="profileLogoLink" type="text" pInputText formControlName="profileLogoLink" class="w-100" />
                 <label for="profileLogoLink">{{ labels.PROFILE_LOGO_LINK }}</label>
             </p-floatlabel>
             @if (form.get('profileLogoLink')?.value) {
             <div class="mt-1 text-center border rounded p-2 shadow-sm d-flex align-items-center justify-content-center"
-                style="min-height: 100px;">
-                <p-image [src]="form.get('profileLogoLink')?.value" height="80" [preview]="true"
+                style="min-height: 80px;">
+                <p-image [src]="form.get('profileLogoLink')?.value" height="60" [preview]="true"
                     styleClass="border rounded shadow-sm" />
             </div>
             }
+        </div>
+
+        <!-- Title / Tagline -->
+        <div>
+            <p-floatlabel variant="on">
+                <input id="title" type="text" pInputText formControlName="title" class="w-100" />
+                <label for="title">{{ labels.TITLE }}</label>
+            </p-floatlabel>
+        </div>
+
+        <!-- Phone & Email Row -->
+        <div class="row g-3">
+            <div class="col-6">
+                <p-floatlabel variant="on">
+                    <input id="phone" type="text" pInputText formControlName="phone" class="w-100" />
+                    <label for="phone">{{ labels.PHONE }}</label>
+                </p-floatlabel>
+            </div>
+            <div class="col-6">
+                <p-floatlabel variant="on">
+                    <input id="email" type="text" pInputText formControlName="email" class="w-100" />
+                    <label for="email">{{ labels.EMAIL }}</label>
+                </p-floatlabel>
+            </div>
+        </div>
+
+        <!-- GSTIN -->
+        <div>
+            <p-floatlabel variant="on">
+                <input id="gstin" type="text" pInputText formControlName="gstin" class="w-100" />
+                <label for="gstin">{{ labels.GSTIN }}</label>
+            </p-floatlabel>
+        </div>
+
+        <!-- Address -->
+        <div>
+            <p-floatlabel variant="on">
+                <textarea id="address" pInputTextarea formControlName="address" rows="2" class="w-100 py-3"
+                    style="resize: none;"></textarea>
+                <label for="address">{{ labels.ADDRESS }}</label>
+            </p-floatlabel>
         </div>
 
         <!-- Currency Type -->
@@ -64,7 +105,8 @@
         <div class="d-flex gap-2 justify-content-end">
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button" (onClick)="onSubmit()" />
+            <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button"
+                (onClick)="onSubmit()" />
         </div>
     </ng-template>
 
