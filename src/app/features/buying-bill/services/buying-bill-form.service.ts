@@ -11,7 +11,7 @@ export class BuyingBillFormService {
     createForm(): FormGroup {
         return this.fb.group({
             id: [0],
-            billNo: [{ value: null, disabled: true }],
+            billNo: [null],
             agencyId: [null, [Validators.required]],
             date: [new Date(), [Validators.required]],
             discount: [0, [Validators.min(0)]],
