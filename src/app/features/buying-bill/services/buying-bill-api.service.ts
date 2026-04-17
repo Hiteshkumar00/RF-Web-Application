@@ -47,4 +47,8 @@ export class BuyingBillApiService {
     getExpenceTypeSuggestions(): Observable<string[]> {
         return this.http.get<string[]>(`${this.basePath}/GetExpenceTypeSuggestions`);
     }
+
+    downloadInvoice(id: number): Observable<Blob> {
+        return this.http.get(`${this.basePath}/DownloadInvoice/${id}`, { responseType: 'blob' });
+    }
 }

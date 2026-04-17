@@ -17,7 +17,7 @@ export class SellingBillListComponent implements OnInit {
     title = SellingBillConstants.SELLING_BILL_TITLE;
     labels = SellingBillConstants.LABELS;
     bills: SellingBillListDto[] = [];
-    
+
     showFormDialog = false;
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedId?: number;
@@ -82,11 +82,26 @@ export class SellingBillListComponent implements OnInit {
         this.apiService.delete(id).subscribe({
             next: () => {
                 this.loadData();
-                this.messageService.add({ 
-                    severity: 'success', 
-                    summary: 'Success', 
-                    detail: SellingBillConstants.MESSAGES.DELETE_SUCCESS(this.title) 
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: SellingBillConstants.MESSAGES.DELETE_SUCCESS(this.title)
                 });
+            }
+        });
+    }
+
+    downloadPdf(item: SellingBillListDto): void {
+        this.apiService.downloadInvoice(item.id).subscribe({
+            next: (blob) => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
             }
         });
     }

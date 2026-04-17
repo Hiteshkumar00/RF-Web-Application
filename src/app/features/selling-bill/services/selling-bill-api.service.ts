@@ -36,4 +36,8 @@ export class SellingBillApiService {
     getItemSuggestions(): Observable<SellingBillItemSuggestionDto[]> {
         return this.http.get<SellingBillItemSuggestionDto[]>(`${this.basePath}/GetItemSuggestions`);
     }
+
+    downloadInvoice(id: number): Observable<Blob> {
+        return this.http.get(`${this.basePath}/DownloadInvoice/${id}`, { responseType: 'blob' });
+    }
 }
