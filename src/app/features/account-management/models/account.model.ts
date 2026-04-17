@@ -11,4 +11,8 @@ export interface AccountDto {
     enableSuggestions: boolean;
     whatsAppNumber?: string | null;
     enableWhatsApp: boolean;
+    enableAdvancedWhatsApp: boolean;
+    whatsAppPhoneNumberId?: string;
+    whatsAppBusinessId?: string;
+    whatsAppAccessToken?: string;
 }

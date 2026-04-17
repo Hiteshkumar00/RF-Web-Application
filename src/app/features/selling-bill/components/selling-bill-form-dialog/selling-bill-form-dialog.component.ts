@@ -254,7 +254,9 @@ export class SellingBillFormDialogComponent implements OnChanges {
         if (this.id) {
             this.apiService.downloadInvoice(this.id).subscribe({
                 next: (blob) => {
-                    this.whatsAppService.sendBillOnWhatsApp(billData, blob);
+                    const dateStr = this.helperService.setDate(formValue.date);
+                    const fileName = `Bill_${formValue.billNo || this.id}_${dateStr}_${formValue.customerName}.pdf`;
+                    this.whatsAppService.sendBillOnWhatsApp(billData, blob, fileName);
                 },
                 error: () => {
                     this.whatsAppService.sendBillOnWhatsApp(billData);

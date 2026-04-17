@@ -113,10 +113,11 @@ export class SellingBillListComponent implements OnInit {
     sendWhatsApp(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                this.whatsAppService.sendBillOnWhatsApp(item, blob);
+                const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
+                this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
             },
             error: () => {
-                this.whatsAppService.sendBillOnWhatsApp(item); // Fallback to link only
+                this.whatsAppService.sendBillOnWhatsApp(item);
             }
         });
     }

@@ -15,6 +15,7 @@ export class AccountDetailsService {
     
     private _enableSuggestions = false;
     private _enableWhatsApp = false;
+    private _enableAdvancedWhatsApp = false;
     private accountSubscription?: any;
 
     private readonly defaultTitle = 'RF Application';
@@ -28,6 +29,10 @@ export class AccountDetailsService {
 
     get enableWhatsApp(): boolean {
         return this._enableWhatsApp;
+    }
+
+    get enableAdvancedWhatsApp(): boolean {
+        return this._enableAdvancedWhatsApp;
     }
 
     init() {
@@ -59,6 +64,7 @@ export class AccountDetailsService {
         if (account) {
             this._enableSuggestions = account.enableSuggestions;
             this._enableWhatsApp = account.enableWhatsApp;
+            this._enableAdvancedWhatsApp = account.enableAdvancedWhatsApp;
             this.headerService.setTitle(account.profileName);
             if (account.profileLogoLink) {
                 this.headerService.setLogo(account.profileLogoLink);

@@ -20,7 +20,11 @@ export class AccountFormService {
             currencyType: [null],
             enableSuggestions: [false],
             whatsAppNumber: [null, [Validators.maxLength(50)]],
-            enableWhatsApp: [false]
+            enableWhatsApp: [false],
+            enableAdvancedWhatsApp: [false],
+            whatsAppPhoneNumberId: [null],
+            whatsAppBusinessId: [null],
+            whatsAppAccessToken: [null]
         });
     }
 
@@ -36,7 +40,11 @@ export class AccountFormService {
             currencyType: account.currencyType ?? null,
             enableSuggestions: account.enableSuggestions ?? false,
             whatsAppNumber: account.whatsAppNumber ?? null,
-            enableWhatsApp: account.enableWhatsApp ?? false
+            enableWhatsApp: account.enableWhatsApp ?? false,
+            enableAdvancedWhatsApp: account.enableAdvancedWhatsApp ?? false,
+            whatsAppPhoneNumberId: account.whatsAppPhoneNumberId ?? null,
+            whatsAppBusinessId: account.whatsAppBusinessId ?? null,
+            whatsAppAccessToken: account.whatsAppAccessToken ?? null
         });
     }
 }

@@ -96,10 +96,31 @@
                                     <span class="fw-bold small">{{ account.whatsAppNumber }}</span>
                                 </div>
                             </div>
-                            <div *ngIf="!account.enableWhatsApp"
-                                class="info-item p-3 d-flex justify-content-between align-items-center">
+                            <div *ngIf="!account.enableWhatsApp" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                 <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
                                 <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
+                            </div>
+
+                            <!-- Advanced WhatsApp Section -->
+                            <div *ngIf="account.enableAdvancedWhatsApp" class="bg-info bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-info">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <i class="pi pi-cog text-info"></i>
+                                    <span class="fw-bold text-info">Advanced API Enabled</span>
+                                </div>
+                                <div class="d-flex flex-column gap-2 small">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Phone ID:</span>
+                                        <span class="fw-semibold">{{ account.whatsAppPhoneNumberId || '---' }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Business ID:</span>
+                                        <span class="fw-semibold">{{ account.whatsAppBusinessId || '---' }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Token:</span>
+                                        <span class="fw-semibold">••••••••••••••••</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

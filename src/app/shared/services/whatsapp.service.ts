@@ -1,52 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { AccountDetailsService } from '../../core/services/account-details.service';
+import { SellingBillApiService } from '../../features/selling-bill/services/selling-bill-api.service';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WhatsAppService {
+    private accountDetailsService = inject(AccountDetailsService);
+    private billingApiService = inject(SellingBillApiService);
+    private messageService = inject(MessageService);
+
     constructor() { }
 
-    async sendBillOnWhatsApp(bill: any, blob?: Blob) {
+    async sendBillOnWhatsApp(bill: any, blob?: Blob, fileName?: string) {
+        // If Advanced API is enabled, trigger backend sending
+        if (this.accountDetailsService.enableAdvancedWhatsApp) {
+            this.billingApiService.sendWhatsAppMessage(bill.id).subscribe({
+                next: () => this.messageService.add({ severity: 'success', summary: 'WhatsApp API', detail: 'Message sent via WhatsApp Business API' }),
+                error: (err) => this.messageService.add({ severity: 'error', summary: 'API Error', detail: 'Failed to send via Business API. Try normal sharing.' })
+            });
+            return;
+        }
+
         const phone = bill.phoneNo;
         const name = bill.customerName || bill.agencyName || 'Customer';
         const billNo = bill.billNo || bill.id;
+        const finalFileName = fileName || `Bill_${billNo}.pdf`;
+        const id = bill.id;
 
-        if (blob) {
-            try {
-                const file = new File([blob], `Bill_${billNo}.pdf`, { type: 'application/pdf' });
-
-                // Try Web Share API (Works on Mobile/Modern Browsers)
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: `Invoice ${billNo}`,
-                        text: `Hello ${name}, please find attached your invoice ${billNo}.`
-                    });
-                    return; // Shared successfully
-                }
-            } catch (error) {
-                console.error('Sharing failed', error);
-            }
-        }
-
-        // Fallback to WhatsApp Link (Message ONLY, no attachment)
-        this.openWhatsAppLink(bill);
-    }
-
-    private openWhatsAppLink(bill: any) {
-        const phone = bill.phoneNo;
-        if (!phone) return;
-
+        // 1. Generate the Professional Message
         const isPending = (bill.remainingAmount || 0) > 0;
         const netAmount = bill.netAmount || bill.finalAmount || 0;
         const paidAmount = bill.paidAmount || 0;
         const remainingAmount = bill.remainingAmount || 0;
-        const billNo = bill.billNo;
         const date = bill.date;
-        const name = bill.customerName || bill.agencyName || 'Customer';
-        const id = bill.id;
-
         const pdfLink = `${environment.apiUrl}/SellingBill/PrintInvoice/${id}`;
 
         let message = '';
@@ -65,9 +54,30 @@ export class WhatsAppService {
                 `Thank you for choosing us!`;
         }
 
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${this.formatPhone(phone)}?text=${encodedMessage}`;
-        window.open(whatsappUrl, '_blank');
+        // 2. Try Native Sharing (File + Message Together)
+        if (blob) {
+            try {
+                const file = new File([blob], finalFileName, { type: 'application/pdf' });
+
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: `Invoice ${billNo}`,
+                        text: message
+                    });
+                    return;
+                }
+            } catch (error) {
+                console.error('Sharing failed', error);
+            }
+        }
+
+        // 3. Fallback to WhatsApp Link (Message ONLY)
+        if (phone) {
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${this.formatPhone(phone)}?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
     }
 
     private formatPhone(phone: string): string {

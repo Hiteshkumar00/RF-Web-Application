@@ -29,6 +29,10 @@ export class AccountLabels {
     public static readonly ENABLE_SUGGESTIONS = 'Enable Suggestions';
     public static readonly WHATSAPP_NUMBER = 'WhatsApp Number';
     public static readonly ENABLE_WHATSAPP = 'Enable WhatsApp Messaging';
+    public static readonly ENABLE_ADVANCED_WHATSAPP = 'Enable Advanced WhatsApp API';
+    public static readonly WHATSAPP_PHONE_NUMBER_ID = 'WhatsApp Phone Number ID';
+    public static readonly WHATSAPP_BUSINESS_ID = 'WhatsApp Business ID';
+    public static readonly WHATSAPP_ACCESS_TOKEN = 'WhatsApp Access Token';
 
     // Validation messages
     public static readonly PROFILE_NAME_REQUIRED = 'Profile name is required.';
