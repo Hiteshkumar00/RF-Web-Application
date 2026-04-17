@@ -12,6 +12,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
+import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -26,6 +27,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
+    private whatsAppService = inject(WhatsAppService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -85,6 +87,10 @@ export class SellingBillFormDialogComponent implements OnChanges {
 
     get remainingAmount(): number {
         return this.finalAmount - this.paidAmount;
+    }
+
+    get canSendWhatsApp(): boolean {
+        return this.accountDetailsService.enableWhatsApp;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -232,5 +238,30 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.downloadService.downloadFile(blob, fileName);
             }
         });
+    }
+
+    sendWhatsApp(): void {
+        const formValue = this.form.getRawValue();
+        const billData = {
+            ...formValue,
+            date: this.helperService.setDate(formValue.date),
+            netAmount: this.finalAmount,
+            paidAmount: this.paidAmount,
+            remainingAmount: this.remainingAmount,
+            id: this.id
+        };
+
+        if (this.id) {
+            this.apiService.downloadInvoice(this.id).subscribe({
+                next: (blob) => {
+                    this.whatsAppService.sendBillOnWhatsApp(billData, blob);
+                },
+                error: () => {
+                    this.whatsAppService.sendBillOnWhatsApp(billData);
+                }
+            });
+        } else {
+            this.whatsAppService.sendBillOnWhatsApp(billData);
+        }
     }
 }

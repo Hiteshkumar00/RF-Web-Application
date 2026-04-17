@@ -14,6 +14,8 @@ export class AccountDetailsService {
     private headerService = inject(HeaderService);
     
     private _enableSuggestions = false;
+    private _enableWhatsApp = false;
+    private accountSubscription?: any;
 
     private readonly defaultTitle = 'RF Application';
     private readonly defaultLogo = 'https://image2url.com/r2/default/images/1773590180920-3a186391-6a15-4289-8b28-223340a67f83.jpg';
@@ -24,8 +26,14 @@ export class AccountDetailsService {
         return this._enableSuggestions;
     }
 
+    get enableWhatsApp(): boolean {
+        return this._enableWhatsApp;
+    }
+
     init() {
-        this.authService.currentUser$.pipe(
+        if (this.accountSubscription) return; // Already initialized
+
+        this.accountSubscription = this.authService.currentUser$.pipe(
             switchMap(user => {
                 const accountId = user?.accountId;
                 const isAccountUser = this.authService.isAccountUser;
@@ -34,23 +42,32 @@ export class AccountDetailsService {
                     return this.accountApiService.getById(parseInt(accountId));
                 }
 
-                // If not an account user, we can reset or skip
                 return of(null);
             })
-        ).subscribe(account => {
-            if (account) {
-                this._enableSuggestions = account.enableSuggestions;
-                this.headerService.setTitle(account.profileName);
-                if (account.profileLogoLink) {
-                    this.headerService.setLogo(account.profileLogoLink);
-                } else {
-                    this.headerService.setLogo(this.defaultLogo);
-                }
+        ).subscribe(account => this.updateState(account));
+    }
+
+    refresh() {
+        const user = this.authService.currentUser;
+        const accountId = user?.accountId;
+        if (accountId && accountId !== '0') {
+            this.accountApiService.getById(parseInt(accountId)).subscribe(account => this.updateState(account));
+        }
+    }
+
+    private updateState(account: any) {
+        if (account) {
+            this._enableSuggestions = account.enableSuggestions;
+            this._enableWhatsApp = account.enableWhatsApp;
+            this.headerService.setTitle(account.profileName);
+            if (account.profileLogoLink) {
+                this.headerService.setLogo(account.profileLogoLink);
             } else {
-                // Default values when not logged into an account
-                this.headerService.setTitle(this.defaultTitle);
                 this.headerService.setLogo(this.defaultLogo);
             }
-        });
+        } else {
+            this.headerService.setTitle(this.defaultTitle);
+            this.headerService.setLogo(this.defaultLogo);
+        }
     }
 }

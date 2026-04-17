@@ -6,6 +6,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { HeaderService } from '../../../../shared/services/header.service';
 import { ActivatedRoute } from '@angular/router';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
   selector: 'app-account-profile',
@@ -19,6 +20,7 @@ export class AccountProfileComponent implements OnInit {
   private messageService = inject(MessageService);
   private headerService = inject(HeaderService);
   private route = inject(ActivatedRoute);
+  private accountDetailsService = inject(AccountDetailsService);
 
   labels = AccountLabels;
   account: AccountDto | null = null;
@@ -64,7 +66,8 @@ export class AccountProfileComponent implements OnInit {
 
   onSaved(): void {
     this.isEditMode = false;
-    this.loadAccount(); // Re-fetch data to reflect changes
+    this.loadAccount(); // Re-fetch data for local view
+    this.accountDetailsService.refresh(); // Refresh global state (WhatsApp, Suggestions, etc.)
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Account details updated' });
   }
 }

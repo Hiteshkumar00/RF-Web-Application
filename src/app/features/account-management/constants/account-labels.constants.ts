@@ -20,13 +20,15 @@ export class AccountLabels {
     // Form fields
     public static readonly PROFILE_NAME = 'Profile Name';
     public static readonly PROFILE_LOGO_LINK = 'Profile Logo Link';
-    public static readonly TITLE = 'Company Title/Tagline';
+    public static readonly TITLE = 'Business Title/Tagline';
     public static readonly ADDRESS = 'Full Address';
     public static readonly PHONE = 'Contact Phone';
     public static readonly EMAIL = 'Contact Email';
     public static readonly GSTIN = 'GSTIN Number';
     public static readonly CURRENCY_TYPE = 'Currency Type';
     public static readonly ENABLE_SUGGESTIONS = 'Enable Suggestions';
+    public static readonly WHATSAPP_NUMBER = 'WhatsApp Number';
+    public static readonly ENABLE_WHATSAPP = 'Enable WhatsApp Messaging';
 
     // Validation messages
     public static readonly PROFILE_NAME_REQUIRED = 'Profile name is required.';

@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '480px' }" [draggable]="false" [resizable]="false"
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '550px' }" [draggable]="false" [resizable]="false"
     [closable]="false" [closeOnEscape]="false">
 
     <ng-template pTemplate="header">
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Profile Logo Link -->
-        <div class="d-flex flex-column gap-2 border rounded p-3 bg-light bg-opacity-10">
+        <div class="d-flex flex-column gap-2 border rounded p-3 bg-opacity-10">
             <p-floatlabel variant="on">
                 <input id="profileLogoLink" type="text" pInputText formControlName="profileLogoLink" class="w-100" />
                 <label for="profileLogoLink">{{ labels.PROFILE_LOGO_LINK }}</label>
@@ -92,11 +92,28 @@
 
         <!-- Enable Suggestions -->
         <div
-            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-light bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
+            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
             <div class="d-flex flex-column gap-1">
                 <span class="fw-bold text-primary pe-2">{{ labels.ENABLE_SUGGESTIONS }}</span>
             </div>
             <p-toggleswitch formControlName="enableSuggestions" />
+        </div>
+
+        <!-- Enable WhatsApp -->
+        <div
+            class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">
+            <div class="d-flex flex-column gap-1">
+                <span class="fw-bold text-success pe-2">{{ labels.ENABLE_WHATSAPP }}</span>
+            </div>
+            <p-toggleswitch formControlName="enableWhatsApp" />
+        </div>
+
+        <!-- WhatsApp Number -->
+        <div *ngIf="form.get('enableWhatsApp')?.value">
+            <p-floatlabel variant="on">
+                <input id="whatsAppNumber" type="text" pInputText formControlName="whatsAppNumber" class="w-100" />
+                <label for="whatsAppNumber">{{ labels.WHATSAPP_NUMBER }}</label>
+            </p-floatlabel>
         </div>
 
     </form>

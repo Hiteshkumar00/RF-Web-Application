@@ -4,6 +4,8 @@ import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillListDto } from '../../models/selling-bill.model';
 import { SellingBillConstants } from '../../constants/selling-bill.constants';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
+import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -15,6 +17,12 @@ export class SellingBillListComponent implements OnInit {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private downloadService = inject(BillDownloadService);
+    private accountDetailsService = inject(AccountDetailsService);
+    private whatsAppService = inject(WhatsAppService);
+
+    get canSendWhatsApp(): boolean {
+        return this.accountDetailsService.enableWhatsApp;
+    }
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
     labels = SellingBillConstants.LABELS;
@@ -98,6 +106,17 @@ export class SellingBillListComponent implements OnInit {
             next: (blob) => {
                 const fileName = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
                 this.downloadService.downloadFile(blob, fileName);
+            }
+        });
+    }
+
+    sendWhatsApp(item: SellingBillListDto): void {
+        this.apiService.downloadInvoice(item.id).subscribe({
+            next: (blob) => {
+                this.whatsAppService.sendBillOnWhatsApp(item, blob);
+            },
+            error: () => {
+                this.whatsAppService.sendBillOnWhatsApp(item); // Fallback to link only
             }
         });
     }

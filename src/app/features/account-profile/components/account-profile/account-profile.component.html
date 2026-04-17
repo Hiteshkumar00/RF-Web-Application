@@ -1,6 +1,6 @@
 <div class="container py-5 animate-fade-in">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-10 col-lg-8">
             <p-card styleClass="shadow-lg border-round-xl overflow-hidden">
                 <ng-template pTemplate="header">
                     <div class="bg-primary p-4 text-white d-flex align-items-center justify-content-between">
@@ -45,48 +45,69 @@
                             </div>
 
                             <!-- New Branding Fields -->
-                            <div *ngIf="account.title" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-tag me-2"></i>{{ labels.TITLE }}</span>
+                            <div *ngIf="account.title"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-tag me-2"></i>{{ labels.TITLE
+                                    }}</span>
                                 <span class="fw-bold">{{ account.title }}</span>
                             </div>
 
-                            <div *ngIf="account.phone" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-phone me-2"></i>{{ labels.PHONE }}</span>
+                            <div *ngIf="account.phone"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-phone me-2"></i>{{ labels.PHONE
+                                    }}</span>
                                 <span class="fw-bold">{{ account.phone }}</span>
                             </div>
 
-                            <div *ngIf="account.email" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>{{ labels.EMAIL }}</span>
+                            <div *ngIf="account.email"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>{{ labels.EMAIL
+                                    }}</span>
                                 <span class="fw-bold">{{ account.email }}</span>
                             </div>
 
-                            <div *ngIf="account.gstin" class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-info-circle me-2"></i>{{ labels.GSTIN }}</span>
+                            <div *ngIf="account.gstin"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-info-circle me-2"></i>{{
+                                    labels.GSTIN }}</span>
                                 <span class="fw-bold">{{ account.gstin }}</span>
                             </div>
 
-                            <div *ngIf="account.address" class="info-item p-3 border-bottom d-flex flex-column align-items-start gap-2">
-                                <span class="text-muted fw-semibold"><i class="pi pi-map-marker me-2"></i>{{ labels.ADDRESS }}</span>
+                            <div *ngIf="account.address"
+                                class="info-item p-3 border-bottom d-flex flex-column align-items-start gap-2">
+                                <span class="text-muted fw-semibold"><i class="pi pi-map-marker me-2"></i>{{
+                                    labels.ADDRESS }}</span>
                                 <span class="fw-bold w-100 text-end">{{ account.address }}</span>
                             </div>
-                            <div class="info-item p-3 d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-sparkles me-2"></i>Suggestions</span>
+                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i
+                                        class="pi pi-sparkles me-2"></i>Suggestions</span>
                                 <p-tag [severity]="account.enableSuggestions ? 'success' : 'secondary'"
                                     [value]="account.enableSuggestions ? 'Enabled' : 'Disabled'"
                                     [icon]="account.enableSuggestions ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                            </div>
+
+                            <div *ngIf="account.enableWhatsApp"
+                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
+                                <div class="text-end">
+                                    <p-tag severity="success" value="Enabled" icon="pi pi-check-circle"
+                                        class="mb-1 d-block" />
+                                    <span class="fw-bold small">{{ account.whatsAppNumber }}</span>
+                                </div>
+                            </div>
+                            <div *ngIf="!account.enableWhatsApp"
+                                class="info-item p-3 d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
+                                <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Reusable Edit Dialog -->
-                <app-account-form-dialog 
-                    *ngIf="account"
-                    [visible]="isEditMode" 
-                    mode="update" 
-                    [account]="account" 
-                    (saved)="onSaved()" 
-                    (closed)="toggleEdit()">
+                <app-account-form-dialog *ngIf="account" [visible]="isEditMode" mode="update" [account]="account"
+                    (saved)="onSaved()" (closed)="toggleEdit()">
                 </app-account-form-dialog>
             </p-card>
         </div>

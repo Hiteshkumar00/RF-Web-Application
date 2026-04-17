@@ -18,7 +18,9 @@ export class AccountFormService {
             email: [null, [Validators.email, Validators.maxLength(100)]],
             gstin: [null, [Validators.maxLength(50)]],
             currencyType: [null],
-            enableSuggestions: [false]
+            enableSuggestions: [false],
+            whatsAppNumber: [null, [Validators.maxLength(50)]],
+            enableWhatsApp: [false]
         });
     }
 
@@ -32,7 +34,9 @@ export class AccountFormService {
             email: account.email ?? null,
             gstin: account.gstin ?? null,
             currencyType: account.currencyType ?? null,
-            enableSuggestions: account.enableSuggestions ?? false
+            enableSuggestions: account.enableSuggestions ?? false,
+            whatsAppNumber: account.whatsAppNumber ?? null,
+            enableWhatsApp: account.enableWhatsApp ?? false
         });
     }
 }

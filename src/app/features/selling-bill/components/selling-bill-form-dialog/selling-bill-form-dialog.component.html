@@ -286,6 +286,9 @@
 
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top w-100" *ngIf="form">
+            <p-button *ngIf="mode === 'view' && canSendWhatsApp" label="WhatsApp" icon="pi pi-whatsapp"
+                (onClick)="sendWhatsApp()" severity="success" class="shadow-sm" />
+
             <p-button *ngIf="mode === 'view'" label="Download" icon="pi pi-download" (onClick)="downloadPdf()"
                 severity="info" class="shadow-sm me-auto" />
 

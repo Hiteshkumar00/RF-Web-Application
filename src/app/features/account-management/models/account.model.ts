@@ -9,4 +9,6 @@ export interface AccountDto {
     gstin?: string | null;
     currencyType?: string | null;
     enableSuggestions: boolean;
+    whatsAppNumber?: string | null;
+    enableWhatsApp: boolean;
 }
