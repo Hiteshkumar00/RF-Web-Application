@@ -75,11 +75,23 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-iconField iconPosition="right">
-                                    <input pInputText formControlName="itemName" placeholder="Item Name"
-                                        class="w-100 p-inputtext-sm" />
+                                    <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions"
+                                        (completeMethod)="searchItems($event)" field="itemName" (onSelect)="onSelectItem($event, i)"
+                                        placeholder="Item Name" styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm"
+                                        appendTo="body" [dropdown]="true" [autofocus]="true" [delay]="100">
+                                        <ng-template let-suggestion pTemplate="item">
+                                            <div class="d-flex justify-content-between align-items-center w-100 gap-4">
+                                                <span class="fw-bold">{{ suggestion.itemName }}</span>
+                                                <div class="d-flex flex-column align-items-end">
+                                                    <span class="text-success small fw-semibold">{{ suggestion.price | currency:'INR' }}</span>
+                                                    <span class="text-muted extra-small" style="font-size: 0.7rem;">Bought {{ suggestion.count }} times</span>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-autoComplete>
                                     <p-inputIcon
                                         *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
-                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Required"
+                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
                                         tooltipPosition="top" />
                                 </p-iconField>
                             </td>
@@ -134,8 +146,10 @@
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
-                                <input pInputText formControlName="expenceType" placeholder="Type"
-                                    class="w-100 p-inputtext-sm" />
+                                <p-autoComplete formControlName="expenceType" [suggestions]="filteredExpenseTypeSuggestions"
+                                    (completeMethod)="searchExpenseTypes($event)" (onSelect)="onSelectExpenseType($event, i)"
+                                    placeholder="Type" styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm"
+                                    appendTo="body" [dropdown]="true" [delay]="100" />
                             </td>
                             <td>
                                 <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"

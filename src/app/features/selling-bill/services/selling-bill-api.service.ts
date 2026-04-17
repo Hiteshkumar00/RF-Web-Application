@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { SellingBillListDto, SellingBillDetailsDto } from '../models/selling-bill.model';
+import { SellingBillListDto, SellingBillDetailsDto, SellingBillItemSuggestionDto } from '../models/selling-bill.model';
 import { CreateSellingBillDto } from '../models/create-selling-bill.dto';
 import { UpdateSellingBillDto } from '../models/update-selling-bill.dto';
 
@@ -31,5 +31,9 @@ export class SellingBillApiService {
 
     delete(id: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.basePath}/Delete/${id}`);
+    }
+
+    getItemSuggestions(): Observable<SellingBillItemSuggestionDto[]> {
+        return this.http.get<SellingBillItemSuggestionDto[]>(`${this.basePath}/GetItemSuggestions`);
     }
 }

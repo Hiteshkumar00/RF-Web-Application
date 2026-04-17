@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
+import { SellingBillItemSuggestionDto } from '../../models/selling-bill.model';
 import { ConfirmationService } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillFormService } from '../../services/selling-bill-form.service';
@@ -35,6 +36,9 @@ export class SellingBillFormDialogComponent implements OnChanges {
     accountOptions: DropdownOption[] = [];
     globalHasWarrenty: boolean = false;
     private isClosing = false;
+
+    suggestions: SellingBillItemSuggestionDto[] = [];
+    filteredSuggestions: SellingBillItemSuggestionDto[] = [];
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -99,6 +103,40 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.globalHasWarrenty = false;
                 this.addItem();
             }
+            if (this.mode != 'view') {
+                this.loadSuggestions();
+            }
+        }
+    }
+
+    private loadSuggestions(): void {
+        this.apiService.getItemSuggestions().subscribe({
+            next: (data) => this.suggestions = data
+        });
+    }
+
+    searchItems(event: any): void {
+        const query = (event.query || '').toLowerCase();
+        this.filteredSuggestions = this.suggestions.filter(s =>
+            s.itemName.toLowerCase().includes(query)
+        );
+    }
+
+    onSelectItem(event: any, index: number): void {
+        const suggestion = event.value as SellingBillItemSuggestionDto || event;
+        const itemName = typeof suggestion === 'string' ? suggestion : suggestion.itemName;
+        const price = typeof suggestion === 'string' ? null : suggestion.price;
+
+        const itemForm = this.items.at(index);
+        if (price !== null) {
+            itemForm.patchValue({
+                itemName: itemName,
+                price: price
+            });
+        } else {
+            itemForm.patchValue({
+                itemName: itemName
+            });
         }
     }
 

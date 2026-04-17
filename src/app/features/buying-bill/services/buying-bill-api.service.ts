@@ -6,6 +6,7 @@ import { BuyingBillListDto } from '../models/buying-bill-list.dto';
 import { BuyingBillDto } from '../models/buying-bill.dto';
 import { CreateBuyingBillDto } from '../models/create-buying-bill.dto';
 import { UpdateBuyingBillDto } from '../models/update-buying-bill.dto';
+import { BuyingBillItemSuggestionDto } from '../models/buying-bill-item-suggestion.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -36,5 +37,14 @@ export class BuyingBillApiService {
 
     getAllByAgencyId(agencyId: number): Observable<BuyingBillListDto[]> {
         return this.http.get<BuyingBillListDto[]>(`${this.basePath}/GetAllByAgencyId/${agencyId}`);
+    }
+
+    getItemSuggestions(agencyId?: number): Observable<BuyingBillItemSuggestionDto[]> {
+        const url = agencyId ? `${this.basePath}/GetItemSuggestions?agencyId=${agencyId}` : `${this.basePath}/GetItemSuggestions`;
+        return this.http.get<BuyingBillItemSuggestionDto[]>(url);
+    }
+
+    getExpenceTypeSuggestions(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.basePath}/GetExpenceTypeSuggestions`);
     }
 }

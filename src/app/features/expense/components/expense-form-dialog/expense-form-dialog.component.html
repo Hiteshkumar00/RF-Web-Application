@@ -17,10 +17,13 @@
             <div class="col-12">
                 <p-floatlabel variant="on">
                     <p-iconField iconPosition="right">
-                        <input id="expenceType" type="text" pInputText formControlName="expenceType" class="w-100"
-                            size="small" />
+                        <p-autoComplete id="expenceType" formControlName="expenceType"
+                            [suggestions]="filteredExpenseTypeSuggestions"
+                            (completeMethod)="searchExpenseTypes($event)" (onSelect)="onSelectExpenseType($event)"
+                            styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
+                            [delay]="100" [autofocus]="true" />
                         <p-inputIcon *ngIf="form.get('expenceType')?.invalid && form.get('expenceType')?.touched"
-                            class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.EXPENSE_TYPE_REQUIRED"
+                            class="pi pi-info-circle text-danger pe-6" [pTooltip]="labels.EXPENSE_TYPE_REQUIRED"
                             tooltipPosition="top" />
                     </p-iconField>
                     <label for="expenceType">{{ labels.EXPENSE_TYPE }}</label>

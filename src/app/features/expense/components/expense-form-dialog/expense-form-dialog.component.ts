@@ -33,6 +33,9 @@ export class ExpenseFormDialogComponent implements OnChanges {
     form!: FormGroup;
     accountOptions: DropdownOption[] = [];
     private isClosing = false;
+    
+    expenseTypeSuggestions: string[] = [];
+    filteredExpenseTypeSuggestions: string[] = [];
 
     get payments(): FormArray {
         return this.form.get('payments') as FormArray;
@@ -66,7 +69,26 @@ export class ExpenseFormDialogComponent implements OnChanges {
                 // Add initial payment row for create mode
                 this.addPayment();
             }
+            this.loadSuggestions();
         }
+    }
+
+    private loadSuggestions(): void {
+        this.expenseApiService.getExpenceTypeSuggestions().subscribe({
+            next: (data) => this.expenseTypeSuggestions = data
+        });
+    }
+
+    searchExpenseTypes(event: any): void {
+        const query = (event.query || '').toLowerCase();
+        this.filteredExpenseTypeSuggestions = this.expenseTypeSuggestions.filter(s =>
+            s.toLowerCase().includes(query)
+        );
+    }
+
+    onSelectExpenseType(event: any): void {
+        const value = event.value || event;
+        this.form.get('expenceType')?.patchValue(value);
     }
 
     private loadAccountOptions(): void {

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
+import { BuyingBillItemSuggestionDto } from '../../models/buying-bill-item-suggestion.dto';
 import { ConfirmationService } from 'primeng/api';
 import { BuyingBillApiService } from '../../services/buying-bill-api.service';
 import { BuyingBillFormService } from '../../services/buying-bill-form.service';
@@ -32,11 +33,17 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     title = BuyingBillConstants.BUYING_BILL_TITLE;
     labels = BuyingBillConstants.LABELS;
     form!: FormGroup;
-    
+
     agencyOptions: DropdownOption[] = [];
     paymentAccountOptions: DropdownOption[] = [];
-    
+
     private isClosing = false;
+
+    suggestions: BuyingBillItemSuggestionDto[] = [];
+    filteredSuggestions: BuyingBillItemSuggestionDto[] = [];
+
+    expenseTypeSuggestions: string[] = [];
+    filteredExpenseTypeSuggestions: string[] = [];
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -108,13 +115,70 @@ export class BuyingBillFormDialogComponent implements OnChanges {
                         this.formService.patchForm(this.form, data);
                         if (this.mode === 'view') {
                             this.form.disable();
+                        } else {
+                            this.loadSuggestions(data.agencyId);
                         }
                     }
                 });
             } else {
                 this.addItem();
+                this.loadSuggestions();
             }
+
+            this.form.get('agencyId')?.valueChanges.subscribe(val => {
+                this.loadSuggestions(val);
+            });
         }
+    }
+
+    private loadSuggestions(agencyId?: number): void {
+        if (this.mode != 'view') {
+            this.apiService.getItemSuggestions(agencyId).subscribe({
+                next: (data) => this.suggestions = data
+            });
+
+            this.apiService.getExpenceTypeSuggestions().subscribe({
+                next: (data) => this.expenseTypeSuggestions = data
+            });
+        }
+    }
+
+    searchItems(event: any): void {
+        const query = (event.query || '').toLowerCase();
+        this.filteredSuggestions = this.suggestions.filter(s =>
+            s.itemName.toLowerCase().includes(query)
+        );
+    }
+
+    searchExpenseTypes(event: any): void {
+        const query = (event.query || '').toLowerCase();
+        this.filteredExpenseTypeSuggestions = this.expenseTypeSuggestions.filter(s =>
+            s.toLowerCase().includes(query)
+        );
+    }
+
+    onSelectItem(event: any, index: number): void {
+        const suggestion = event.value as BuyingBillItemSuggestionDto || event;
+        const itemName = typeof suggestion === 'string' ? suggestion : suggestion.itemName;
+        const price = typeof suggestion === 'string' ? null : suggestion.price;
+
+        const itemForm = this.items.at(index);
+        if (price !== null) {
+            itemForm.patchValue({
+                itemName: itemName,
+                price: price
+            });
+        } else {
+            itemForm.patchValue({
+                itemName: itemName
+            });
+        }
+    }
+
+    onSelectExpenseType(event: any, index: number): void {
+        const value = event.value || event;
+        const expenseForm = this.expences.at(index);
+        expenseForm.patchValue({ expenceType: value });
     }
 
     private loadOptions(): void {

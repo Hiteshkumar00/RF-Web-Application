@@ -41,6 +41,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -81,6 +82,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputIconModule,
     InputNumberModule,
     ToggleSwitchModule,
+    AutoCompleteModule,
     MenuModule
   ],
   exports: [
@@ -122,6 +124,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputIconModule,
     InputNumberModule,
     ToggleSwitchModule,
+    AutoCompleteModule,
     MenuModule
   ],
   providers: []

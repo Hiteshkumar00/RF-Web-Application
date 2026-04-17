@@ -32,4 +32,8 @@ export class ExpenseApiService {
     delete(id: number): Observable<boolean> {
         return this.http.delete<boolean>(`${this.basePath}/Delete?id=${id}`);
     }
+
+    getExpenceTypeSuggestions(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.basePath}/GetExpenceTypeSuggestions`);
+    }
 }
