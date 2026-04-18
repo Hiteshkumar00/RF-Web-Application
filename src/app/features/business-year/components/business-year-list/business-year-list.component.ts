@@ -60,6 +60,10 @@ export class BusinessYearListComponent implements OnInit {
       header: this.labels.DELETE_HEADER,
       message: this.labels.DELETE_MESSAGE,
       icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-text p-button-secondary',
       accept: () => {
         this.apiService.delete(year.id).subscribe({
           next: (res) => {
@@ -75,12 +79,24 @@ export class BusinessYearListComponent implements OnInit {
 
   confirmToggleSelected(year: BusinessYearListDto): void {
     if (year.isSelected) return; // already selected
-    this.apiService.changeSelectedYear({ businessYearId: year.id }).subscribe({
-      next: (res) => {
-        if (res) {
-          this.loadYears();
-          this.apiService.notifyBusinessYearChanged();
-        }
+    
+    this.confirmationService.confirm({
+      header: 'Change Business Year',
+      message: `Are you sure you want to set ${year.yearName} as the active business year?`,
+      icon: 'pi pi-info-circle',
+      acceptLabel: 'Change',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-primary',
+      rejectButtonStyleClass: 'p-button-text p-button-secondary',
+      accept: () => {
+        this.apiService.changeSelectedYear({ businessYearId: year.id }).subscribe({
+          next: (res) => {
+            if (res) {
+              this.loadYears();
+              this.apiService.notifyBusinessYearChanged();
+            }
+          }
+        });
       }
     });
   }
