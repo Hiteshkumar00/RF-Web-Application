@@ -65,6 +65,7 @@ export class BusinessYearListComponent implements OnInit {
           next: (res) => {
             if (res) {
               this.loadYears();
+              this.apiService.notifyBusinessYearChanged();
             }
           }
         });
@@ -78,6 +79,7 @@ export class BusinessYearListComponent implements OnInit {
       next: (res) => {
         if (res) {
           this.loadYears();
+          this.apiService.notifyBusinessYearChanged();
         }
       }
     });
@@ -86,6 +88,7 @@ export class BusinessYearListComponent implements OnInit {
   onFormSaved(): void {
     this.showFormDialog = false;
     this.loadYears();
+    this.apiService.notifyBusinessYearChanged();
   }
 
   onFormDialogClosed(): void {

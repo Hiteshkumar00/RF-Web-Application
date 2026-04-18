@@ -285,7 +285,7 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form">
+        <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form" [formGroup]="form">
             <div class="d-flex gap-2" *ngIf="mode === 'view'">
                 <p-button label="Download" icon="pi pi-download" (onClick)="downloadPdf()" severity="info" size="small"
                     [outlined]="true" tooltipPosition="top" pTooltip="Download PDF" />

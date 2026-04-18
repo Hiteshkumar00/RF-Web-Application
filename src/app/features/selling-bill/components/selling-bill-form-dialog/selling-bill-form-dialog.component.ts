@@ -203,8 +203,8 @@ export class SellingBillFormDialogComponent implements OnChanges {
         if (this.mode === 'create') {
             delete payload.id;
             this.apiService.create(payload as CreateSellingBillDto).subscribe({
-                next: (id: any) => {
-                    const actualId = typeof id === 'number' ? id : (id?.id || this.id);
+                next: (res: any) => {
+                    const actualId = (typeof res === 'number') ? res : (res?.data || res?.id || this.id);
                     if (actualId) {
                         this.handleAutoSend(actualId, formValue);
                     }

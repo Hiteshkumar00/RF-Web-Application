@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CreateBusinessYearDto } from '../models/create-business-year-dto.model';
 import { UpdateBusinessYearDto } from '../models/update-business-year-dto.model';
@@ -12,6 +12,13 @@ import { ChangeUserSelectedYearDto } from '../models/change-user-selected-year-d
 })
 export class BusinessYearApiService {
   private apiUrl = environment.apiUrl;
+
+  private businessYearChangedSource = new Subject<void>();
+  businessYearChanged$ = this.businessYearChangedSource.asObservable();
+
+  notifyBusinessYearChanged() {
+    this.businessYearChangedSource.next();
+  }
 
   constructor(private http: HttpClient) { }
 

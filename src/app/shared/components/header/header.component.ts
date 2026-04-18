@@ -59,6 +59,12 @@ export class HeaderComponent implements OnInit {
                 this.loadYears();
             }
         });
+
+        this.businessYearApiService.businessYearChanged$.subscribe(() => {
+            if (this.isAccountUser) {
+                this.loadYears();
+            }
+        });
     }
 
     updateMenuItems() {
