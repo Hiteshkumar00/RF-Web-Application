@@ -44,4 +44,8 @@ export class SellingBillApiService {
     sendWhatsAppMessage(id: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.basePath}/SendWhatsAppMessage/${id}`, {});
     }
+
+    sendEmailMessage(id: number): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/SendEmailMessage/${id}`, {});
+    }
 }

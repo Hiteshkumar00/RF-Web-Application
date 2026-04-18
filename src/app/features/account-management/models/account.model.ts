@@ -15,4 +15,10 @@ export interface AccountDto {
     whatsAppPhoneNumberId?: string;
     whatsAppBusinessId?: string;
     whatsAppAccessToken?: string;
+    enableEmail: boolean;
+    emailSmtpHost?: string;
+    emailSmtpPort?: number;
+    emailSmtpUsername?: string;
+    emailSmtpPassword?: string;
+    emailSmtpEnableSsl: boolean;
 }

@@ -5,6 +5,7 @@ import { SellingBillListDto } from '../../models/selling-bill.model';
 import { SellingBillConstants } from '../../constants/selling-bill.constants';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
+import { EmailService } from '../../../../shared/services/email.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
@@ -19,9 +20,14 @@ export class SellingBillListComponent implements OnInit {
     private downloadService = inject(BillDownloadService);
     private accountDetailsService = inject(AccountDetailsService);
     private whatsAppService = inject(WhatsAppService);
+    private emailService = inject(EmailService);
 
     get canSendWhatsApp(): boolean {
         return this.accountDetailsService.enableWhatsApp;
+    }
+
+    get canSendEmail(): boolean {
+        return this.accountDetailsService.enableEmail;
     }
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
@@ -120,5 +126,9 @@ export class SellingBillListComponent implements OnInit {
                 this.whatsAppService.sendBillOnWhatsApp(item);
             }
         });
+    }
+
+    sendEmail(item: SellingBillListDto): void {
+        this.emailService.sendBillOnEmail(item);
     }
 }

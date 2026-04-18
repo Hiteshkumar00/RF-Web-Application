@@ -19,7 +19,9 @@ export class SellingBillFormService {
             date: [new Date(), [Validators.required]],
             discount: [0, [Validators.min(0)]],
             items: this.fb.array([], [Validators.required, Validators.minLength(1)]),
-            payments: this.fb.array([])
+            payments: this.fb.array([]),
+            sendEmail: [false],
+            sendWhatsApp: [false]
         });
     }
 

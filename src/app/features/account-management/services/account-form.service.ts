@@ -24,7 +24,13 @@ export class AccountFormService {
             enableAdvancedWhatsApp: [false],
             whatsAppPhoneNumberId: [null],
             whatsAppBusinessId: [null],
-            whatsAppAccessToken: [null]
+            whatsAppAccessToken: [null],
+            enableEmail: [false],
+            emailSmtpHost: [null],
+            emailSmtpPort: [null],
+            emailSmtpUsername: [null],
+            emailSmtpPassword: [null],
+            emailSmtpEnableSsl: [false]
         });
     }
 
@@ -44,7 +50,13 @@ export class AccountFormService {
             enableAdvancedWhatsApp: account.enableAdvancedWhatsApp ?? false,
             whatsAppPhoneNumberId: account.whatsAppPhoneNumberId ?? null,
             whatsAppBusinessId: account.whatsAppBusinessId ?? null,
-            whatsAppAccessToken: account.whatsAppAccessToken ?? null
+            whatsAppAccessToken: account.whatsAppAccessToken ?? null,
+            enableEmail: account.enableEmail ?? false,
+            emailSmtpHost: account.emailSmtpHost ?? null,
+            emailSmtpPort: account.emailSmtpPort ?? null,
+            emailSmtpUsername: account.emailSmtpUsername ?? null,
+            emailSmtpPassword: account.emailSmtpPassword ?? null,
+            emailSmtpEnableSsl: account.emailSmtpEnableSsl ?? false
         });
     }
 }

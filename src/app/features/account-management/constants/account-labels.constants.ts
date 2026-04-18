@@ -33,6 +33,12 @@ export class AccountLabels {
     public static readonly WHATSAPP_PHONE_NUMBER_ID = 'WhatsApp Phone Number ID';
     public static readonly WHATSAPP_BUSINESS_ID = 'WhatsApp Business ID';
     public static readonly WHATSAPP_ACCESS_TOKEN = 'WhatsApp Access Token';
+    public static readonly ENABLE_EMAIL = 'Enable Email Services';
+    public static readonly EMAIL_SMTP_HOST = 'SMTP Host';
+    public static readonly EMAIL_SMTP_PORT = 'SMTP Port';
+    public static readonly EMAIL_SMTP_USERNAME = 'SMTP Username (Email)';
+    public static readonly EMAIL_SMTP_PASSWORD = 'SMTP Password';
+    public static readonly EMAIL_SMTP_ENABLE_SSL = 'Enable SSL/TLS';
 
     // Validation messages
     public static readonly PROFILE_NAME_REQUIRED = 'Profile name is required.';

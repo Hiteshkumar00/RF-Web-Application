@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { SellingBillItemSuggestionDto } from '../../models/selling-bill.model';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillFormService } from '../../services/selling-bill-form.service';
 import { SellingBillConstants } from '../../constants/selling-bill.constants';
@@ -13,6 +13,7 @@ import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
+import { EmailService } from '../../../../shared/services/email.service';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -24,10 +25,12 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private formService = inject(SellingBillFormService);
     private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
+    private messageService = inject(MessageService);
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private whatsAppService = inject(WhatsAppService);
+    private emailService = inject(EmailService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -91,6 +94,14 @@ export class SellingBillFormDialogComponent implements OnChanges {
 
     get canSendWhatsApp(): boolean {
         return this.accountDetailsService.enableWhatsApp;
+    }
+
+    get canSendEmail(): boolean {
+        return this.accountDetailsService.enableEmail;
+    }
+
+    get canAutoSendWhatsApp(): boolean {
+        return this.accountDetailsService.enableAdvancedWhatsApp;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -192,11 +203,35 @@ export class SellingBillFormDialogComponent implements OnChanges {
         if (this.mode === 'create') {
             delete payload.id;
             this.apiService.create(payload as CreateSellingBillDto).subscribe({
-                next: () => this.onSave.emit()
+                next: (id: any) => {
+                    const actualId = typeof id === 'number' ? id : (id?.id || this.id);
+                    if (actualId) {
+                        this.handleAutoSend(actualId, formValue);
+                    }
+                    this.onSave.emit();
+                }
             });
         } else {
             this.apiService.update({ id: this.id!, ...payload } as UpdateSellingBillDto).subscribe({
-                next: () => this.onSave.emit()
+                next: () => {
+                    this.handleAutoSend(this.id!, formValue);
+                    this.onSave.emit();
+                }
+            });
+        }
+    }
+
+    private handleAutoSend(id: number, formValue: any): void {
+        if (formValue.sendEmail) {
+            this.apiService.sendEmailMessage(id).subscribe({
+                next: () => this.messageService.add({ severity: 'success', summary: 'Auto-Send', detail: 'Bill sent via Email' }),
+                error: () => this.messageService.add({ severity: 'error', summary: 'Email Error', detail: 'Failed to auto-send email' })
+            });
+        }
+        if (formValue.sendWhatsApp && this.canAutoSendWhatsApp) {
+            this.apiService.sendWhatsAppMessage(id).subscribe({
+                next: () => this.messageService.add({ severity: 'success', summary: 'Auto-Send', detail: 'Bill sent via WhatsApp API' }),
+                error: () => this.messageService.add({ severity: 'error', summary: 'WhatsApp Error', detail: 'Failed to auto-send WhatsApp' })
             });
         }
     }
@@ -265,5 +300,18 @@ export class SellingBillFormDialogComponent implements OnChanges {
         } else {
             this.whatsAppService.sendBillOnWhatsApp(billData);
         }
+    }
+
+    sendEmail(): void {
+        const formValue = this.form.getRawValue();
+        const billData = {
+            ...formValue,
+            date: this.helperService.setDate(formValue.date),
+            netAmount: this.finalAmount,
+            paidAmount: this.paidAmount,
+            remainingAmount: this.remainingAmount,
+            id: this.id
+        };
+        this.emailService.sendBillOnEmail(billData);
     }
 }

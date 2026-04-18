@@ -285,16 +285,36 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 justify-content-end pt-3 mt-3 border-top w-100" *ngIf="form">
-            <p-button *ngIf="mode === 'view' && canSendWhatsApp" label="WhatsApp" icon="pi pi-whatsapp"
-                (onClick)="sendWhatsApp()" severity="success" class="shadow-sm" />
+        <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form">
+            <div class="d-flex gap-2" *ngIf="mode === 'view'">
+                <p-button label="Download" icon="pi pi-download" (onClick)="downloadPdf()" severity="info" size="small"
+                    [outlined]="true" tooltipPosition="top" pTooltip="Download PDF" />
+                <p-button *ngIf="canSendWhatsApp" label="WhatsApp" icon="pi pi-whatsapp" (onClick)="sendWhatsApp()"
+                    severity="success" size="small" [outlined]="true" tooltipPosition="top" pTooltip="Send WhatsApp" />
+                <p-button *ngIf="canSendEmail" label="Email" icon="pi pi-envelope" (onClick)="sendEmail()"
+                    severity="help" size="small" [outlined]="true" tooltipPosition="top" pTooltip="Send Email" />
+            </div>
 
-            <p-button *ngIf="mode === 'view'" label="Download" icon="pi pi-download" (onClick)="downloadPdf()"
-                severity="info" class="shadow-sm me-auto" />
+            <div class="ms-auto d-flex gap-3 align-items-center">
+                <!-- Auto-Send Toggles -->
+                <div *ngIf="mode !== 'view'" class="d-flex align-items-center gap-3 me-2 border-end pe-3">
+                    <div class="d-flex align-items-center gap-2" *ngIf="canSendEmail">
+                        <i class="pi pi-envelope text-muted small"></i>
+                        <label class="small fw-semibold text-muted mb-0 cursor-pointer">Email</label>
+                        <p-toggleswitch formControlName="sendEmail" styleClass="p-toggleswitch-sm" />
+                    </div>
+                    <div class="d-flex align-items-center gap-2" *ngIf="canAutoSendWhatsApp">
+                        <i class="pi pi-whatsapp text-muted small"></i>
+                        <label class="small fw-semibold text-muted mb-0 cursor-pointer">WhatsApp</label>
+                        <p-toggleswitch formControlName="sendWhatsApp" styleClass="p-toggleswitch-sm" />
+                    </div>
+                </div>
 
-            <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
-            <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
-                [disabled]="form.invalid" severity="primary" class="shadow-sm" />
+                <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
+                    (onClick)="requestClose()" size="small" />
+                <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
+                    [disabled]="form.invalid" severity="primary" size="small" />
+            </div>
         </div>
     </ng-template>
 
