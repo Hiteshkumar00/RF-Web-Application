@@ -13,15 +13,15 @@ export class EmailService {
 
     sendBillOnEmail(bill: any) {
         this.billingApiService.sendEmailMessage(bill.id).subscribe({
-            next: () => this.messageService.add({ 
-                severity: 'success', 
-                summary: 'Email Service', 
-                detail: 'Bill has been sent successfully to ' + bill.email 
+            next: () => this.messageService.add({
+                severity: 'success',
+                summary: 'Email Service',
+                detail: 'Bill has been sent successfully to ' + bill.customerName
             }),
-            error: (err) => this.messageService.add({ 
-                severity: 'error', 
-                summary: 'Email Error', 
-                detail: 'Failed to send email. Please check your SMTP settings.' 
+            error: (err) => this.messageService.add({
+                severity: 'error',
+                summary: 'Email Error',
+                detail: 'Failed to send email. Please check your SMTP settings.'
             })
         });
     }
