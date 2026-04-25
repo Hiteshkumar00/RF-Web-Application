@@ -126,13 +126,7 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-calendar-plus',
                 routerLink: ['/business-year'],
                 routerLinkActiveOptions: { exact: true }
-            },
-            {
-                label: 'Inventory',
-                icon: 'pi pi-fw pi-box',
-                routerLink: ['/inventory'],
-                routerLinkActiveOptions: { exact: true }
-            },
+            }
         ];
 
         this.superAdminItems = [

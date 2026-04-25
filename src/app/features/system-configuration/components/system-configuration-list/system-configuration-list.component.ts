@@ -44,7 +44,7 @@ export class SystemConfigurationListComponent implements OnInit {
     this.saving = true;
     const dtos = this.configurations.map(config => ({
       id: config.id,
-      propertyValue: config.propertyType === 'boolean' 
+      propertyValue: config.propertyType === 'boolean'
         ? config.propertyValueBool?.toString() || 'false'
         : config.propertyValue
     }));
@@ -54,6 +54,9 @@ export class SystemConfigurationListComponent implements OnInit {
         this.saving = false;
         if (success) {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'All configurations saved successfully' });
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       },
       error: () => {
