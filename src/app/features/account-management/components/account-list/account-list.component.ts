@@ -7,6 +7,7 @@ import { AccountMessages } from '../../constants/account-messages.constants';
 import { AccountTableColumns } from '../../constants/account-table.constants';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { SystemConfigurationService } from '../../../system-configuration/services/system-configuration.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,11 +21,13 @@ export class AccountListComponent implements OnInit {
     private messageService = inject(MessageService);
     private authApiService = inject(AuthApiService);
     private authService = inject(AuthService);
+    private configService = inject(SystemConfigurationService);
     private router = inject(Router);
 
     labels = AccountLabels;
     columns = AccountTableColumns.COLUMNS;
     accounts: AccountDto[] = [];
+    isDeleteEnabled = false;
 
     // Dialog control
     showFormDialog = false;
@@ -33,6 +36,13 @@ export class AccountListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAccounts();
+        this.checkDeletePermission();
+    }
+
+    checkDeletePermission(): void {
+        this.configService.getValue('EnableDeleteAccount').subscribe(val => {
+            this.isDeleteEnabled = val === 'true';
+        });
     }
 
     loadAccounts(): void {

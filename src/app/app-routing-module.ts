@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { superAdminGuard } from './core/guards/super-admin.guard';
+import { rootSuperAdminGuard } from './core/guards/root-super-admin.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
@@ -30,8 +31,13 @@ const routes: Routes = [
   },
   {
     path: 'entity',
-    canActivate: [authGuard, superAdminGuard],
+    canActivate: [authGuard, rootSuperAdminGuard],
     loadChildren: () => import('./features/entity/entity-module').then(m => m.EntityModule)
+  },
+  {
+    path: 'system-configuration',
+    canActivate: [authGuard, rootSuperAdminGuard],
+    loadChildren: () => import('./features/system-configuration/system-configuration.module').then(m => m.SystemConfigurationModule)
   },
 
   // Admin and SuperAdmin Access Modules 

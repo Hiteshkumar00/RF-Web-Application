@@ -40,7 +40,7 @@
                                     [pTooltip]="labels.VIEW" tooltipPosition="top" (onClick)="openViewDialog(account)" />
                                 <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small"
                                     [pTooltip]="labels.EDIT" tooltipPosition="top" (onClick)="openEditDialog(account)" />
-                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                <p-button *ngIf="isDeleteEnabled" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
                                     size="small" [pTooltip]="labels.DELETE" tooltipPosition="top"
                                     (onClick)="confirmDelete(account)" />
                             </div>

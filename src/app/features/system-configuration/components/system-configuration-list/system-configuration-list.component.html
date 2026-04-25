@@ -1,0 +1,58 @@
+<div class="container-fluid py-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">System Configuration</h5>
+                <span class="badge bg-primary-subtle text-primary">{{ configurations.length }} Properties</span>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <p-table [value]="configurations" [loading]="loading" styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Property</th>
+                        <th style="width: 25rem;">Value</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-config>
+                    <tr>
+                        <td>
+                            <div class="fw-bold">{{ config.propertyDisplayName }}</div>
+                            <small class="text-secondary">{{ config.propertyName }}</small>
+                        </td>
+                        <td>
+                            <!-- Boolean Type -->
+                            @if (config.propertyType === 'boolean') {
+                            <div class="d-flex align-items-center gap-2">
+                                <p-toggleswitch [(ngModel)]="config.propertyValueBool" (onChange)="onUpdate(config)"></p-toggleswitch>
+                                <span class="badge" [class.bg-success]="config.propertyValueBool" [class.bg-secondary]="!config.propertyValueBool">
+                                    {{ config.propertyValueBool ? 'Enabled' : 'Disabled' }}
+                                </span>
+                            </div>
+                            }
+
+                            <!-- Number Type -->
+                            @if (config.propertyType === 'number') {
+                            <p-inputNumber [(ngModel)]="config.propertyValue" (onBlur)="onUpdate(config)" [useGrouping]="false" styleClass="w-100"></p-inputNumber>
+                            }
+
+                            <!-- String Type -->
+                            @if (config.propertyType === 'string') {
+                            <input type="text" pInputText [(ngModel)]="config.propertyValue" (blur)="onUpdate(config)" class="w-100" />
+                            }
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="2" class="text-center py-5 opacity-50">
+                            <i class="pi pi-inbox me-2" style="font-size: 1.5rem;"></i>
+                            No configurations found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

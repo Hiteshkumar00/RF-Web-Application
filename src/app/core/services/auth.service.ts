@@ -36,6 +36,13 @@ export class AuthService {
     }
 
     /**
+     * True if PureSuperAdmin AND UserId is -1
+     */
+    get isRootSuperAdmin(): boolean {
+        return this.isPureSuperAdmin && this.currentUser?.id === '-1';
+    }
+
+    /**
      * True if Admin or SuperAdmin AND has a valid account (Show Main Menu / Access Dashboard)
      */
     get isAccountUser(): boolean {

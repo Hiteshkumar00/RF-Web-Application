@@ -152,7 +152,15 @@ export class SidebarComponent implements OnInit {
                 label: 'Entity Management',
                 icon: 'pi pi-fw pi-database',
                 routerLink: ['/entity'],
-                routerLinkActiveOptions: { exact: true }
+                routerLinkActiveOptions: { exact: true },
+                visible: this.authService.isRootSuperAdmin
+            },
+            {
+                label: 'System Configuration',
+                icon: 'pi pi-fw pi-cog',
+                routerLink: ['/system-configuration'],
+                routerLinkActiveOptions: { exact: true },
+                visible: this.authService.isRootSuperAdmin
             }
         ];
     }
