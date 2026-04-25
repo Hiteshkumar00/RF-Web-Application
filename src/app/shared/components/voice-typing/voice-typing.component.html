@@ -1,6 +1,6 @@
 <p-dialog [(visible)]="isOpen" [modal]="true" [style]="{width: '450px'}" 
           (onHide)="closePopup()" [draggable]="false" [resizable]="false" 
-          [closable]="false"
+          [closable]="false" appendTo="body"
           styleClass="border-round-2xl overflow-hidden shadow-6">
     <ng-template pTemplate="header">
         <div class="w-full flex align-items-center justify-content-between">
