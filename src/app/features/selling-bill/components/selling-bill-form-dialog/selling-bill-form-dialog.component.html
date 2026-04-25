@@ -57,7 +57,7 @@
                 <div class="field">
                     <label for="phoneNo" class="block mb-2 font-semibold">{{ labels.PHONE_NO }}</label>
                     <p-iconField iconPosition="right">
-                        <input id="phoneNo" type="text" pInputText formControlName="phoneNo"
+                        <input id="phoneNo" type="text" pInputText formControlName="phoneNo" appVoiceTyping
                             class="w-100 p-inputtext-sm" />
                         <p-inputIcon *ngIf="form.get('phoneNo')?.invalid && form.get('phoneNo')?.touched"
                             class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.PHONE_NO + ' is required'"
@@ -84,7 +84,7 @@
                 <div class="field">
                     <label for="address" class="block mb-2 font-semibold">{{ labels.ADDRESS }} (Optional)</label>
                     <p-iconField iconPosition="right">
-                        <input id="address" type="text" pInputText formControlName="address"
+                        <input id="address" type="text" pInputText formControlName="address" appVoiceTyping
                             class="w-100 p-inputtext-sm" />
                         <p-inputIcon *ngIf="form.get('address')?.invalid && form.get('address')?.touched"
                             class="pi pi-info-circle text-danger pe-2" pTooltip="Address is too long"

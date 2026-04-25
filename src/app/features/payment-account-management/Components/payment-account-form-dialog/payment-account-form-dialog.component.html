@@ -29,7 +29,7 @@
             <div class="col-12">
                 <p-floatlabel variant="on">
                     <p-iconField iconPosition="right">
-                        <input pInputText id="methodName" formControlName="methodName" class="w-100" />
+                        <input pInputText id="methodName" formControlName="methodName" class="w-100" appVoiceTyping />
                         <p-inputIcon *ngIf="form.get('methodName')?.invalid && form.get('methodName')?.touched" 
                             class="pi pi-info-circle text-danger pe-2" [pTooltip]="labels.FIELD_REQUIRED" tooltipPosition="top" />
                     </p-iconField>

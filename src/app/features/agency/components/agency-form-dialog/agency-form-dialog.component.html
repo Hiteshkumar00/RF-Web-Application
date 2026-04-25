@@ -17,7 +17,7 @@
             <div class="col-12">
                 <p-floatlabel variant="on">
                     <p-iconField iconPosition="right">
-                        <input id="agencyName" type="text" pInputText formControlName="agencyName" class="w-100" />
+                        <input id="agencyName" type="text" pInputText formControlName="agencyName" class="w-100" appVoiceTyping />
                         <p-inputIcon *ngIf="form.get('agencyName')?.invalid && form.get('agencyName')?.touched" 
                             class="pi pi-info-circle text-danger pe-2" 
                             [pTooltip]="form.get('agencyName')?.hasError('required') ? labels.AGENCY_NAME_REQUIRED : labels.AGENCY_NAME_MAX" 
@@ -31,7 +31,7 @@
             <div class="col-12">
                 <p-floatlabel variant="on">
                     <textarea id="address" pTextarea formControlName="address" class="w-100" rows="3"
-                        style="resize: none;"></textarea>
+                        style="resize: none;" appVoiceTyping></textarea>
                     <label for="address">{{ labels.ADDRESS }}</label>
                 </p-floatlabel>
             </div>

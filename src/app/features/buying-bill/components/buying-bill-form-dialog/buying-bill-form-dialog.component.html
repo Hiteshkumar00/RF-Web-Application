@@ -79,7 +79,7 @@
                                         (completeMethod)="searchItems($event)" field="itemName"
                                         (onSelect)="onSelectItem($event, i)" placeholder="Item Name" styleClass="w-100"
                                         inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                                        [autofocus]="true" [delay]="100">
+                                        [autofocus]="true" [delay]="100" appVoiceTyping>
                                         <ng-template let-suggestion pTemplate="item">
                                             <div class="d-flex justify-content-between align-items-center w-100 gap-4">
                                                 <span class="fw-bold">{{ suggestion.itemName }}</span>
@@ -155,7 +155,7 @@
                                     (completeMethod)="searchExpenseTypes($event)"
                                     (onSelect)="onSelectExpenseType($event, i)" placeholder="Type" styleClass="w-100"
                                     inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                                    [delay]="100" />
+                                    [delay]="100" appVoiceTyping />
                             </td>
                             <td>
                                 <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"

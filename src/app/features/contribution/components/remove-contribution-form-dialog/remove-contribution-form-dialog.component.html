@@ -41,7 +41,7 @@
                     <label for="description" class="block mb-2 font-semibold">Description (Optional)</label>
                     <p-iconField iconPosition="right">
                         <textarea id="description" pInputTextarea formControlName="description" rows="2"
-                            class="w-100 p-inputtext-sm" style="resize: none"></textarea>
+                            class="w-100 p-inputtext-sm" style="resize: none" appVoiceTyping></textarea>
                         <p-inputIcon *ngIf="form.get('description')?.hasError('maxlength')"
                             class="pi pi-info-circle text-danger pe-2"
                             pTooltip="Description cannot exceed 500 characters" tooltipPosition="top" />

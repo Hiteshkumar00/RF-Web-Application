@@ -5,7 +5,7 @@
             <div class="d-flex align-items-center gap-2">
                 <p-iconField iconPosition="left">
                     <p-inputIcon styleClass="pi pi-search" />
-                    <input type="text" pInputText placeholder="Search customer, phone..."
+                    <input type="text" pInputText placeholder="Search customer, phone..." appVoiceTyping
                         (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                         class="p-inputtext-sm shadow-sm" style="width: 250px;" />
                 </p-iconField>

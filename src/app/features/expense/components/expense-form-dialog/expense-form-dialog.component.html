@@ -21,7 +21,7 @@
                             [suggestions]="filteredExpenseTypeSuggestions"
                             (completeMethod)="searchExpenseTypes($event)" (onSelect)="onSelectExpenseType($event)"
                             styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                            [delay]="100" [autofocus]="true" />
+                            [delay]="100" [autofocus]="true" appVoiceTyping/>
                         <p-inputIcon *ngIf="form.get('expenceType')?.invalid && form.get('expenceType')?.touched"
                             class="pi pi-info-circle text-danger pe-6" [pTooltip]="labels.EXPENSE_TYPE_REQUIRED"
                             tooltipPosition="top" />
