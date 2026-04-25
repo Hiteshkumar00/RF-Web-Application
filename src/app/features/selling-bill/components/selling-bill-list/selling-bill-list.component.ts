@@ -7,6 +7,7 @@ import { BillDownloadService } from '../../../../shared/services/bill-download.s
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -14,13 +15,16 @@ import { AccountDetailsService } from '../../../../core/services/account-details
     templateUrl: './selling-bill-list.component.html'
 })
 export class SellingBillListComponent implements OnInit {
-    private apiService = inject(SellingBillApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
-    private downloadService = inject(BillDownloadService);
-    private accountDetailsService = inject(AccountDetailsService);
-    private whatsAppService = inject(WhatsAppService);
-    private emailService = inject(EmailService);
+    constructor(
+        private apiService: SellingBillApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        private downloadService: BillDownloadService,
+        private accountDetailsService: AccountDetailsService,
+        private whatsAppService: WhatsAppService,
+        private emailService: EmailService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     get canSendWhatsApp(): boolean {
         return this.accountDetailsService.enableWhatsApp;
@@ -110,8 +114,7 @@ export class SellingBillListComponent implements OnInit {
     downloadPdf(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const dateStr = item.date.split('-').reverse().join('-');
-                const fileName = `Bill_${item.billNo || item.id}_${dateStr}_${item.customerName}.pdf`;
+                const fileName = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
                 this.downloadService.downloadFile(blob, fileName);
             }
         });
@@ -120,8 +123,7 @@ export class SellingBillListComponent implements OnInit {
     sendWhatsApp(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const dateStr = item.date.split('-').reverse().join('-');
-                const fileName = `Bill_${item.billNo}_${dateStr}_${item.customerName}.pdf`;
+                const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
                 this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
             },
             error: () => {

@@ -12,8 +12,9 @@
             <!-- Table -->
             <p-table [value]="accounts" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} accounts"
-                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'"
-                styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
+                [scrollHeight]="globalConfig.tableScrollHeight"
+                styleClass="p-datatable-striped p-datatable-sm">
 
                 <ng-template pTemplate="header">
                     <tr>
@@ -40,7 +41,7 @@
                                     [pTooltip]="labels.VIEW" tooltipPosition="top" (onClick)="openViewDialog(account)" />
                                 <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn" size="small"
                                     [pTooltip]="labels.EDIT" tooltipPosition="top" (onClick)="openEditDialog(account)" />
-                                <p-button *ngIf="isDeleteEnabled" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                <p-button *ngIf="globalConfig.enableDeleteAccount" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
                                     size="small" [pTooltip]="labels.DELETE" tooltipPosition="top"
                                     (onClick)="confirmDelete(account)" />
                             </div>

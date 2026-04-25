@@ -12,8 +12,8 @@
             <!-- Data Table -->
             <p-table [value]="expenses" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
-                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'"
-                styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '60rem'}">
+                [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
+                [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm">
 
                 <ng-template pTemplate="header">
                     <tr>

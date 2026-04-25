@@ -17,6 +17,7 @@
 
     <div class="card-body p-0">
         <p-table #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
             styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [globalFilterFields]="['agencyName', 'billNo']">

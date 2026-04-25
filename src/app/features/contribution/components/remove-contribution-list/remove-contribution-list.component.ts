@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { RemoveContributionApiService } from '../../services/remove-contribution-api.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { RemoveContributionListDto } from '../../models/remove-contribution.model';
 import { ContributionConstants } from '../../constants/contribution.constants';
 
@@ -10,9 +11,12 @@ import { ContributionConstants } from '../../constants/contribution.constants';
     templateUrl: './remove-contribution-list.component.html'
 })
 export class RemoveContributionListComponent implements OnInit {
-    private apiService = inject(RemoveContributionApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private apiService: RemoveContributionApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     title = ContributionConstants.REMOVE_CONTRIBUTION_TITLE;
     contributions: RemoveContributionListDto[] = [];

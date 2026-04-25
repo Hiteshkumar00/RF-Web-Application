@@ -6,6 +6,7 @@ import { UserDto } from '../../models/user.model';
 import { UserLabels } from '../../constants/user-labels.constants';
 import { UserMessages } from '../../constants/user-messages.constants';
 import { UserTableColumns } from '../../constants/user-table.constants';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-user-list',
@@ -13,10 +14,13 @@ import { UserTableColumns } from '../../constants/user-table.constants';
     templateUrl: './user-list.component.html'
 })
 export class UserListComponent implements OnInit {
-    private userApiService = inject(UserApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
-    private fb = inject(FormBuilder);
+    constructor(
+        private userApiService: UserApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        private fb: FormBuilder,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = UserLabels;
     columns = UserTableColumns.COLUMNS;

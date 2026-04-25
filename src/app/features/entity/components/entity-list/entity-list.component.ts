@@ -5,6 +5,7 @@ import { EntityDto } from '../../models/entity.model';
 import { EntityLabels } from '../../constants/entity-labels.constants';
 import { EntityMessages } from '../../constants/entity-messages.constants';
 import { EntityTableColumns } from '../../constants/entity-table.constants';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-entity-list',
@@ -12,9 +13,12 @@ import { EntityTableColumns } from '../../constants/entity-table.constants';
     templateUrl: './entity-list.component.html'
 })
 export class EntityListComponent implements OnInit {
-    private entityApiService = inject(EntityApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private entityApiService: EntityApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = EntityLabels;
     columns = EntityTableColumns.COLUMNS;

@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { AddContributionApiService } from '../../services/add-contribution-api.service';
 import { AddContributionListDto } from '../../models/add-contribution.model';
 import { ContributionConstants } from '../../constants/contribution.constants';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-add-contribution-list',
@@ -10,9 +11,12 @@ import { ContributionConstants } from '../../constants/contribution.constants';
     templateUrl: './add-contribution-list.component.html'
 })
 export class AddContributionListComponent implements OnInit {
-    private apiService = inject(AddContributionApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private apiService: AddContributionApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     title = ContributionConstants.ADD_CONTRIBUTION_TITLE;
     contributions: AddContributionListDto[] = [];

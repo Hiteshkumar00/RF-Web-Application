@@ -5,6 +5,7 @@ import { ExpenseListDto, ExpenseDto } from '../../models/expense.model';
 import { ExpenseLabels } from '../../constants/expense-labels.constants';
 import { ExpenseMessages } from '../../constants/expense-messages.constants';
 import { ExpenseTableColumns } from '../../constants/expense-table.constants';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-expense-list',
@@ -12,9 +13,12 @@ import { ExpenseTableColumns } from '../../constants/expense-table.constants';
     templateUrl: './expense-list.component.html'
 })
 export class ExpenseListComponent implements OnInit {
-    private expenseApiService = inject(ExpenseApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private expenseApiService: ExpenseApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = ExpenseLabels;
     columns = ExpenseTableColumns.COLUMNS;

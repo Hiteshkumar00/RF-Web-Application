@@ -4,6 +4,7 @@ import { BuyingBillApiService } from '../../services/buying-bill-api.service';
 import { BuyingBillListDto } from '../../models/buying-bill-list.dto';
 import { BuyingBillConstants } from '../../constants/buying-bill.constants';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-buying-bill-list',
@@ -11,15 +12,18 @@ import { BillDownloadService } from '../../../../shared/services/bill-download.s
     templateUrl: './buying-bill-list.component.html'
 })
 export class BuyingBillListComponent implements OnInit {
-    private apiService = inject(BuyingBillApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
-    private downloadService = inject(BillDownloadService);
+    constructor(
+        private apiService: BuyingBillApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        private downloadService: BillDownloadService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     title = BuyingBillConstants.BUYING_BILL_TITLE;
     labels = BuyingBillConstants.LABELS;
     bills: BuyingBillListDto[] = [];
-    
+
     showFormDialog = false;
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedId?: number;
@@ -84,10 +88,10 @@ export class BuyingBillListComponent implements OnInit {
         this.apiService.delete(id).subscribe({
             next: () => {
                 this.loadData();
-                this.messageService.add({ 
-                    severity: 'success', 
-                    summary: 'Success', 
-                    detail: BuyingBillConstants.MESSAGES.DELETE_SUCCESS(this.title) 
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: BuyingBillConstants.MESSAGES.DELETE_SUCCESS(this.title)
                 });
             }
         });

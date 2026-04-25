@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SystemConfigurationService } from '../../services/system-configuration.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { SystemConfiguration } from '../../models/system-configuration';
 import { MessageService } from 'primeng/api';
 
@@ -11,10 +12,12 @@ import { MessageService } from 'primeng/api';
 export class SystemConfigurationListComponent implements OnInit {
   configurations: SystemConfiguration[] = [];
   loading: boolean = false;
+  saving: boolean = false;
 
   constructor(
     private configService: SystemConfigurationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public globalConfig: GlobalConfigService
   ) { }
 
   ngOnInit(): void {
@@ -37,16 +40,25 @@ export class SystemConfigurationListComponent implements OnInit {
     });
   }
 
-  onUpdate(config: SystemConfiguration): void {
-    const propertyValue = config.propertyType === 'boolean' 
-      ? config.propertyValueBool?.toString() || 'false'
-      : config.propertyValue;
+  saveAll(): void {
+    this.saving = true;
+    const dtos = this.configurations.map(config => ({
+      id: config.id,
+      propertyValue: config.propertyType === 'boolean' 
+        ? config.propertyValueBool?.toString() || 'false'
+        : config.propertyValue
+    }));
 
-    this.configService.update({ id: config.id, propertyValue }).subscribe({
+    this.configService.updateMultiple(dtos).subscribe({
       next: (success) => {
+        this.saving = false;
         if (success) {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Configuration updated' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'All configurations saved successfully' });
         }
+      },
+      error: () => {
+        this.saving = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save configurations' });
       }
     });
   }

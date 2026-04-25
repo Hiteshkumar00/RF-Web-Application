@@ -7,6 +7,7 @@ import { PaymentAccountMessages } from '../../constants/payment-account-messages
 import { PaymentAccountTableColumns } from '../../constants/payment-account-table.constants';
 import { AccountPersonApiService } from '../../../account-person-management/Services/account-person-api.service';
 import { forkJoin } from 'rxjs';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-payment-account-list',
@@ -14,10 +15,13 @@ import { forkJoin } from 'rxjs';
     standalone: false
 })
 export class PaymentAccountListComponent implements OnInit {
-    private paymentAccountApiService = inject(PaymentAccountApiService);
-    private accountPersonApiService = inject(AccountPersonApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private paymentAccountApiService: PaymentAccountApiService,
+        private accountPersonApiService: AccountPersonApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = PaymentAccountLabels;
     columns = PaymentAccountTableColumns.COLUMNS;

@@ -7,6 +7,7 @@ import { AgencyPersonDto } from '../../models/agency-person.model';
 import { AgencyPersonLabels } from '../../constants/agency-person-labels.constants';
 import { AgencyPersonMessages } from '../../constants/agency-person-messages.constants';
 import { AgencyPersonTableColumns } from '../../constants/agency-person-table.constants';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-agency-person-list',
@@ -14,10 +15,13 @@ import { AgencyPersonTableColumns } from '../../constants/agency-person-table.co
     templateUrl: './agency-person-list.component.html'
 })
 export class AgencyPersonListComponent implements OnInit {
-    private agencyPersonApiService = inject(AgencyPersonApiService);
-    private agencyApiService = inject(AgencyApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private agencyPersonApiService: AgencyPersonApiService,
+        private agencyApiService: AgencyApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = AgencyPersonLabels;
     columns = AgencyPersonTableColumns.COLUMNS;

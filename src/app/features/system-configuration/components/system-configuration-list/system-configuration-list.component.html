@@ -3,12 +3,18 @@
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
                 <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">System Configuration</h5>
-                <span class="badge bg-primary-subtle text-primary">{{ configurations.length }} Properties</span>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-primary-subtle text-primary">{{ configurations.length }} Properties</span>
+                    <p-button label="Save All" icon="pi pi-save" [loading]="saving" 
+                        (onClick)="saveAll()" size="small"></p-button>
+                </div>
             </div>
         </div>
 
         <div class="card-body p-0">
-            <p-table [value]="configurations" [loading]="loading" styleClass="p-datatable-striped p-datatable-sm" [tableStyle]="{'min-width': '50rem'}">
+            <p-table [value]="configurations" [loading]="loading" [scrollable]="true"
+                [scrollHeight]="globalConfig.tableScrollHeight"
+                styleClass="p-datatable-striped p-datatable-sm">
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Property</th>
@@ -25,7 +31,7 @@
                             <!-- Boolean Type -->
                             @if (config.propertyType === 'boolean') {
                             <div class="d-flex align-items-center gap-2">
-                                <p-toggleswitch [(ngModel)]="config.propertyValueBool" (onChange)="onUpdate(config)"></p-toggleswitch>
+                                <p-toggleswitch [(ngModel)]="config.propertyValueBool"></p-toggleswitch>
                                 <span class="badge" [class.bg-success]="config.propertyValueBool" [class.bg-secondary]="!config.propertyValueBool">
                                     {{ config.propertyValueBool ? 'Enabled' : 'Disabled' }}
                                 </span>
@@ -33,13 +39,13 @@
                             }
 
                             <!-- Number Type -->
-                            @if (config.propertyType === 'number') {
-                            <p-inputNumber [(ngModel)]="config.propertyValue" (onBlur)="onUpdate(config)" [useGrouping]="false" styleClass="w-100"></p-inputNumber>
+                             @if (config.propertyType === 'number') {
+                            <p-inputNumber [(ngModel)]="config.propertyValue" [useGrouping]="false" styleClass="w-100"></p-inputNumber>
                             }
 
                             <!-- String Type -->
-                            @if (config.propertyType === 'string') {
-                            <input type="text" pInputText [(ngModel)]="config.propertyValue" (blur)="onUpdate(config)" class="w-100" />
+                             @if (config.propertyType === 'string') {
+                            <input type="text" pInputText [(ngModel)]="config.propertyValue" class="w-100" />
                             }
                         </td>
                     </tr>

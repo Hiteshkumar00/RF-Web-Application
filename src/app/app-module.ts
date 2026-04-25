@@ -1,4 +1,4 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -8,6 +8,7 @@ import { SharedModule } from './shared/shared-module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
+import { GlobalConfigService } from './core/services/global-config.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,13 @@ import Aura from '@primeuix/themes/aura';
     provideAnimationsAsync(),
     providePrimeNG({
       theme: { preset: Aura, options: { darkModeSelector: '.p-dark', ripple: true } },
-    })
+    }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: GlobalConfigService) => () => configService.init(),
+      deps: [GlobalConfigService],
+      multi: true
+    }
   ],
   bootstrap: [App]
 })

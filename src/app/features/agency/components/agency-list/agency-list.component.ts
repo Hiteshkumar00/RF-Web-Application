@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AgencyApiService } from '../../services/agency-api.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { AgencyDto } from '../../models/agency.model';
 import { AgencyLabels } from '../../constants/agency-labels.constants';
 import { AgencyMessages } from '../../constants/agency-messages.constants';
@@ -12,9 +13,12 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
     templateUrl: './agency-list.component.html'
 })
 export class AgencyListComponent implements OnInit {
-    private agencyApiService = inject(AgencyApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private agencyApiService: AgencyApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService
+    ) {}
 
     labels = AgencyLabels;
     columns = AgencyTableColumns.COLUMNS;

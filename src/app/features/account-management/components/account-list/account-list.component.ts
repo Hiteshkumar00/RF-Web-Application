@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AccountApiService } from '../../services/account-api.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { AccountDto } from '../../models/account.model';
 import { AccountLabels } from '../../constants/account-labels.constants';
 import { AccountMessages } from '../../constants/account-messages.constants';
@@ -16,13 +17,15 @@ import { Router } from '@angular/router';
     templateUrl: './account-list.component.html'
 })
 export class AccountListComponent implements OnInit {
-    private accountApiService = inject(AccountApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
-    private authApiService = inject(AuthApiService);
-    private authService = inject(AuthService);
-    private configService = inject(SystemConfigurationService);
-    private router = inject(Router);
+    constructor(
+        private accountApiService: AccountApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
+        public globalConfig: GlobalConfigService,
+        private authApiService: AuthApiService,
+        private authService: AuthService,
+        private router: Router
+    ) {}
 
     labels = AccountLabels;
     columns = AccountTableColumns.COLUMNS;
@@ -36,13 +39,6 @@ export class AccountListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadAccounts();
-        this.checkDeletePermission();
-    }
-
-    checkDeletePermission(): void {
-        this.configService.getValue('EnableDeleteAccount').subscribe(val => {
-            this.isDeleteEnabled = val === 'true';
-        });
     }
 
     loadAccounts(): void {

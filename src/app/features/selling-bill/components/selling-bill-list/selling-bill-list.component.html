@@ -17,6 +17,7 @@
 
     <div class="card-body p-0">
         <p-table #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
             styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [globalFilterFields]="['customerName', 'phoneNo']">
@@ -93,13 +94,13 @@
                             <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
                                 (onClick)="openViewDialog(bill)" pTooltip="View" tooltipPosition="top" />
                             <p-button *ngIf="canSendWhatsApp" icon="pi pi-whatsapp" [rounded]="true" [text]="true"
-                            severity="success" (onClick)="sendWhatsApp(bill)" pTooltip="Send on WhatsApp"
-                            tooltipPosition="top" />
+                                severity="success" (onClick)="sendWhatsApp(bill)" pTooltip="Send on WhatsApp"
+                                tooltipPosition="top" />
                             <p-button *ngIf="canSendEmail" icon="pi pi-envelope" [rounded]="true" [text]="true"
-                            severity="help" (onClick)="sendEmail(bill)" pTooltip="Send on Email"
-                            tooltipPosition="top" />
-                        <p-button icon="pi pi-download" [rounded]="true" [text]="true" severity="info"
-                            (onClick)="downloadPdf(bill)" pTooltip="Download" tooltipPosition="top" />
+                                severity="help" (onClick)="sendEmail(bill)" pTooltip="Send on Email"
+                                tooltipPosition="top" />
+                            <p-button icon="pi pi-download" [rounded]="true" [text]="true" severity="info"
+                                (onClick)="downloadPdf(bill)" pTooltip="Download" tooltipPosition="top" />
                             <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
                                 (onClick)="openEditDialog(bill)" pTooltip="Edit" tooltipPosition="top" />
                             <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { BusinessYearApiService } from '../../services/business-year-api.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { BusinessYearConstants } from '../../constants/business-year.constant';
 import { BusinessYearListDto } from '../../models/business-year-list-dto.model';
 
@@ -28,7 +29,8 @@ export class BusinessYearListComponent implements OnInit {
 
   constructor(
     private apiService: BusinessYearApiService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public globalConfig: GlobalConfigService
   ) {}
 
   ngOnInit(): void {

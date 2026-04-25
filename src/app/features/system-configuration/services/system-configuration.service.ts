@@ -17,23 +17,7 @@ export class SystemConfigurationService {
     return this.http.get<SystemConfiguration[]>(`${this.apiUrl}/GetAll`);
   }
 
-  update(dto: UpdateSystemConfigurationDto): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/Update`, dto);
-  }
-
-  getValue(propertyName: string): Observable<string> {
-    return new Observable<string>(observer => {
-      this.getAll().subscribe({
-        next: (res) => {
-          const config = res.find((c: SystemConfiguration) => c.propertyName === propertyName);
-          observer.next(config?.propertyValue || '');
-          observer.complete();
-        },
-        error: () => {
-          observer.next('');
-          observer.complete();
-        }
-      });
-    });
+  updateMultiple(dtos: UpdateSystemConfigurationDto[]): Observable<boolean> {
+    return this.http.put<boolean>(`${this.apiUrl}/UpdateMultiple`, dtos);
   }
 }
