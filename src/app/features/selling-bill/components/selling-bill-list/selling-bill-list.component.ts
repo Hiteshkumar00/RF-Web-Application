@@ -110,7 +110,8 @@ export class SellingBillListComponent implements OnInit {
     downloadPdf(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const fileName = `Bill_${item.billNo || item.id}_${item.date}_${item.customerName}.pdf`;
+                const dateStr = item.date.split('-').reverse().join('-');
+                const fileName = `Bill_${item.billNo || item.id}_${dateStr}_${item.customerName}.pdf`;
                 this.downloadService.downloadFile(blob, fileName);
             }
         });
@@ -119,7 +120,8 @@ export class SellingBillListComponent implements OnInit {
     sendWhatsApp(item: SellingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
+                const dateStr = item.date.split('-').reverse().join('-');
+                const fileName = `Bill_${item.billNo}_${dateStr}_${item.customerName}.pdf`;
                 this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
             },
             error: () => {

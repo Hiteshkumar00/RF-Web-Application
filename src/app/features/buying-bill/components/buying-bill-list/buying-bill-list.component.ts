@@ -96,7 +96,8 @@ export class BuyingBillListComponent implements OnInit {
     downloadPdf(item: BuyingBillListDto): void {
         this.apiService.downloadInvoice(item.id).subscribe({
             next: (blob) => {
-                const fileName = `Purchase_Bill_${item.billNo || item.id}.pdf`;
+                const dateStr = item.date.split('-').reverse().join('-');
+                const fileName = `Purchase_Bill_${item.billNo || item.id}_${dateStr}.pdf`;
                 this.downloadService.downloadFile(blob, fileName);
             }
         });

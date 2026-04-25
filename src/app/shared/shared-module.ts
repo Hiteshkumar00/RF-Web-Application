@@ -20,6 +20,8 @@ import { ErrorDialogComponent } from './components/error-dialog/error-dialog.com
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
+import { RfDatePipe } from './pipes/rf-date.pipe';
+import { RfShortDatePipe } from './pipes/rf-short-date.pipe';
 
 // New PrimeNG Imports
 import { TableModule } from 'primeng/table';
@@ -83,7 +85,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputNumberModule,
     ToggleSwitchModule,
     AutoCompleteModule,
-    MenuModule
+    MenuModule,
+    RfDatePipe,
+    RfShortDatePipe
   ],
   exports: [
     CommonModule,
@@ -101,6 +105,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     SidebarComponent,
     LoaderComponent,
     ErrorDialogComponent,
+    RfDatePipe,
+    RfShortDatePipe,
     ProgressSpinnerModule,
     DialogModule,
     MessageModule,

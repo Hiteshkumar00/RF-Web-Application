@@ -12,7 +12,7 @@
         @if ((isLoggedIn$ | async) && isAccountUser && years.length > 0) {
         <div class="d-flex align-items-center gap-2">
             <span class="fw-semibold text-color-secondary fs-6"
-                [pTooltip]="selectedYear ? 'START: ' + (selectedYear.startDate | date:'dd-MMM-yyyy') + '<br/>' + 'END: ' + (selectedYear.endDate | date:'dd-MMM-yyyy') : ''"
+                [pTooltip]="selectedYear ? 'START: ' + (selectedYear.startDate | rfShortDate) + '<br/>' + 'END: ' + (selectedYear.endDate | rfShortDate) : ''"
                 [escape]="false" tooltipPosition="bottom" style="cursor: help;">Business Year:</span>
             <p-select [options]="years" size="small" [(ngModel)]="selectedYearId" optionLabel="yearName" optionValue="id"
                 placeholder="Select Year" (onChange)="onYearChange()" [style]="{'min-width': '120px'}"

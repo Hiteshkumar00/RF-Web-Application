@@ -17,6 +17,8 @@ export class AccountDetailsService {
     private _enableWhatsApp = false;
     private _enableAdvancedWhatsApp = false;
     private _enableEmail = false;
+    private _dateFormat = 'dd-MMMM-yyyy';
+    private _shortDateFormat = 'dd-MMM-yyyy';
     private accountSubscription?: any;
 
     private readonly defaultTitle = 'RF Application';
@@ -38,6 +40,14 @@ export class AccountDetailsService {
 
     get enableEmail(): boolean {
         return this._enableEmail;
+    }
+
+    get dateFormat(): string {
+        return this._dateFormat;
+    }
+
+    get shortDateFormat(): string {
+        return this._shortDateFormat;
     }
 
     init() {
@@ -71,6 +81,9 @@ export class AccountDetailsService {
             this._enableWhatsApp = account.enableWhatsApp;
             this._enableAdvancedWhatsApp = account.enableAdvancedWhatsApp;
             this._enableEmail = account.enableEmail;
+            this._dateFormat = account.dateFormat || 'dd-MMMM-yyyy';
+            this._shortDateFormat = account.shortDateFormat || 'dd-MMM-yyyy';
+            
             this.headerService.setTitle(account.profileName);
             if (account.profileLogoLink) {
                 this.headerService.setLogo(account.profileLogoLink);
@@ -78,6 +91,8 @@ export class AccountDetailsService {
                 this.headerService.setLogo(this.defaultLogo);
             }
         } else {
+            this._dateFormat = 'dd-MMMM-yyyy';
+            this._shortDateFormat = 'dd-MMM-yyyy';
             this.headerService.setTitle(this.defaultTitle);
             this.headerService.setLogo(this.defaultLogo);
         }

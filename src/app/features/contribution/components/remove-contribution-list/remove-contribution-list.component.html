@@ -39,7 +39,7 @@
                             </div>
                         </td>
                         <td>{{ item.accountPersonName || '-' }}</td>
-                        <td>{{ item.date | date: 'dd-MMMM-yyyy' }}</td>
+                        <td>{{ item.date | rfDate }}</td>
                         <td class="fw-bold text-danger">{{ item.totalAmount | currency:'INR' }}</td>
                     </tr>
                 </ng-template>

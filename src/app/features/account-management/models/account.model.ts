@@ -8,6 +8,8 @@ export interface AccountDto {
     email?: string | null;
     gstin?: string | null;
     currencyType?: string | null;
+    dateFormat?: string | null;
+    shortDateFormat?: string | null;
     enableSuggestions: boolean;
     whatsAppNumber?: string | null;
     enableWhatsApp: boolean;

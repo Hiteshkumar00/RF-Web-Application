@@ -203,9 +203,8 @@
                             <div class="d-flex align-items-center gap-2">
                                 <span class="fw-bold text-primary">{{ yearGroup.yearName }}</span>
                                 <span class="text-muted fs-xs" *ngIf="yearGroup.startDate">
-                                    ({{ yearGroup.startDate | date:'dd-MMM-yyyy' }}
-                                    <span *ngIf="yearGroup.endDate"> To {{ yearGroup.endDate | date:'dd-MMM-yyyy'
-                                        }}</span>)
+                                    ({{ yearGroup.startDate | rfShortDate }}
+                                    <span *ngIf="yearGroup.endDate"> To {{ yearGroup.endDate | rfShortDate }}</span>)
                                 </span>
                             </div>
                             <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2">
@@ -227,7 +226,7 @@
                                 <ng-template pTemplate="body" let-bill>
                                     <tr class="fs-xs">
                                         <td class="fw-semibold text-muted py-2 px-3">{{ bill.billNo }}</td>
-                                        <td class="small opacity-75 py-2 px-3">{{ bill.date | date:'dd-MMM-yyyy' }}</td>
+                                        <td class="small opacity-75 py-2 px-3">{{ bill.date | rfShortDate }}</td>
                                         <td class="text-end fw-semibold text-info py-2 px-3">{{ bill.netAmount |
                                             currency:'INR' }}</td>
                                         <td class="text-end text-success fw-semibold py-2 px-3">{{ bill.paidAmount |

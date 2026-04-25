@@ -26,6 +26,8 @@ export class AccountLabels {
     public static readonly EMAIL = 'Contact Email';
     public static readonly GSTIN = 'GSTIN Number';
     public static readonly CURRENCY_TYPE = 'Currency Type';
+    public static readonly DATE_FORMAT = 'Long Date Format (e.g. dd-MMMM-yyyy)';
+    public static readonly SHORT_DATE_FORMAT = 'Short Date Format (e.g. dd-MMM-yyyy)';
     public static readonly ENABLE_SUGGESTIONS = 'Enable Suggestions';
     public static readonly WHATSAPP_NUMBER = 'WhatsApp Number';
     public static readonly ENABLE_WHATSAPP = 'Enable WhatsApp Messaging';

@@ -59,7 +59,7 @@
                         } @else if (col.field === 'startDate' || col.field === 'endDate') {
                         <td>
                             @if (year[col.field]) {
-                            {{ year[col.field] | date: 'dd-MMMM-yyyy' }}
+                            {{ year[col.field] | rfDate }}
                             } @else {
                             <span class="opacity-50">—</span>
                             }

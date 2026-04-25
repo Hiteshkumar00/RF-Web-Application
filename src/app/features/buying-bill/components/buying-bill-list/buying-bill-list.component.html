@@ -110,7 +110,7 @@
                     <td>
                         <div class="fw-semibold">{{ bill.agencyName }}</div>
                     </td>
-                    <td class="small">{{ bill.date | date:'dd-MMMM-yyyy' }}</td>
+                    <td class="small">{{ bill.date | rfDate }}</td>
                     <td class="text-end fw-semibold">{{ bill.totalAmount | currency:'INR' }}</td>
                     <td class="text-end fw-semibold text-warning">{{ bill.discount | currency:'INR' }}</td>
                     <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>

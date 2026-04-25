@@ -90,6 +90,22 @@
             </p-floatlabel>
         </div>
 
+        <!-- Date Formats Row -->
+        <div class="row g-3">
+            <div class="col-6">
+                <p-floatlabel variant="on">
+                    <input id="dateFormat" type="text" pInputText formControlName="dateFormat" class="w-100" />
+                    <label for="dateFormat">{{ labels.DATE_FORMAT }}</label>
+                </p-floatlabel>
+            </div>
+            <div class="col-6">
+                <p-floatlabel variant="on">
+                    <input id="shortDateFormat" type="text" pInputText formControlName="shortDateFormat" class="w-100" />
+                    <label for="shortDateFormat">{{ labels.SHORT_DATE_FORMAT }}</label>
+                </p-floatlabel>
+            </div>
+        </div>
+
         <!-- Enable Suggestions -->
         <div
             class="d-flex align-items-center justify-content-between p-3 border rounded-3 bg-opacity-25 mt-2 shadow-sm transition-all hover-shadow">

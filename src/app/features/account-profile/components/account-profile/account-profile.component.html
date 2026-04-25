@@ -44,6 +44,16 @@
                                         class="pi pi-money-bill me-2"></i>Currency</span>
                                 <span class="fw-bold">{{ account.currencyType || 'Not Set' }}</span>
                             </div>
+                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i
+                                        class="pi pi-calendar me-2"></i>Date Format</span>
+                                <span class="fw-bold">{{ account.dateFormat || 'dd-MMMM-yyyy (Default)' }}</span>
+                            </div>
+                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i
+                                        class="pi pi-calendar-plus me-2"></i>Short Date Format</span>
+                                <span class="fw-bold">{{ account.shortDateFormat || 'dd-MMM-yyyy (Default)' }}</span>
+                            </div>
 
                             <!-- New Branding Fields -->
                             <div *ngIf="account.title"
