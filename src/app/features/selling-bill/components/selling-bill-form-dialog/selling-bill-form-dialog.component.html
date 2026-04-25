@@ -16,7 +16,7 @@
                 <div class="field">
                     <label for="customerName" class="block mb-2 font-semibold">{{ labels.CUSTOMER_NAME }}</label>
                     <p-iconField iconPosition="right">
-                        <input id="customerName" type="text" pInputText formControlName="customerName"
+                        <input id="customerName" type="text" pInputText formControlName="customerName" appVoiceTyping
                             class="w-100 p-inputtext-sm" />
                         <p-inputIcon *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched"
                             class="pi pi-info-circle text-danger pe-2"
@@ -125,7 +125,7 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-iconField iconPosition="right">
-                                    <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions"
+                                    <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions" appVoiceTyping
                                         (completeMethod)="searchItems($event)" field="itemName"
                                         (onSelect)="onSelectItem($event, i)" placeholder="Item Name" styleClass="w-100"
                                         inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"

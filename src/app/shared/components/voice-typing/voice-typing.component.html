@@ -1,0 +1,70 @@
+<p-dialog [(visible)]="isOpen" [modal]="true" [style]="{width: '450px'}" 
+          (onHide)="closePopup()" [draggable]="false" [resizable]="false" 
+          [closable]="false"
+          styleClass="border-round-2xl overflow-hidden shadow-6">
+    <ng-template pTemplate="header">
+        <div class="w-full flex align-items-center justify-content-between">
+            <div class="flex align-items-center gap-2">
+                <div class="bg-primary border-circle flex align-items-center justify-content-center" style="width: 2.5rem; height: 2.5rem;">
+                    <i class="pi pi-microphone text-white text-xl"></i>
+                </div>
+                <h5 class="m-0 font-bold text-xl text-color">Voice Typing</h5>
+            </div>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="closePopup()" [style]="{width: '2.5rem', height: '2.5rem'}"></p-button>
+        </div>
+    </ng-template>
+
+    <div class="flex flex-column align-items-center gap-4 py-3">
+        <p-select [options]="languages" [(ngModel)]="selectedLanguage" optionLabel="name" optionValue="code"
+                  (onChange)="onLanguageChange()" appendTo="body" styleClass="w-full font-medium" 
+                  [style]="{'border-radius': '1rem'}"></p-select>
+
+        <div class="w-full relative flex flex-column gap-2">
+            <!-- Editable Final Transcript Area -->
+            <div class="relative w-full">
+                <textarea pInputTextarea [(ngModel)]="finalTranscript"
+                          placeholder="Tap the mic below to speak, or type here directly..."
+                          [rows]="4" [autoResize]="true"
+                          class="w-full p-3 border-round-xl border-1 text-color surface-ground"
+                          [ngClass]="{'border-primary shadow-2': isListening, 'border-300': !isListening}"
+                          style="min-height: 140px; max-height: 200px; font-size: 1.15rem; line-height: 1.6; transition: all 0.3s ease; resize: none;"></textarea>
+                
+                <div *ngIf="isListening" class="absolute top-0 right-0 m-3 flex gap-1">
+                    <span class="pulse-dot" style="width: 6px; height: 6px;"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Big Microphone Button -->
+        <div class="flex justify-content-center my-3">
+            <button type="button" 
+                    [ngClass]="{'is-listening': isListening}"
+                    class="mic-main-btn flex align-items-center justify-content-center p-0"
+                    [pTooltip]="isListening ? 'Tap to Stop' : 'Tap to Start'"
+                    tooltipPosition="top"
+                    (click)="toggleListen()">
+                <ng-container *ngIf="!isListening">
+                    <i class="pi pi-microphone text-4xl text-white"></i>
+                </ng-container>
+                <ng-container *ngIf="isListening">
+                    <div class="sound-wave">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                </ng-container>
+            </button>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="w-full flex justify-content-between align-items-center pt-2">
+            <p-button label="Clear" icon="pi pi-trash" [text]="true" severity="danger" 
+                      [disabled]="!finalTranscript" (onClick)="clearText()"></p-button>
+            <p-button label="Apply Text" icon="pi pi-check" severity="success" [rounded]="true"
+                      [disabled]="!finalTranscript" (onClick)="applyText()"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>
