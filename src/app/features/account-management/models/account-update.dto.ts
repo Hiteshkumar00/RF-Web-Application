@@ -11,6 +11,7 @@ export interface UpdateAccountDto {
     dateFormat?: string | null;
     shortDateFormat?: string | null;
     enableSuggestions: boolean;
+    enableVoiceTyping: boolean;
     whatsAppNumber?: string | null;
     enableWhatsApp: boolean;
     enableAdvancedWhatsApp: boolean;

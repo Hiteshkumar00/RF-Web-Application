@@ -93,6 +93,13 @@
                                     [icon]="account.enableSuggestions ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
                             </div>
 
+                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-microphone me-2"></i>Voice Typing</span>
+                                <p-tag [severity]="account.enableVoiceTyping ? 'info' : 'secondary'"
+                                    [value]="account.enableVoiceTyping ? 'Enabled' : 'Disabled'"
+                                    [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                            </div>
+
                             <div *ngIf="account.enableWhatsApp"
                                 class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                 <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>

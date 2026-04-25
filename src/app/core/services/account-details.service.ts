@@ -17,6 +17,7 @@ export class AccountDetailsService {
     private _enableWhatsApp = false;
     private _enableAdvancedWhatsApp = false;
     private _enableEmail = false;
+    private _enableVoiceTyping = false;
     private _dateFormat = 'dd-MMMM-yyyy';
     private _shortDateFormat = 'dd-MMM-yyyy';
     private accountSubscription?: any;
@@ -40,6 +41,10 @@ export class AccountDetailsService {
 
     get enableEmail(): boolean {
         return this._enableEmail;
+    }
+
+    get enableVoiceTyping(): boolean {
+        return this._enableVoiceTyping;
     }
 
     get dateFormat(): string {
@@ -81,6 +86,7 @@ export class AccountDetailsService {
             this._enableWhatsApp = account.enableWhatsApp;
             this._enableAdvancedWhatsApp = account.enableAdvancedWhatsApp;
             this._enableEmail = account.enableEmail;
+            this._enableVoiceTyping = account.enableVoiceTyping;
             this._dateFormat = account.dateFormat || 'dd-MMMM-yyyy';
             this._shortDateFormat = account.shortDateFormat || 'dd-MMM-yyyy';
             

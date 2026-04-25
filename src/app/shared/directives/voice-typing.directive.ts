@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { VoiceTypingComponent } from '../components/voice-typing/voice-typing.component';
 import { NgControl } from '@angular/forms';
+import { AccountDetailsService } from '../../core/services/account-details.service';
 
 @Directive({
   selector: '[appVoiceTyping]',
@@ -26,6 +27,7 @@ export class VoiceTypingDirective implements OnInit, OnDestroy {
     private el: ElementRef,
     private renderer: Renderer2,
     private viewContainerRef: ViewContainerRef,
+    private accountDetails: AccountDetailsService,
     @Optional() private ngControl: NgControl
   ) {}
 
@@ -104,6 +106,10 @@ export class VoiceTypingDirective implements OnInit, OnDestroy {
 
   @HostListener('focusin')
   onFocus() {
+    if (!this.accountDetails.enableVoiceTyping) {
+      return;
+    }
+
     if (this.micIcon) {
       this.renderer.setStyle(this.micIcon, 'display', 'flex');
     }
