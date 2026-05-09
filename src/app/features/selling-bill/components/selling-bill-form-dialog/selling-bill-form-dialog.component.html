@@ -203,7 +203,8 @@
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="bg-light text-uppercase small">
-                            <th style="min-width: 250px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 200px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 150px">{{ labels.DATE }}</th>
                             <th style="min-width: 150px">{{ labels.AMOUNT }}</th>
                             <th style="min-width: 50px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
@@ -220,6 +221,10 @@
                                         class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
                                         tooltipPosition="top" />
                                 </p-iconField>
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small" placeholder="Bill Date" />
                             </td>
                             <td>
                                 <p-iconField iconPosition="right">
@@ -240,7 +245,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 3 : 2"
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
                                 class="text-center p-3 text-muted small italic">
                                 No payments added.
                             </td>

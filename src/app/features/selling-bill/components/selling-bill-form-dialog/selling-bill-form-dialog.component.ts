@@ -197,6 +197,10 @@ export class SellingBillFormDialogComponent implements OnChanges {
             items: formValue.items.map((item: any) => ({
                 ...item,
                 warrenty: this.globalHasWarrenty ? item.warrenty : null
+            })),
+            payments: formValue.payments.map((p: any) => ({
+                ...p,
+                date: this.helperService.setDate(p.date)
             }))
         };
 

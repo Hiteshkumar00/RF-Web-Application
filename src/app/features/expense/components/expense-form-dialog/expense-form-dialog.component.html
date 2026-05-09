@@ -82,8 +82,9 @@
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
-                            <th style="width: 50%">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="width: 40%" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th style="width: 35%">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="width: 30%">{{ labels.DATE }}</th>
+                            <th style="width: 25%" class="text-end">{{ labels.AMOUNT }}</th>
                             <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
                         </tr>
                     </ng-template>
@@ -99,6 +100,10 @@
                                         class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ACCOUNT_REQUIRED"
                                         tooltipPosition="top" />
                                 </p-iconField>
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small" placeholder="Exp Date" />
                             </td>
                             <td>
                                 <p-iconField iconPosition="right">
@@ -119,7 +124,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-4 text-muted small">
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3" class="text-center p-4 text-muted small">
                                 No payments added yet.
                             </td>
                         </tr>
@@ -128,12 +133,12 @@
                     <!-- Payment total footer -->
                     <ng-template pTemplate="footer" *ngIf="payments.length > 0">
                         <tr class="fw-bold bg-light">
-                            <td class="text-end text-muted small pe-3">Total Paid:</td>
+                            <td [attr.colspan]="2" class="text-end text-muted small pe-3">Total Paid:</td>
                             <td class="text-end text-success">{{ totalPaid | currency:'INR' }}</td>
                             <td *ngIf="mode !== 'view'"></td>
                         </tr>
                         <tr class="fw-bold bg-light" *ngIf="form.get('totalAmount')?.value">
-                            <td class="text-end text-muted small pe-3">Remaining:</td>
+                            <td [attr.colspan]="2" class="text-end text-muted small pe-3">Remaining:</td>
                             <td class="text-end"
                                 [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
                                 {{ remainingAmount | currency:'INR' }}

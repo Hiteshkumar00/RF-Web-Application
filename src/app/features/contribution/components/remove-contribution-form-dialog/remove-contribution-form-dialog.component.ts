@@ -94,7 +94,11 @@ export class RemoveContributionFormDialogComponent implements OnChanges {
         const formValue = this.form.getRawValue();
         const payload = {
             ...formValue,
-            date: this.helperService.setDate(formValue.date)
+            date: this.helperService.setDate(formValue.date),
+            payments: formValue.payments.map((p: any) => ({
+                ...p,
+                date: this.helperService.setDate(p.date)
+            }))
         };
 
         if (this.mode === 'create') {

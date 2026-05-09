@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { AccountDetailsService } from '../../core/services/account-details.service';
 import { SellingBillApiService } from '../../features/selling-bill/services/selling-bill-api.service';
 import { MessageService } from 'primeng/api';
@@ -36,7 +35,6 @@ export class WhatsAppService {
         const paidAmount = bill.paidAmount || 0;
         const remainingAmount = bill.remainingAmount || 0;
         const date = bill.date;
-        const pdfLink = `${environment.apiUrl}/SellingBill/PrintInvoice/${id}`;
 
         let message = '';
         if (isPending) {
@@ -44,13 +42,11 @@ export class WhatsAppService {
                 `Total Amount: ₹${netAmount.toLocaleString('en-IN')}\n` +
                 `Paid Amount: ₹${paidAmount.toLocaleString('en-IN')}\n` +
                 `*Remaining Balance: ₹${remainingAmount.toLocaleString('en-IN')}*\n\n` +
-                `📄 *View Invoice:* ${pdfLink}\n\n` +
                 `Please settle the amount at your earliest convenience. Thank you!`;
         } else {
             message = `*Payment Successful*\n\nHello *${name}*,\n\nYour bill *${billNo}* dated *${date}* has been successfully paid.\n\n` +
                 `Total Amount: ₹${netAmount.toLocaleString('en-IN')}\n` +
                 `Payment Status: *Full Paid*\n\n` +
-                `📄 *View Invoice:* ${pdfLink}\n\n` +
                 `Thank you for choosing us!`;
         }
 

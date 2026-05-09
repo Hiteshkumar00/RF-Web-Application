@@ -3,6 +3,7 @@ export interface AddContributionPaymentDto {
     amount: number;
     paymentAccountId: number;
     paymentAccountName?: string;
+    date?: string | null;
 }
 
 export interface AddContributionDto {

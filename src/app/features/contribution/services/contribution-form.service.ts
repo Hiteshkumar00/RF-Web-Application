@@ -23,7 +23,8 @@ export class ContributionFormService {
         return this.fb.group({
             id: [payment?.id || 0],
             amount: [payment?.amount || null, [Validators.required, Validators.min(0.01)]],
-            paymentAccountId: [payment?.paymentAccountId || null, [Validators.required]]
+            paymentAccountId: [payment?.paymentAccountId || null, [Validators.required]],
+            date: [payment?.date ? new Date(payment.date) : null]
         });
     }
 

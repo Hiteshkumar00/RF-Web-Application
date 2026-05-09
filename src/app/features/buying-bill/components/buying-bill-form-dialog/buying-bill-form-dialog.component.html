@@ -141,8 +141,9 @@
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small">
-                            <th style="min-width: 200px">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="min-width: 150px" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th style="min-width: 180px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th style="min-width: 150px">{{ labels.DATE }}</th>
+                            <th style="min-width: 130px" class="text-end">{{ labels.AMOUNT }}</th>
                             <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
@@ -152,6 +153,10 @@
                                 <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
                                     optionLabel="label" optionValue="value" placeholder="Select Account"
                                     styleClass="w-100 text-start" appendTo="body" size="small" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small" placeholder="Bill Date" />
                             </td>
                             <td>
                                 <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
@@ -165,7 +170,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-3 text-muted small italic">
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3" class="text-center p-3 text-muted small italic">
                                 No payments added.
                             </td>
                         </tr>
@@ -231,8 +236,9 @@
                                             styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm">
                                             <ng-template pTemplate="header">
                                                 <tr class="small">
-                                                    <th style="width: 50%">Payment Account</th>
-                                                    <th style="width: 40%" class="text-end">Amount</th>
+                                                    <th style="width: 35%">Payment Account</th>
+                                                    <th style="width: 30%">Date</th>
+                                                    <th style="width: 25%" class="text-end">Amount</th>
                                                     <th style="width: 10%" class="text-center"
                                                         *ngIf="mode !== 'view'"></th>
                                                 </tr>
@@ -245,6 +251,11 @@
                                                             optionValue="value" placeholder="Select Account"
                                                             styleClass="w-100 text-start" appendTo="body"
                                                             size="small" />
+                                                    </td>
+                                                    <td>
+                                                        <p-datepicker formControlName="date" [showIcon]="true"
+                                                            dateFormat="dd-mm-yy" appendTo="body" styleClass="w-100"
+                                                            size="small" placeholder="Exp Date" />
                                                     </td>
                                                     <td>
                                                         <p-inputNumber formControlName="amount" mode="currency"
@@ -260,7 +271,7 @@
                                             </ng-template>
                                             <ng-template pTemplate="emptymessage">
                                                 <tr>
-                                                    <td [attr.colspan]="mode !== 'view' ? 3 : 2"
+                                                    <td [attr.colspan]="mode !== 'view' ? 4 : 3"
                                                         class="text-center p-2 text-muted small italic">
                                                         No payments added yet.
                                                     </td>
