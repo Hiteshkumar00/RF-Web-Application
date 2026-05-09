@@ -74,6 +74,13 @@ export class PerformanceDashboardComponent implements OnInit {
                     fill: false,
                     borderColor: '#9C27B0',
                     tension: .4
+                },
+                {
+                    label: this.labels.EXPENSE_PENDING,
+                    data: this.metrics.map(m => m.expencePendingAmount),
+                    fill: false,
+                    borderColor: '#E91E63',
+                    tension: .4
                 }
             ]
         };
