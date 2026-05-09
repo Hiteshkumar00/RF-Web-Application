@@ -100,6 +100,20 @@
             </div>
         </div>
 
+        <div class="col-md-6 col-lg-4">
+            <div class="card metric-card border-0 shadow-sm p-4 h-100 bg-dark bg-opacity-10">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-muted small fw-semibold uppercase mb-1">Expense Remaining</div>
+                        <div class="fs-2 fw-bold text-dark">{{ metrics.expencePendingAmount | currency:'INR' }}</div>
+                    </div>
+                    <div class="icon-circle bg-dark text-white mb-0">
+                        <i class="pi pi-clock fs-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>

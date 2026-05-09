@@ -6,5 +6,6 @@ export interface CreateExpensePaymentDto {
 export interface CreateExpenseDto {
     expenceType: string;
     date: string;
+    totalAmount: number;
     payments: CreateExpensePaymentDto[];
 }

@@ -48,6 +48,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
+    expandedExpences: { [key: string]: boolean } = {};
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -88,12 +89,25 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     get totalExpenceAmount(): number {
         if (!this.form) return 0;
         return this.expences.controls.reduce((acc, control) => {
-            return acc + (control.get('amount')?.value || 0);
+            return acc + (control.get('totalAmount')?.value || 0);
         }, 0);
     }
 
+    get totalExpencePaidAmount(): number {
+        if (!this.form) return 0;
+        return this.expences.controls.reduce((acc, control) => {
+            const payments = control.get('payments') as FormArray;
+            const paid = payments ? payments.controls.reduce((pAcc, pControl) => pAcc + (pControl.get('amount')?.value || 0), 0) : 0;
+            return acc + paid;
+        }, 0);
+    }
+
+    get totalExpenceRemainingAmount(): number {
+        return this.totalExpenceAmount - this.totalExpencePaidAmount;
+    }
+
     get finalAmount(): number {
-        return this.netAmount + this.totalExpenceAmount;
+        return this.netAmount;
     }
 
     get totalPaidAmount(): number {
@@ -216,6 +230,18 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     removeExpence(index: number): void {
         this.formService.removeExpence(this.form, index);
+    }
+
+    getExpencePayments(expenceIndex: number): FormArray {
+        return this.expences.at(expenceIndex).get('payments') as FormArray;
+    }
+
+    addExpencePayment(expenceIndex: number): void {
+        this.formService.addExpencePayment(this.expences.at(expenceIndex) as FormGroup);
+    }
+
+    removeExpencePayment(expenceIndex: number, paymentIndex: number): void {
+        this.formService.removeExpencePayment(this.expences.at(expenceIndex) as FormGroup, paymentIndex);
     }
 
     onSubmit(): void {

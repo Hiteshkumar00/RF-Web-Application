@@ -8,5 +8,6 @@ export interface UpdateExpenseDto {
     id: number;
     expenceType: string;
     date: string;
+    totalAmount: number;
     payments: UpdateExpensePaymentDto[];
 }

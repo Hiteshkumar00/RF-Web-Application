@@ -10,6 +10,10 @@ export interface ExpenseDto {
     accountId: number;
     expenceType: string;
     date: string;
+    totalAmount: number;
+    buyingBillId?: number;
+    buyingBillNo?: string;
+    agencyName?: string;
     payments: ExpensePaymentDto[];
 }
 
@@ -17,5 +21,10 @@ export interface ExpenseListDto {
     id: number;
     expenceType: string;
     date: string;
+    totalAmount: number;
     paidAmount: number;
+    remainingAmount: number;
+    buyingBillId?: number;
+    buyingBillNo?: string;
+    agencyName?: string;
 }

@@ -9,8 +9,8 @@ export class DashboardLabels {
     public static readonly TOTAL_BUYING = 'Total Buying';
     public static readonly TOTAL_EXPENSE = 'Total Expense';
     public static readonly TOTAL_PROFIT = 'Total Net Profit';
-    public static readonly SELLING_PENDING = 'Selling Bill Pending';
-    public static readonly BUYING_PENDING = 'Buying Bill Pending';
+    public static readonly SELLING_PENDING = 'Selling Bill Remaining';
+    public static readonly BUYING_PENDING = 'Buying Bill Remaining';
     public static readonly AVAILABLE_BALANCE = 'Available Balance';
 
     // Tooltips

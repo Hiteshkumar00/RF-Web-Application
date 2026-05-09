@@ -36,6 +36,9 @@ export interface ViewAgencyAllDetailDto extends AgencyDto {
     totalBillsAmount: number;
     totalPaidAmount: number;
     totalPendingAmount: number;
+    totalExpenceAmount: number;
+    totalExpencePaidAmount: number;
+    totalExpencePendingAmount: number;
     agencyPersons: AgencyPersonDto[];
     billsByYear: AgencyBillsByYearDto[];
 }

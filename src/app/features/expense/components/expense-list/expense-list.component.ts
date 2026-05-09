@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ExpenseApiService } from '../../services/expense-api.service';
-import { ExpenseListDto, ExpenseDto } from '../../models/expense.model';
+import { ExpenseListDto } from '../../models/expense.model';
 import { ExpenseLabels } from '../../constants/expense-labels.constants';
 import { ExpenseMessages } from '../../constants/expense-messages.constants';
 import { ExpenseTableColumns } from '../../constants/expense-table.constants';
@@ -27,6 +27,19 @@ export class ExpenseListComponent implements OnInit {
     showFormDialog = false;
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedExpenseId?: number;
+
+    // Summary totals
+    get totalExpenseAmount(): number {
+        return this.expenses.reduce((sum, e) => sum + (e.totalAmount || 0), 0);
+    }
+
+    get totalPaidAmount(): number {
+        return this.expenses.reduce((sum, e) => sum + (e.paidAmount || 0), 0);
+    }
+
+    get totalRemainingAmount(): number {
+        return this.expenses.reduce((sum, e) => sum + (e.remainingAmount || 0), 0);
+    }
 
     ngOnInit(): void {
         this.loadExpenses();

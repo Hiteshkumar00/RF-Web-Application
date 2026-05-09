@@ -5,4 +5,5 @@ export interface DashboardDto {
     totalProfit: number;
     sellingPendingAmount: number;
     buyingPendingAmount: number;
+    expencePendingAmount: number;
 }

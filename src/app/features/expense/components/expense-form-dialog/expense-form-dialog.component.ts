@@ -35,12 +35,26 @@ export class ExpenseFormDialogComponent implements OnChanges {
     form!: FormGroup;
     accountOptions: DropdownOption[] = [];
     private isClosing = false;
-    
+
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
 
+    // Buying-bill linkage (display only in view mode)
+    buyingBillId?: number;
+    buyingBillNo?: string;
+    agencyName?: string;
+
     get payments(): FormArray {
         return this.form.get('payments') as FormArray;
+    }
+
+    get totalPaid(): number {
+        return this.payments.controls.reduce((sum, ctrl) => sum + (ctrl.get('amount')?.value || 0), 0);
+    }
+
+    get remainingAmount(): number {
+        const total = this.form.get('totalAmount')?.value || 0;
+        return total - this.totalPaid;
     }
 
     get dialogTitle(): string {
@@ -55,6 +69,9 @@ export class ExpenseFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
+            this.buyingBillId = undefined;
+            this.buyingBillNo = undefined;
+            this.agencyName = undefined;
             this.loadAccountOptions();
             this.form = this.expenseFormService.createForm();
 
@@ -62,14 +79,18 @@ export class ExpenseFormDialogComponent implements OnChanges {
                 this.expenseApiService.getById(this.expenseId).subscribe({
                     next: (data) => {
                         this.expenseFormService.patchForm(this.form, data);
+                        // Capture bill-linkage for the view badge
+                        this.buyingBillId = data.buyingBillId;
+                        this.buyingBillNo = data.buyingBillNo;
+                        this.agencyName = data.agencyName;
                         if (this.mode === 'view') {
                             this.form.disable();
+                        } else if (this.buyingBillId) {
+                            // If linked to a Buying Bill, date must be strictly synced to the bill, so disable it here
+                            this.form.get('date')?.disable();
                         }
                     }
                 });
-            } else {
-                // Add initial payment row for create mode
-                this.addPayment();
             }
             this.loadSuggestions();
         }
@@ -117,7 +138,6 @@ export class ExpenseFormDialogComponent implements OnChanges {
         }
 
         const formValue = this.form.getRawValue();
-        // Use HelperService to convert Date to YYYY-MM-DD
         const payload = {
             ...formValue,
             date: this.helperService.setDate(formValue.date)
@@ -160,4 +180,3 @@ export class ExpenseFormDialogComponent implements OnChanges {
         }
     }
 }
-

@@ -12,7 +12,8 @@ export class ExpenseFormService {
         return this.fb.group({
             expenceType: [null, [Validators.required, Validators.maxLength(250)]],
             date: [new Date(), [Validators.required]],
-            payments: this.fb.array([], [Validators.required, Validators.minLength(1)])
+            totalAmount: [null, [Validators.required, Validators.min(0.01)]],
+            payments: this.fb.array([])
         });
     }
 
@@ -27,7 +28,8 @@ export class ExpenseFormService {
     patchForm(form: FormGroup, data: ExpenseDto): void {
         form.patchValue({
             expenceType: data.expenceType,
-            date: new Date(data.date)
+            date: new Date(data.date),
+            totalAmount: data.totalAmount
         });
 
         const paymentsArray = form.get('payments') as FormArray;

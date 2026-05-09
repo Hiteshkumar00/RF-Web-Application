@@ -19,13 +19,20 @@ export class ExpenseLabels {
     // Form fields
     public static readonly EXPENSE_TYPE = 'Expense Type';
     public static readonly DATE = 'Expense Date';
+    public static readonly TOTAL_AMOUNT = 'Total Amount';
     public static readonly PAYMENTS_SECTION = 'Payment Details';
     public static readonly AMOUNT = 'Amount';
     public static readonly PAYMENT_ACCOUNT = 'Payment Account';
 
+    // Summary labels
+    public static readonly PAID_AMOUNT = 'Paid Amount';
+    public static readonly REMAINING_AMOUNT = 'Remaining';
+    public static readonly BUYING_BILL = 'Buying Bill';
+
     // Validations
     public static readonly EXPENSE_TYPE_REQUIRED = 'Expense type is required.';
     public static readonly DATE_REQUIRED = 'Date is required.';
+    public static readonly TOTAL_AMOUNT_REQUIRED = 'Total amount is required.';
     public static readonly AMOUNT_REQUIRED = 'Amount is required.';
     public static readonly AMOUNT_MIN = 'Amount must be greater than 0.';
     public static readonly ACCOUNT_REQUIRED = 'Account is required.';

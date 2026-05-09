@@ -63,7 +63,7 @@
                 <p-table [value]="items.controls" [scrollable]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
-                        <tr class="bg-light text-uppercase small bg-opacity-10">
+                        <tr class="text-uppercase small bg-opacity-10">
                             <th style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
                             <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
                             <th style="min-width: 150px">{{ labels.PRICE }}</th>
@@ -129,59 +129,6 @@
 
             <!-- Expenses and Payments Section -->
             <div class="col-md-7">
-                <!-- Expenses Table -->
-                <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
-                    <h6 class="mb-0 fw-bold text-warning"><i class="pi pi-truck me-2"></i>{{ labels.EXPENCES_SECTION }}
-                    </h6>
-                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Expence"
-                        styleClass="p-button-sm p-button-outlined p-button-warning" (onClick)="addExpence()" />
-                </div>
-
-                <p-table [value]="expences.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
-                    <ng-template pTemplate="header">
-                        <tr class="bg-light text-uppercase small">
-                            <th style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
-                            <th style="min-width: 150px">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="min-width: 120px" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-control let-i="rowIndex">
-                        <tr [formGroup]="$any(control)" class="align-middle">
-                            <td>
-                                <p-autoComplete formControlName="expenceType"
-                                    [suggestions]="filteredExpenseTypeSuggestions"
-                                    (completeMethod)="searchExpenseTypes($event)"
-                                    (onSelect)="onSelectExpenseType($event, i)" placeholder="Type" styleClass="w-100"
-                                    inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                                    [delay]="100" appVoiceTyping />
-                            </td>
-                            <td>
-                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
-                                    optionLabel="label" optionValue="value" placeholder="Select"
-                                    styleClass="w-100 text-start" appendTo="body" size="small" />
-                            </td>
-                            <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
-                            </td>
-                            <td class="text-center" *ngIf="mode !== 'view'">
-                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
-                                    (onClick)="removeExpence(i)" />
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
-                                class="text-center p-3 text-muted small italic">
-                                No expenses added.
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-
                 <!-- Payments Table -->
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>{{ labels.PAYMENTS_SECTION }}
@@ -193,7 +140,7 @@
                 <p-table [value]="payments.controls" [scrollable]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
                     <ng-template pTemplate="header">
-                        <tr class="bg-light text-uppercase small">
+                        <tr class="text-uppercase small">
                             <th style="min-width: 200px">{{ labels.PAYMENT_ACCOUNT }}</th>
                             <th style="min-width: 150px" class="text-end">{{ labels.AMOUNT }}</th>
                             <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
@@ -218,9 +165,117 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 3 : 2"
-                                class="text-center p-3 text-muted small italic">
+                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-3 text-muted small italic">
                                 No payments added.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <!-- Expenses Table -->
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
+                    <h6 class="mb-0 fw-bold text-warning"><i class="pi pi-truck me-2"></i>{{ labels.EXPENCES_SECTION }}
+                    </h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Expence"
+                        styleClass="p-button-sm p-button-outlined p-button-warning" (onClick)="addExpence()" />
+                </div>
+
+                <p-table [value]="expences.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="text-uppercase small">
+                            <th style="width: 3rem"></th>
+                            <th style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
+                            <th style="min-width: 130px" class="text-end">Total Amount</th>
+                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <ng-container>
+                            <tr [formGroup]="$any(control)" class="align-middle">
+                                <td class="text-center">
+                                    <p-button type="button"
+                                        [icon]="expandedExpences[i] ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                                        [text]="true" [rounded]="true" size="small"
+                                        (onClick)="expandedExpences[i] = !expandedExpences[i]" />
+                                </td>
+                                <td>
+                                    <p-autoComplete formControlName="expenceType"
+                                        [suggestions]="filteredExpenseTypeSuggestions"
+                                        (completeMethod)="searchExpenseTypes($event)"
+                                        (onSelect)="onSelectExpenseType($event, i)" placeholder="Type"
+                                        styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm" appendTo="body"
+                                        [dropdown]="true" [delay]="100" appVoiceTyping />
+                                </td>
+                                <td>
+                                    <p-inputNumber formControlName="totalAmount" mode="currency" currency="INR"
+                                        locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end fw-semibold"
+                                        class="p-inputtext-sm" placeholder="Amount" />
+                                </td>
+                                <td class="text-center" *ngIf="mode !== 'view'">
+                                    <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                        (onClick)="removeExpence(i)" />
+                                </td>
+                            </tr>
+                            <tr *ngIf="expandedExpences[i]" [formGroup]="$any(control)">
+                                <td [attr.colspan]="mode !== 'view' ? 4 : 3" class="p-0 border-0 bg-opacity-50">
+                                    <div class="p-3 border-start border-warning border-4">
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <h6 class="mb-0 small fw-bold text-muted"><i
+                                                    class="pi pi-wallet me-1"></i>Payments for this Expense</h6>
+                                            <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Payment"
+                                                styleClass="p-button-sm p-button-outlined p-button-secondary py-1 px-2 text-xs"
+                                                (onClick)="addExpencePayment(i)" />
+                                        </div>
+                                        <p-table [value]="getExpencePayments(i).controls"
+                                            styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm">
+                                            <ng-template pTemplate="header">
+                                                <tr class="small">
+                                                    <th style="width: 50%">Payment Account</th>
+                                                    <th style="width: 40%" class="text-end">Amount</th>
+                                                    <th style="width: 10%" class="text-center"
+                                                        *ngIf="mode !== 'view'"></th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-paymentCtrl let-pIndex="rowIndex">
+                                                <tr [formGroup]="$any(paymentCtrl)">
+                                                    <td>
+                                                        <p-select [options]="paymentAccountOptions"
+                                                            formControlName="paymentAccountId" optionLabel="label"
+                                                            optionValue="value" placeholder="Select Account"
+                                                            styleClass="w-100 text-start" appendTo="body"
+                                                            size="small" />
+                                                    </td>
+                                                    <td>
+                                                        <p-inputNumber formControlName="amount" mode="currency"
+                                                            currency="INR" locale="en-IN" styleClass="w-100"
+                                                            inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
+                                                    </td>
+                                                    <td class="text-center" *ngIf="mode !== 'view'">
+                                                        <p-button icon="pi pi-trash" severity="danger" [text]="true"
+                                                            [rounded]="true" size="small"
+                                                            (onClick)="removeExpencePayment(i, pIndex)" />
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="emptymessage">
+                                                <tr>
+                                                    <td [attr.colspan]="mode !== 'view' ? 3 : 2"
+                                                        class="text-center p-2 text-muted small italic">
+                                                        No payments added yet.
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-3 text-muted small italic">
+                                No expenses added.
                             </td>
                         </tr>
                     </ng-template>
@@ -229,7 +284,8 @@
 
             <!-- Summary Column -->
             <div class="col-md-5">
-                <div class="card border-1 p-4 mb-4 shadow-sm rounded-3 mt-1 justify-content-center">
+                <!-- Buying Bill Main Summary -->
+                <div class="card border-1 p-4 mb-3 shadow-sm rounded-3 mt-1 justify-content-center">
                     <h6 class="fw-bold mb-4 border-bottom pb-2">Buying Bill Summary</h6>
 
                     <div class="d-flex justify-content-between mb-2 align-items-center">
@@ -243,19 +299,9 @@
                             styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
                     </div>
 
-                    <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
-                        <span class="fw-semibold">{{ labels.NET_AMOUNT }}:</span>
-                        <span class="fw-bold text-info">{{ netAmount | currency:'INR' }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-2 align-items-center">
-                        <span class="text-muted">{{ labels.TOTAL_EXPENCE }}:</span>
-                        <span class="fw-semibold text-secondary">{{ totalExpenceAmount | currency:'INR' }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between text-info mb-2 pt-2 border-top align-items-center">
+                    <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center text-info">
                         <span class="fw-bold">{{ labels.FINAL_AMOUNT }}:</span>
-                        <span class="fw-bold h5 mb-0">{{ finalAmount | currency:'INR' }}</span>
+                        <span class="fw-bold h5 mb-0">{{ netAmount | currency:'INR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 align-items-center text-success mt-3">
@@ -269,6 +315,28 @@
                         <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
                     </div>
                 </div>
+
+                <!-- Expenses Summary (Separated) -->
+                <div class="card border-1 border-warning p-3 shadow-sm rounded-3 bg-warning bg-opacity-10 mt-3"
+                    *ngIf="totalExpenceAmount > 0">
+                    <h6 class="fw-bold mb-2 text-warning border-bottom border-warning pb-2"><i
+                            class="pi pi-truck me-2"></i>Related Expenses</h6>
+
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-semibold text-warning-emphasis">Total Expenses:</span>
+                        <span class="fw-semibold text-warning-emphasis">{{ totalExpenceAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-semibold text-success">Paid Expense:</span>
+                        <span class="fw-semibold text-success">{{ totalExpencePaidAmount | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top border-warning mt-1">
+                        <span class="fw-bold text-danger">Remaining Expense:</span>
+                        <span class="fw-bold text-danger h6 mb-0">{{ totalExpenceRemainingAmount | currency:'INR' }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -276,14 +344,16 @@
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form">
             <div class="d-flex gap-2" *ngIf="mode === 'view'">
-                <p-button label="Download" icon="pi pi-download" (onClick)="downloadPdf()"
-                    severity="info" size="small" [outlined]="true" tooltipPosition="top" pTooltip="Download PDF" />
+                <p-button label="Download" icon="pi pi-download" (onClick)="downloadPdf()" severity="info" size="small"
+                    [outlined]="true" tooltipPosition="top" pTooltip="Download PDF" />
             </div>
-            
+
             <div class="ms-auto d-flex gap-2">
-                <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" size="small" />
+                <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
+                    (onClick)="requestClose()" size="small" />
                 <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Bill' : 'Update Bill'"
-                    icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary" size="small" />
+                    icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary"
+                    size="small" />
             </div>
         </div>
     </ng-template>

@@ -43,7 +43,7 @@ export class AgencyLabels {
     public static readonly BILL_SUMMARY = 'Billing Summary';
     public static readonly TOTAL_BILLS = 'Total Bills Amount';
     public static readonly TOTAL_PAID = 'Total Paid Amount';
-    public static readonly TOTAL_PENDING = 'Total Pending Amount';
+    public static readonly TOTAL_REMAINING = 'Total Remaining Amount';
     public static readonly AGENCY_PERSONS = 'Agency Persons';
     public static readonly BILLS_BY_YEAR = 'Bills By Year';
     public static readonly STATUS = 'Status';

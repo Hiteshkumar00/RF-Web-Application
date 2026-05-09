@@ -40,7 +40,7 @@ export class WhatsAppService {
 
         let message = '';
         if (isPending) {
-            message = `*Pending Payment Reminder*\n\nHello *${name}*,\n\nYour bill *${billNo}* dated *${date}* has a pending balance.\n\n` +
+            message = `*Remaining Payment Reminder*\n\nHello *${name}*,\n\nYour bill *${billNo}* dated *${date}* has a remaining balance.\n\n` +
                 `Total Amount: ₹${netAmount.toLocaleString('en-IN')}\n` +
                 `Paid Amount: ₹${paidAmount.toLocaleString('en-IN')}\n` +
                 `*Remaining Balance: ₹${remainingAmount.toLocaleString('en-IN')}*\n\n` +

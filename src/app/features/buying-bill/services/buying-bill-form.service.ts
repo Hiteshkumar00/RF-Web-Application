@@ -39,12 +39,25 @@ export class BuyingBillFormService {
     }
 
     createExpenceForm(expence?: any): FormGroup {
-        return this.fb.group({
+        const form = this.fb.group({
             id: [expence?.id || 0],
             expenceType: [expence?.expenceType || null, [Validators.required, Validators.maxLength(250)]],
-            amount: [expence?.amount || null, [Validators.required, Validators.min(0.01)]],
-            paymentAccountId: [expence?.paymentAccountId || null, [Validators.required]]
+            totalAmount: [expence?.totalAmount || null, [Validators.required, Validators.min(0.01)]],
+            payments: this.fb.array([])
         });
+
+        if (expence && expence.payments && expence.payments.length > 0) {
+            const paymentsArray = form.get('payments') as FormArray;
+            expence.payments.forEach((p: any) => {
+                paymentsArray.push(this.createPaymentForm(p));
+            });
+        } else if (!expence) {
+            // Default: push one empty payment
+            const paymentsArray = form.get('payments') as FormArray;
+            paymentsArray.push(this.createPaymentForm());
+        }
+
+        return form;
     }
 
     patchForm(form: FormGroup, data: BuyingBillDto): void {
@@ -106,5 +119,16 @@ export class BuyingBillFormService {
         const expencesArray = form.get('expences') as FormArray;
         expencesArray.removeAt(index);
         expencesArray.markAsDirty();
+    }
+
+    addExpencePayment(expenceForm: FormGroup): void {
+        const paymentsArray = expenceForm.get('payments') as FormArray;
+        paymentsArray.push(this.createPaymentForm());
+    }
+
+    removeExpencePayment(expenceForm: FormGroup, paymentIndex: number): void {
+        const paymentsArray = expenceForm.get('payments') as FormArray;
+        paymentsArray.removeAt(paymentIndex);
+        paymentsArray.markAsDirty();
     }
 }
