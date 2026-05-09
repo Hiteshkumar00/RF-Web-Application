@@ -1,13 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillListDto } from '../../models/selling-bill.model';
 import { SellingBillConstants } from '../../constants/selling-bill.constants';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
+import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
+import { HelperService } from '../../../../core/services/helper.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
-import { AccountDetailsService } from '../../../../core/services/account-details.service';
-import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -20,11 +22,23 @@ export class SellingBillListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private downloadService: BillDownloadService,
+        public globalConfig: GlobalConfigService,
+        private excelService: ExcelService,
+        private helperService: HelperService,
         private accountDetailsService: AccountDetailsService,
         private whatsAppService: WhatsAppService,
-        private emailService: EmailService,
-        public globalConfig: GlobalConfigService
+        private emailService: EmailService
     ) {}
+
+    title = SellingBillConstants.SELLING_BILL_TITLE;
+    labels = SellingBillConstants.LABELS;
+    bills: SellingBillListDto[] = [];
+    selectedBills: SellingBillListDto[] = [];
+    exportMenuItems: MenuItem[] = [];
+
+    showFormDialog = false;
+    formDialogMode: 'create' | 'update' | 'view' = 'create';
+    selectedId?: number;
 
     get canSendWhatsApp(): boolean {
         return this.accountDetailsService.enableWhatsApp;
@@ -34,22 +48,30 @@ export class SellingBillListComponent implements OnInit {
         return this.accountDetailsService.enableEmail;
     }
 
-    title = SellingBillConstants.SELLING_BILL_TITLE;
-    labels = SellingBillConstants.LABELS;
-    bills: SellingBillListDto[] = [];
-
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
-
     ngOnInit(): void {
         this.loadData();
+        this.updateExportMenu();
+    }
+
+    public updateExportMenu(): void {
+        this.exportMenuItems = [
+            {
+                label: 'Export Selected',
+                icon: 'pi pi-check-square',
+                badge: this.selectedBills.length > 0 ? this.selectedBills.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.exportToExcel(true),
+                disabled: this.selectedBills.length === 0
+            },
+            { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+        ];
     }
 
     loadData(): void {
         this.apiService.getAll().subscribe({
             next: (data) => {
                 this.bills = data ?? [];
+                this.updateExportMenu();
             }
         });
     }
@@ -132,7 +154,25 @@ export class SellingBillListComponent implements OnInit {
         });
     }
 
-    sendEmail(item: SellingBillListDto): void {
-        this.emailService.sendBillOnEmail(item);
+    sendEmail(bill: SellingBillListDto): void {
+        this.emailService.sendBillOnEmail(bill);
+    }
+
+    exportToExcel(onlySelected: boolean = false): void {
+        const source = onlySelected ? this.selectedBills : this.bills;
+
+        const data = source.map(item => ({
+            'ID': item.id,
+            [this.labels.BILL_NO]: item.billNo || '-',
+            [this.labels.CUSTOMER_NAME]: item.customerName,
+            [this.labels.PHONE_NO]: item.phoneNo,
+            [this.labels.DATE]: this.helperService.formatDate(item.date),
+            [this.labels.TOTAL_AMOUNT]: item.totalAmount,
+            [this.labels.DISCOUNT]: item.discount,
+            [this.labels.NET_AMOUNT]: item.netAmount,
+            [this.labels.PAID_AMOUNT]: item.paidAmount,
+            [this.labels.REMAINING_AMOUNT]: item.remainingAmount
+        }));
+        this.excelService.exportAsExcelFile(data, onlySelected ? 'Selling_Bills_Selected' : 'Selling_Bills');
     }
 }

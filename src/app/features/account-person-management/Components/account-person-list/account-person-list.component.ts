@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AccountPersonApiService } from '../../Services/account-person-api.service';
 import { AccountPersonDto } from '../../models/account-person.model';
@@ -12,9 +12,11 @@ import { AccountPersonTable } from '../../constants/account-person-table.constan
     templateUrl: './account-person-list.component.html'
 })
 export class AccountPersonListComponent implements OnInit {
-    private apiService = inject(AccountPersonApiService);
-    private confirmationService = inject(ConfirmationService);
-    private messageService = inject(MessageService);
+    constructor(
+        private apiService: AccountPersonApiService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService
+    ) {}
 
     labels = AccountPersonLabels;
     columns = AccountPersonTable.COLUMNS;

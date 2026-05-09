@@ -1,10 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PaymentAccountApiService } from '../../Services/payment-account-api.service';
 import { PaymentHistoryDto, PaymentHistoryFilterDto } from '../../models/payment-history.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'app-payment-history-list',
@@ -12,13 +14,18 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
     templateUrl: './payment-history-list.component.html'
 })
 export class PaymentHistoryListComponent implements OnInit {
-    private apiService = inject(PaymentAccountApiService);
-    private dropdownService = inject(DropdownService);
-    private helperService = inject(HelperService);
-    public globalConfig = inject(GlobalConfigService);
+    constructor(
+        private apiService: PaymentAccountApiService,
+        private dropdownService: DropdownService,
+        private helperService: HelperService,
+        public globalConfig: GlobalConfigService,
+        private excelService: ExcelService
+    ) {}
 
     history: PaymentHistoryDto[] = [];
+    selectedHistory: PaymentHistoryDto[] = [];
     loading = false;
+    exportMenuItems: MenuItem[] = [];
 
     filter: PaymentHistoryFilterDto = {
         paymentAccountId: null,
@@ -68,6 +75,21 @@ export class PaymentHistoryListComponent implements OnInit {
         this.initYearOptions();
         this.loadOptions();
         this.loadHistory();
+        this.updateExportMenu();
+    }
+
+    public updateExportMenu(): void {
+        this.exportMenuItems = [
+            { 
+                label: 'Export Selected', 
+                icon: 'pi pi-check-square', 
+                badge: this.selectedHistory.length > 0 ? this.selectedHistory.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.exportToExcel(true),
+                disabled: this.selectedHistory.length === 0
+            },
+            { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+        ];
     }
 
     private initYearOptions(): void {
@@ -113,9 +135,26 @@ export class PaymentHistoryListComponent implements OnInit {
             next: (data) => {
                 this.history = data;
                 this.loading = false;
+                this.updateExportMenu();
             },
             error: () => this.loading = false
         });
+    }
+
+    exportToExcel(onlySelected: boolean = false): void {
+        const source = onlySelected ? this.selectedHistory : this.history;
+
+        const data = source.map(item => ({
+            'Payment Date': this.helperService.formatDate(item.date),
+            'Payment Account': item.paymentAccountName,
+            'Account Person': item.accountPersonName || '-',
+            'Payment Description': item.description,
+            'Received or Paid': item.direction,
+            'Amount': item.amount,
+            'Payment Type': item.paymentType,
+            'Bill No': item.billNo || '-'
+        }));
+        this.excelService.exportAsExcelFile(data, onlySelected ? 'Payment_History_Selected' : 'Payment_History');
     }
 
     onFilterChange(): void {

@@ -46,6 +46,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -87,6 +88,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputNumberModule,
     ToggleSwitchModule,
     AutoCompleteModule,
+    SplitButtonModule,
     MenuModule,
     RfDatePipe,
     RfShortDatePipe
@@ -135,6 +137,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     InputNumberModule,
     ToggleSwitchModule,
     AutoCompleteModule,
+    SplitButtonModule,
     MenuModule
   ],
   providers: []

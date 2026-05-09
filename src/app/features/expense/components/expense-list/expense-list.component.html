@@ -58,6 +58,8 @@
                             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             class="p-inputtext-sm shadow-sm" style="width: 250px;" />
                     </p-iconField>
+                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                        [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                     <p-button icon="pi pi-plus" [label]="labels.ADD_EXPENSE" (onClick)="openCreateDialog()"
                         styleClass="p-button-sm shadow-sm" />
                 </div>
@@ -68,11 +70,15 @@
             <p-table #dt [value]="expenses" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
+                [(selection)]="selectedExpenses" (selectionChange)="updateExportMenu()"
                 [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm"
                 [globalFilterFields]="['expenceType', 'agencyName']">
 
                 <ng-template pTemplate="header">
                     <tr class="text-uppercase small">
+                        <th style="width: 4rem">
+                            <p-tableHeaderCheckbox />
+                        </th>
                         @for (col of columns; track col.field) {
                         @if (col.field === 'actions') {
                         <th style="width: 12rem; text-align: center;">{{ col.header }}</th>
@@ -111,6 +117,9 @@
 
                 <ng-template pTemplate="body" let-expense>
                     <tr>
+                        <td>
+                            <p-tableCheckbox [value]="expense" />
+                        </td>
                         @for (col of columns; track col.field) {
                         @if (col.field === 'actions') {
                         <td class="text-center">
@@ -157,7 +166,7 @@
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td [attr.colspan]="columns.length" class="text-center py-5 opacity-50">
+                        <td [attr.colspan]="columns.length + 1" class="text-center py-5 opacity-50">
                             <i class="pi pi-receipt me-2" style="font-size: 1.5rem;"></i>
                             {{ labels.NO_RECORDS }}
                         </td>
