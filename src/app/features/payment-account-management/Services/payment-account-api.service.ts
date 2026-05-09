@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { PaymentAccountDto } from '../models/payment-account.model';
 import { CreatePaymentAccountDto } from '../models/create-payment-account.dto';
 import { UpdatePaymentAccountDto } from '../models/update-payment-account.dto';
+import { PaymentHistoryDto, PaymentHistoryFilterDto } from '../models/payment-history.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -31,5 +32,9 @@ export class PaymentAccountApiService {
 
     delete(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/Delete`, { params: { id } });
+    }
+
+    getHistory(filter: PaymentHistoryFilterDto): Observable<PaymentHistoryDto[]> {
+        return this.http.post<PaymentHistoryDto[]>(`${this.apiUrl}/GetHistory`, filter);
     }
 }

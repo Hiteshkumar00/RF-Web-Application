@@ -112,8 +112,20 @@ export class SidebarComponent implements OnInit {
             {
                 label: 'Payment Account',
                 icon: 'pi pi-fw pi-wallet',
-                routerLink: ['/payment-account-management'],
-                routerLinkActiveOptions: { exact: true }
+                items: [
+                    {
+                        label: 'Account List',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/payment-account-management'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Payment History',
+                        icon: 'pi pi-fw pi-history',
+                        routerLink: ['/payment-account-management/history'],
+                        routerLinkActiveOptions: { exact: true }
+                    }
+                ]
             },
             {
                 label: 'Account Person',

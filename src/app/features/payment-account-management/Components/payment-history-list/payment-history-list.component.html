@@ -1,0 +1,166 @@
+<div class="p-4">
+    <div class="card border-0 shadow-sm">
+        <!-- Header -->
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Payment History</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <p-iconField iconPosition="left">
+                        <p-inputIcon styleClass="pi pi-search" />
+                        <input type="text" pInputText placeholder="Search history..."
+                            (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                            class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
+                    </p-iconField>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card-body border-bottom">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted">Account</label>
+                    <p-select [options]="paymentAccountOptions" [(ngModel)]="filter.paymentAccountId"
+                        optionLabel="label" optionValue="value" styleClass="w-100" placeholder="All" size="small"
+                        [filter]="true" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted">Direction</label>
+                    <p-select [options]="directionOptions" [(ngModel)]="filter.direction" optionLabel="label"
+                        optionValue="value" styleClass="w-100" size="small" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted">Type</label>
+                    <p-select [options]="typeOptions" [(ngModel)]="filter.paymentType" optionLabel="label"
+                        optionValue="value" styleClass="w-100" size="small" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted">Year</label>
+                    <p-select [options]="yearOptions" [(ngModel)]="selectedYear" optionLabel="label" optionValue="value"
+                        styleClass="w-100" size="small" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small fw-semibold text-muted">Month</label>
+                    <p-select [options]="monthOptions" [(ngModel)]="selectedMonth" optionLabel="label"
+                        optionValue="value" styleClass="w-100" size="small" [disabled]="!selectedYear" />
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <p-button icon="pi pi-check" (onClick)="onFilterChange()" label="Apply" severity="primary"
+                        size="small" pTooltip="Apply filters" tooltipPosition="top" styleClass="flex-grow-1"
+                        [outlined]="true" />
+                    <p-button icon="pi pi-filter-slash" (onClick)="clearFilters()" label="Reset" severity="secondary"
+                        size="small" pTooltip="Reset Filters" tooltipPosition="top" [outlined]="true" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="card-body p-0">
+            <p-table #dt [value]="history" [loading]="loading" [paginator]="true" [rows]="10" [scrollable]="true"
+                [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+                styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                responsiveLayout="scroll"
+                [globalFilterFields]="['paymentAccountName', 'accountPersonName', 'description', 'paymentType', 'billNo']">
+                <ng-template pTemplate="header">
+                    <tr class="text-uppercase small">
+                        <th pSortableColumn="paymentAccountName" style="min-width: 250px">
+                            <div class="d-flex align-items-center gap-1">
+                                Payment Account <p-sortIcon field="paymentAccountName" />
+                                <p-columnFilter type="text" field="paymentAccountName" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th pSortableColumn="accountPersonName" style="min-width: 250px">
+                            <div class="d-flex align-items-center gap-1">
+                                Account Person <p-sortIcon field="accountPersonName" />
+                                <p-columnFilter type="text" field="accountPersonName" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th style="min-width: 300px">
+                            <div class="d-flex align-items-center gap-1">
+                                Payment Description
+                                <p-columnFilter type="text" field="description" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th pSortableColumn="direction" style="min-width: 250px">
+                            <div class="d-flex align-items-center gap-1">
+                                Received or Paid <p-sortIcon field="direction" />
+                                <p-columnFilter type="text" field="direction" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th pSortableColumn="amount" style="min-width: 250px">
+                            <div class="d-flex align-items-center justify-content-end gap-1">
+                                Amount <p-sortIcon field="amount" />
+                                <p-columnFilter type="numeric" field="amount" display="menu" />
+                            </div>
+                        </th>
+                        <th pSortableColumn="date" style="min-width: 200px">
+                            <div class="d-flex align-items-center gap-1">
+                                Payment Date <p-sortIcon field="date" />
+                                <p-columnFilter type="date" field="date" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th pSortableColumn="paymentType" style="min-width: 250px">
+                            <div class="d-flex align-items-center gap-1">
+                                Payment Type <p-sortIcon field="paymentType" />
+                                <p-columnFilter type="text" field="paymentType" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                        <th style="min-width: 150px">
+                            <div class="d-flex align-items-center gap-1">
+                                Bill No
+                                <p-columnFilter type="text" field="billNo" display="menu" class="ms-auto" />
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="pi pi-wallet text-muted small"></i>
+                                <span class="fw-medium">{{ item.paymentAccountName }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-muted" *ngIf="!item.accountPersonName">-</span>
+                            <span *ngIf="item.accountPersonName" class="text-dark">{{ item.accountPersonName }}</span>
+                        </td>
+                        <td>
+                            <div class="text-wrap">
+                                {{ item.description }}
+                            </div>
+                        </td>
+                        <td>
+                            <p-tag [severity]="item.direction === 'Received' ? 'success' : 'danger'"
+                                [value]="item.direction" [rounded]="true" />
+                        </td>
+                        <td class="text-end fw-bold">
+                            <span [ngClass]="item.direction === 'Received' ? 'text-success' : 'text-danger'">
+                                {{ item.amount | currency:'INR' }}
+                            </span>
+                        </td>
+                        <td class="small">{{ item.date | rfDate }}</td>
+                        <td>
+                            <span class="small fw-semibold text-600">{{ item.paymentType }}</span>
+                        </td>
+                        <td>
+                            <span class="text-muted small" *ngIf="!item.billNo">-</span>
+                            <p-tag *ngIf="item.billNo" severity="info" [value]="item.billNo" [rounded]="true" />
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="8" class="text-center p-4">
+                            <div class="py-4">
+                                <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                                <span class="text-muted">No payment history found.</span>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

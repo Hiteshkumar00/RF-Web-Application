@@ -6,12 +6,14 @@ import { PaymentAccountManagementRoutingModule } from './payment-account-managem
 import { PaymentAccountListComponent } from './Components/payment-account-list/payment-account-list.component';
 import { PaymentAccountFormDialogComponent } from './Components/payment-account-form-dialog/payment-account-form-dialog.component';
 import { PaymentAccountViewDialogComponent } from './Components/payment-account-view-dialog/payment-account-view-dialog.component';
+import { PaymentHistoryListComponent } from './Components/payment-history-list/payment-history-list.component';
 
 @NgModule({
     declarations: [
         PaymentAccountListComponent,
         PaymentAccountFormDialogComponent,
-        PaymentAccountViewDialogComponent
+        PaymentAccountViewDialogComponent,
+        PaymentHistoryListComponent
     ],
     imports: [
         CommonModule,
