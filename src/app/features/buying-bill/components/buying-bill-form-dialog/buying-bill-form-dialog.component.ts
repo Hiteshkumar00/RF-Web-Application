@@ -47,8 +47,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     suggestions: BuyingBillItemSuggestionDto[] = [];
-    allProducts: ProductDto[] = [];
-    filteredSuggestions: ProductDto[] = [];
+    productOptions: any[] = [];
 
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
@@ -193,8 +192,22 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     private loadAllProducts(): void {
         this.productApiService.getAll().subscribe({
-            next: (data) => this.allProducts = data
+            next: (data) => {
+                this.productOptions = data.map(p => ({
+                    label: p.productName,
+                    value: p.id,
+                    data: p
+                }));
+            }
         });
+    }
+
+    onProductChange(event: any, index: number): void {
+        const productId = event.value;
+        const option = this.productOptions.find(o => o.value === productId);
+        if (option?.data) {
+            this.onSelectItem(option.data, index);
+        }
     }
 
     private loadSuggestions(agencyId?: number): void {
@@ -209,12 +222,6 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         }
     }
 
-    searchItems(event: any): void {
-        const query = (event.query || '').toLowerCase();
-        this.filteredSuggestions = this.allProducts.filter(p => 
-            p.productName.toLowerCase().includes(query)
-        );
-    }
 
     searchExpenseTypes(event: any): void {
         const query = (event.query || '').toLowerCase();

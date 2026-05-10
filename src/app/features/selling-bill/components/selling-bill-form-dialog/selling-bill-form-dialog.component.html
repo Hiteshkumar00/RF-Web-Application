@@ -120,23 +120,30 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-iconField iconPosition="right">
-                                    <p-autoComplete formControlName="productName" [suggestions]="filteredSuggestions" appVoiceTyping
-                                        (completeMethod)="searchItems($event)" field="productName"
-                                        (onSelect)="onSelectItem($event, i)" placeholder="Select Product" styleClass="w-100"
-                                        inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                                        [autofocus]="true" [delay]="100">
-                                        <ng-template let-suggestion pTemplate="item">
-                                            <div class="d-flex justify-content-between align-items-center w-100 gap-4">
-                                                <span class="fw-bold">{{ suggestion.productName }}</span>
-                                                <div class="d-flex flex-column align-items-end">
-                                                    <span class="text-success small fw-semibold">{{ (suggestion.price || 0) |
-                                                        currency:'INR' }}</span>
-                                                    <span class="text-muted extra-small" style="font-size: 0.7rem;">Sold
-                                                        {{ suggestion.count }} times</span>
+                                    <p-select [options]="productOptions" formControlName="productId"
+                                        (onChange)="onProductChange($event, i)" placeholder="Select Product"
+                                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
+                                        optionLabel="label" optionValue="value" [autofocus]="true">
+                                        <ng-template let-item pTemplate="item">
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span
+                                                        class="badge bg-secondary-subtle text-secondary small border">#{{
+                                                        item.data.id }}</span>
+                                                    <span class="fw-bold">{{ item.data.productName }}</span>
+                                                </div>
+                                                <div *ngIf="item.data.warrantyYear || item.data.warrantyMonth || item.data.warrantyDay"
+                                                    class="text-info small border border-info border-opacity-25 px-2 py-0 rounded-pill bg-info bg-opacity-10 d-flex align-items-center">
+                                                    <i class="pi pi-shield me-1" style="font-size: 0.7rem;"></i>
+                                                    <span style="font-size: 0.75rem;" class="fw-semibold">
+                                                        {{ item.data.warrantyYear ? item.data.warrantyYear + 'Y ' : '' }}
+                                                        {{ item.data.warrantyMonth ? item.data.warrantyMonth + 'M ' : '' }}
+                                                        {{ item.data.warrantyDay ? item.data.warrantyDay + 'D' : '' }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-select>
                                     <p-inputIcon
                                         *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched"
                                         class="pi pi-info-circle text-danger pe-6" pTooltip="Required"

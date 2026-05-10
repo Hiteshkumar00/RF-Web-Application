@@ -49,8 +49,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     suggestions: SellingBillItemSuggestionDto[] = [];
-    allProducts: ProductDto[] = [];
-    filteredSuggestions: ProductDto[] = [];
+    productOptions: any[] = [];
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -141,7 +140,13 @@ export class SellingBillFormDialogComponent implements OnChanges {
 
     private loadAllProducts(): void {
         this.productApiService.getAll().subscribe({
-            next: (data) => this.allProducts = data
+            next: (data) => {
+                this.productOptions = data.map(p => ({
+                    label: p.productName,
+                    value: p.id,
+                    data: p
+                }));
+            }
         });
     }
 
@@ -152,11 +157,13 @@ export class SellingBillFormDialogComponent implements OnChanges {
         });
     }
 
-    searchItems(event: any): void {
-        const query = (event.query || '').toLowerCase();
-        this.filteredSuggestions = this.allProducts.filter(p => 
-            p.productName.toLowerCase().includes(query)
-        );
+
+    onProductChange(event: any, index: number): void {
+        const productId = event.value;
+        const option = this.productOptions.find(o => o.value === productId);
+        if (option?.data) {
+            this.onSelectItem(option.data, index);
+        }
     }
 
     onSelectItem(event: any, index: number): void {
@@ -164,8 +171,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
         const itemForm = this.items.at(index);
         itemForm.patchValue({
             productId: product.id,
-            productName: product.productName,
-            price: itemForm.get('price')?.value || null // Keep existing price if any
+            productName: product.productName
         });
     }
 
