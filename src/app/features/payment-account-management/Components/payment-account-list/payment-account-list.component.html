@@ -3,8 +3,14 @@
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
                 <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }}</h5>
-                <p-button icon="pi pi-plus" [label]="labels.ADD_PAYMENT_ACCOUNT" (onClick)="openCreateDialog()"
-                    styleClass="p-button-sm shadow-sm" />
+                <div class="d-flex gap-2">
+                    <p-button icon="pi pi-history" label="Payment History" severity="secondary" styleClass="p-button-sm shadow-sm"
+                        [routerLink]="['history']" />
+                    <p-button icon="pi pi-sync" label="Transfer" severity="info" styleClass="p-button-sm shadow-sm"
+                        [routerLink]="['transfer']" />
+                    <p-button icon="pi pi-plus" [label]="labels.ADD_PAYMENT_ACCOUNT" (onClick)="openCreateDialog()"
+                        styleClass="p-button-sm shadow-sm" />
+                </div>
             </div>
         </div>
 

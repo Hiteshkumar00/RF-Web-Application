@@ -142,6 +142,12 @@ export class SidebarComponent implements OnInit {
                         icon: 'pi pi-fw pi-history',
                         routerLink: ['/payment-account-management/history'],
                         routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Payment Transfer',
+                        icon: 'pi pi-fw pi-sync',
+                        routerLink: ['/payment-account-management/transfer'],
+                        routerLinkActiveOptions: { exact: true }
                     }
                 ]
             },
