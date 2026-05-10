@@ -162,18 +162,15 @@ export class SellingBillFormDialogComponent implements OnChanges {
         const productId = event.value;
         const option = this.productOptions.find(o => o.value === productId);
         if (option?.data) {
-            this.onSelectItem(option.data, index);
+            const product = option.data;
+            const itemForm = this.items.at(index);
+            itemForm.patchValue({
+                productId: product.id,
+                productName: product.productName
+            });
         }
     }
 
-    onSelectItem(event: any, index: number): void {
-        const product = event.value as ProductDto || event;
-        const itemForm = this.items.at(index);
-        itemForm.patchValue({
-            productId: product.id,
-            productName: product.productName
-        });
-    }
 
     private loadOptions(): void {
         this.dropdownService.getPaymentAccountOptions().subscribe({

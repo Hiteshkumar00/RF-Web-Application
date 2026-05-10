@@ -46,7 +46,6 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     private isClosing = false;
 
-    suggestions: BuyingBillItemSuggestionDto[] = [];
     productOptions: any[] = [];
 
     expenseTypeSuggestions: string[] = [];
@@ -206,16 +205,17 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         const productId = event.value;
         const option = this.productOptions.find(o => o.value === productId);
         if (option?.data) {
-            this.onSelectItem(option.data, index);
+            const product = option.data;
+            const itemForm = this.stocks.at(index);
+            itemForm.patchValue({
+                productId: product.id,
+                productName: product.productName
+            });
         }
     }
 
     private loadSuggestions(agencyId?: number): void {
         if (this.mode != 'view' && this.accountDetailsService.enableSuggestions) {
-            this.apiService.getItemSuggestions(agencyId).subscribe({
-                next: (data) => this.suggestions = data
-            });
-
             this.apiService.getExpenceTypeSuggestions().subscribe({
                 next: (data) => this.expenseTypeSuggestions = data
             });
@@ -230,14 +230,6 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         );
     }
 
-    onSelectItem(event: any, index: number): void {
-        const product = event.value as ProductDto || event;
-        const itemForm = this.stocks.at(index);
-        itemForm.patchValue({
-            productId: product.id,
-            productName: product.productName
-        });
-    }
 
     onSelectExpenseType(event: any, index: number): void {
         const value = event.value || event;
