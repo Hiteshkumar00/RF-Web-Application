@@ -54,6 +54,35 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     filteredExpenseTypeSuggestions: string[] = [];
     expandedExpences: { [key: string]: boolean } = {};
 
+    showPaymentDialog = false;
+    selectedBill: any = null;
+
+    openPaymentDialog(): void {
+        const formValue = this.form.getRawValue();
+        this.selectedBill = {
+            id: this.id,
+            billNo: formValue.billNo,
+            agencyName: this.agencyOptions.find(o => o.value === formValue.agencyId)?.label || ''
+        };
+        this.showPaymentDialog = true;
+    }
+
+    onPaymentSaved(): void {
+        this.showPaymentDialog = false;
+        if (this.id) {
+            this.apiService.getById(this.id).subscribe({
+                next: (data) => {
+                    this.formService.patchForm(this.form, data);
+                    this.onSave.emit(); // Also notify the list that data has changed
+                }
+            });
+        }
+    }
+
+    onPaymentDialogClosed(): void {
+        this.showPaymentDialog = false;
+    }
+
     get stocks(): FormArray {
         return this.form.get('stocks') as FormArray;
     }

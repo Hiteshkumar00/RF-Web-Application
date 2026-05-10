@@ -46,12 +46,12 @@
                             [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     </td>
                     <td>
-                        <p-image *ngIf="item.imageLink" [src]="item.imageLink" [alt]="item.productName"
-                            [preview]="true" [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
+                        <p-image *ngIf="item.imageLink" [src]="item.imageLink" [alt]="item.productName" [preview]="true"
+                            [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
                             styleClass="shadow-sm border rounded" />
                         <div *ngIf="!item.imageLink"
                             style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
-                            class="border bg-light">
+                            class="border">
                             <i class="pi pi-image text-muted"></i>
                         </div>
                     </td>
@@ -87,7 +87,7 @@
             <ng-template #expandedrow let-item>
                 <tr>
                     <td colspan="9">
-                        <div class="p-3 bg-light border-start border-4 border-primary rounded-end">
+                        <div class="p-3 border-start border-4 border-primary rounded-end">
                             <div class="d-flex align-items-center mb-3">
                                 <i class="pi pi-history me-2 text-primary"></i>
                                 <h6 class="mb-0 fw-bold">Stock History (FIFO Analysis)</h6>
@@ -104,7 +104,7 @@
                     <th class="text-end">Purchase Price</th>
                     <th class="text-end">Discount</th>
                     <th class="text-end">Total Amount</th>
-                    <th class="text-center bg-primary-subtle fw-bold">Remaining Qty</th>
+                    <th class="text-center fw-bold">Remaining Qty</th>
                 </tr>
             </ng-template>
             <ng-template #body let-history>

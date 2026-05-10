@@ -329,6 +329,11 @@
                         <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
                         <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
                     </div>
+
+                    <div class="mt-3" *ngIf="mode !== 'create' && remainingAmount > 0">
+                        <p-button label="Quick Pay" icon="pi pi-wallet"
+                            styleClass="p-button-sm p-button-success w-100 shadow-sm" (onClick)="openPaymentDialog()" />
+                    </div>
                 </div>
 
                 <!-- Expenses Summary (Separated) -->
@@ -374,3 +379,6 @@
     </ng-template>
 
 </p-dialog>
+
+<app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
+    (saved)="onPaymentSaved()" (closed)="onPaymentDialogClosed()" />

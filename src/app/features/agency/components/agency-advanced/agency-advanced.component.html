@@ -322,6 +322,7 @@
                         <th class="text-end py-2 px-3">Exp. Total</th>
                         <th class="text-end py-2 px-3">Exp. Paid</th>
                         <th class="text-end py-2 px-3">Exp. Rem.</th>
+                        <th class="text-center py-2 px-3">Actions</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-bill>
@@ -342,6 +343,11 @@
                         <td class="text-end fw-bold py-2 px-3"
                             [ngClass]="{'text-danger': bill.totalExpenceRemaining > 0, 'text-success': bill.totalExpenceRemaining === 0}">
                             {{ bill.totalExpenceRemaining | currency:'INR' }}
+                        </td>
+                        <td class="text-center py-1">
+                            <p-button icon="pi pi-wallet" [text]="true" [rounded]="true" severity="success"
+                                size="small" *ngIf="bill.remainingAmount > 0" 
+                                (onClick)="openPaymentDialog(bill)" pTooltip="Add Payment" tooltipPosition="top" />
                         </td>
                     </tr>
                 </ng-template>
@@ -365,3 +371,6 @@
         </div>
     </ng-template>
 </p-dialog>
+
+<app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
+    (saved)="onPaymentSaved()" (closed)="onPaymentDialogClosed()" />

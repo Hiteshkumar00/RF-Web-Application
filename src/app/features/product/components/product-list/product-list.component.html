@@ -52,10 +52,11 @@
                     </td>
                     <td>
                         <p-image *ngIf="product.imageLink" [src]="product.imageLink" [alt]="product.productName"
-                            [preview]="true" [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
+                            [preview]="true"
+                            [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
                             styleClass="shadow-sm border rounded" />
-                        <div *ngIf="!product.imageLink" 
-                            style="width: 40px; height: 40px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                        <div *ngIf="!product.imageLink"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
                             class="border">
                             <i class="pi pi-image text-muted" style="font-size: 1.2rem;"></i>
                         </div>
@@ -76,6 +77,5 @@
     </div>
 </div>
 
-<app-product-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
-    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
-
+<app-product-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId" (onSave)="onFormSaved()"
+    (onClose)="onFormDialogClosed()" />
