@@ -103,6 +103,7 @@
                     <th class="text-center">Initial Qty</th>
                     <th class="text-end">Purchase Price</th>
                     <th class="text-end">Discount</th>
+                    <th class="text-end">Net Price</th>
                     <th class="text-end">Total Amount</th>
                     <th class="text-center fw-bold">Remaining Qty</th>
                 </tr>
@@ -115,6 +116,7 @@
                     <td class="text-center">{{history.quantity}}</td>
                     <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
                     <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
+                    <td class="text-end fw-bold text-success">{{(history.purchasePrice - history.discount) | currency:'INR'}}</td>
                     <td class="text-end fw-semibold">{{history.totalAmount | currency:'INR'}}</td>
                     <td class="text-center fw-bold" [ngClass]="history.remainingQty > 0 ? 'text-primary' : ''">
                         {{history.remainingQty}}
@@ -123,7 +125,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="8" class="text-center py-3 text-muted italic">No stock entries recorded.</td>
+                    <td colspan="9" class="text-center py-3 text-muted italic">No stock entries recorded.</td>
                 </tr>
             </ng-template>
         </p-table>
