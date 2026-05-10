@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { CreatePaymentTransfer, PaymentTransfer, UpdatePaymentTransfer } from '../models/payment-transfer.model';
 
 @Injectable({
@@ -16,7 +16,19 @@ export class PaymentTransferFormService {
             amount: [null, [Validators.required, Validators.min(0.01)]],
             description: [''],
             date: [new Date(), Validators.required]
-        });
+        }, { validators: this.sameAccountValidator() });
+    }
+
+    private sameAccountValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const fromId = control.get('fromPaymentAccountId')?.value;
+            const toId = control.get('toPaymentAccountId')?.value;
+
+            if (fromId && toId && fromId === toId) {
+                return { sameAccount: true };
+            }
+            return null;
+        };
     }
 
     patchForm(form: FormGroup, data: PaymentTransfer): void {
