@@ -88,7 +88,7 @@ export class SellingBillPaymentDialogComponent implements OnChanges {
     addPayment(): void {
         const paymentGroup = this.fb.group({
             id: [0],
-            amount: [this.remainingAmount > 0 ? this.remainingAmount : 0, [Validators.required, Validators.min(0.01)]],
+            amount: [null, [Validators.required, Validators.min(0.01)]],
             paymentAccountId: [null, Validators.required],
             date: [new Date(), Validators.required]
         });
