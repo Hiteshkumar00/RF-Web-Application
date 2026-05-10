@@ -25,6 +25,7 @@
                 <tr class="text-uppercase small">
                     <th style="width: 3rem"></th>
                     <th style="width: 80px">Image</th>
+                    <th style="width: 100px" class="text-center">Action</th>
                     <th pSortableColumn="productName">Product Name <p-sortIcon field="productName" /></th>
                     <th pSortableColumn="totalSoldCount" class="text-end">Sold Qty <p-sortIcon field="totalSoldCount" />
                     </th>
@@ -35,7 +36,6 @@
                     <th pSortableColumn="totalProfit" class="text-end">Profit <p-sortIcon field="totalProfit" /></th>
                     <th pSortableColumn="availableStock" class="text-center">Stock <p-sortIcon field="availableStock" />
                     </th>
-                    <th style="width: 100px" class="text-center">Action</th>
                 </tr>
             </ng-template>
 
@@ -55,6 +55,16 @@
                             <i class="pi pi-image text-muted"></i>
                         </div>
                     </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(item.productId)" pTooltip="View Details"
+                                tooltipPosition="left" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(item.productId)" pTooltip="Edit Product"
+                                tooltipPosition="left" />
+                        </div>
+                    </td>
                     <td>
                         <div class="fw-semibold">{{item.productName}}</div>
                     </td>
@@ -70,16 +80,6 @@
                     <td class="text-center">
                         <p-tag [value]="item.availableStock.toString()"
                             [severity]="getStockSeverity(item.availableStock)" />
-                    </td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center">
-                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
-                                (onClick)="openViewDialog(item.productId)" pTooltip="View Details"
-                                tooltipPosition="left" />
-                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
-                                (onClick)="openEditDialog(item.productId)" pTooltip="Edit Product"
-                                tooltipPosition="left" />
-                        </div>
                     </td>
                 </tr>
             </ng-template>

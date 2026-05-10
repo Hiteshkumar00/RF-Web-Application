@@ -53,10 +53,6 @@ export class BuyingBillFormService {
             expence.payments.forEach((p: any) => {
                 paymentsArray.push(this.createPaymentForm(p));
             });
-        } else if (!expence) {
-            // Default: push one empty payment
-            const paymentsArray = form.get('payments') as FormArray;
-            paymentsArray.push(this.createPaymentForm());
         }
 
         return form;
