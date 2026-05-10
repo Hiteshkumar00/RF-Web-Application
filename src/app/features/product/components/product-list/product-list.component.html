@@ -1,0 +1,81 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Product Management</h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search products..."
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" />
+                </p-iconField>
+                <p-button icon="pi pi-plus" label="New Product" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table #dt [value]="products" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['productName']" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr class="text-uppercase small">
+                    <th pSortableColumn="id" style="width: 80px">ID <p-sortIcon field="id" /></th>
+                    <th style="min-width: 120px" class="text-center">Action</th>
+                    <th pSortableColumn="productName" style="min-width: 200px">
+                        <div class="d-flex align-items-center gap-1">
+                            Product Name <p-sortIcon field="productName" />
+                            <p-columnFilter type="text" field="productName" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th style="width: 100px">Image</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product>
+                <tr>
+                    <td class="fw-bold text-muted small">#{{ product.id }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(product)" pTooltip="View Details" tooltipPosition="top" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(product)" pTooltip="Edit" tooltipPosition="top" />
+                            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                                (onClick)="deleteProduct(product)" pTooltip="Delete" tooltipPosition="top" />
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">{{product.productName}}</div>
+                    </td>
+                    <td>
+                        <p-image *ngIf="product.imageLink" [src]="product.imageLink" [alt]="product.productName"
+                            [preview]="true"
+                            [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
+                            styleClass="shadow-sm border rounded" />
+                        <div *ngIf="!product.imageLink"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                            class="border">
+                            <i class="pi pi-image text-muted" style="font-size: 1.2rem;"></i>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-4">
+                        <div class="py-4">
+                            <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                            <span class="text-muted">No products found.</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-product-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId" (onSave)="onFormSaved()"
+    (onClose)="onFormDialogClosed()" />

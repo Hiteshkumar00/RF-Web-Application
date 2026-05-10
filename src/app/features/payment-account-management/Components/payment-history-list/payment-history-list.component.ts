@@ -48,7 +48,8 @@ export class PaymentHistoryListComponent implements OnInit {
         { label: 'Expense', value: 'Expense' },
         { label: 'Buying Bill Expense', value: 'Buying Bill Expense' },
         { label: 'Add Contribution', value: 'Add Contribution' },
-        { label: 'Remove Contribution', value: 'Remove Contribution' }
+        { label: 'Remove Contribution', value: 'Remove Contribution' },
+        { label: 'Transfer', value: 'Transfer' }
     ];
 
     yearOptions: DropdownOption[] = [];

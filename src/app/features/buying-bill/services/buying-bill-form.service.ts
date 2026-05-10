@@ -14,8 +14,7 @@ export class BuyingBillFormService {
             billNo: [null],
             agencyId: [null, [Validators.required]],
             date: [new Date(), [Validators.required]],
-            discount: [0, [Validators.min(0)]],
-            items: this.fb.array([], [Validators.required, Validators.minLength(1)]),
+            stocks: this.fb.array([], [Validators.required, Validators.minLength(1)]),
             payments: this.fb.array([]),
             expences: this.fb.array([])
         });
@@ -24,9 +23,11 @@ export class BuyingBillFormService {
     createItemForm(item?: any): FormGroup {
         return this.fb.group({
             id: [item?.id || 0],
-            itemName: [item?.itemName || null, [Validators.required, Validators.maxLength(250)]],
+            productId: [item?.productId || null, [Validators.required]],
+            productName: [item?.productName || null], // For UI display
             quantity: [item?.quantity || 1, [Validators.required, Validators.min(1)]],
-            price: [item?.price || null, [Validators.required, Validators.min(0.01)]]
+            purchasePrice: [item?.purchasePrice || null, [Validators.required, Validators.min(0.01)]],
+            discount: [item?.discount || 0, [Validators.min(0)]]
         });
     }
 
@@ -52,10 +53,6 @@ export class BuyingBillFormService {
             expence.payments.forEach((p: any) => {
                 paymentsArray.push(this.createPaymentForm(p));
             });
-        } else if (!expence) {
-            // Default: push one empty payment
-            const paymentsArray = form.get('payments') as FormArray;
-            paymentsArray.push(this.createPaymentForm());
         }
 
         return form;
@@ -66,14 +63,13 @@ export class BuyingBillFormService {
             id: data.id,
             billNo: data.billNo,
             agencyId: data.agencyId,
-            date: new Date(data.date),
-            discount: data.discount
+            date: new Date(data.date)
         });
 
-        const itemsArray = form.get('items') as FormArray;
-        itemsArray.clear();
-        data.items.forEach(item => {
-            itemsArray.push(this.createItemForm(item));
+        const stocksArray = form.get('stocks') as FormArray;
+        stocksArray.clear();
+        data.stocks.forEach(item => {
+            stocksArray.push(this.createItemForm(item));
         });
 
         const paymentsArray = form.get('payments') as FormArray;
@@ -90,14 +86,14 @@ export class BuyingBillFormService {
     }
 
     addItem(form: FormGroup): void {
-        const itemsArray = form.get('items') as FormArray;
-        itemsArray.push(this.createItemForm());
+        const stocksArray = form.get('stocks') as FormArray;
+        stocksArray.push(this.createItemForm());
     }
 
     removeItem(form: FormGroup, index: number): void {
-        const itemsArray = form.get('items') as FormArray;
-        itemsArray.removeAt(index);
-        itemsArray.markAsDirty();
+        const stocksArray = form.get('stocks') as FormArray;
+        stocksArray.removeAt(index);
+        stocksArray.markAsDirty();
     }
 
     addPayment(form: FormGroup): void {

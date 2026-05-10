@@ -1,0 +1,110 @@
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '700px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <div>
+                <span class="p-dialog-title m-0">Bill Payment</span>
+                <div class="text-sm opacity-70" *ngIf="bill">
+                    Bill No: {{ bill.billNo }} | Customer: {{ bill.customerName }}
+                </div>
+            </div>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="onClose()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-2" *ngIf="form && !loading">
+        <div class="row g-4">
+            <!-- Summary Info -->
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2 shadow-sm border">
+                    <div class="d-flex gap-4">
+                        <div>
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Amount</div>
+                            <div class="h6 mb-0 fw-bold text-secondary">{{ billDetails?.totalAmount | currency: 'INR' }}
+                            </div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Net Payable</div>
+                            <div class="h5 mb-0 fw-bold text-primary">{{ billDetails?.netAmount | currency: 'INR' }}
+                            </div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Paid</div>
+                            <div class="h5 mb-0 fw-bold text-success">{{ totalPaid | currency: 'INR' }}</div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-xs text-uppercase fw-bold text-muted mb-1">Remaining Balance</div>
+                        <div class="h5 mb-0 fw-bold" [class.text-danger]="remainingAmount > 0"
+                            [class.text-success]="remainingAmount <= 0">
+                            {{ remainingAmount | currency: 'INR' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments List -->
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-2">
+                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">Payment Installments</h6>
+                    <p-button icon="pi pi-plus" label="Add Payment" styleClass="p-button-sm p-button-outlined"
+                        (onClick)="addPayment()" />
+                </div>
+
+                <p-table [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                    <ng-template pTemplate="header">
+                        <tr class="bg-light">
+                            <th style="width: 35%">Account</th>
+                            <th style="width: 30%">Date</th>
+                            <th style="width: 25%">Amount</th>
+                            <th style="width: 10%" class="text-center">Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)">
+                            <td>
+                                <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select Account"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                                <p-message severity="error" text="Req" variant="simple" size="small"
+                                    *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" placeholder="0.00" size="small" />
+                                <p-message severity="error" text="Invalid" variant="simple" size="small"
+                                    *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched" />
+                            </td>
+                            <td class="text-center">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    (onClick)="removePayment(i)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4" class="text-center p-4 text-muted small">
+                                No payments added for this bill.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3" *ngIf="form && !loading">
+            <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="onClose()" />
+            <p-button label="Save Payments" icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid"
+                severity="primary" class="shadow-sm" />
+        </div>
+    </ng-template>
+</p-dialog>

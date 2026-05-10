@@ -25,6 +25,7 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
     @Input() mode: 'create' | 'update' = 'create';
     @Input() account: PaymentAccountDto | null = null;
 
+    @Output() visibleChange = new EventEmitter<boolean>();
     @Output() saved = new EventEmitter<void>();
     @Output() closed = new EventEmitter<void>();
 

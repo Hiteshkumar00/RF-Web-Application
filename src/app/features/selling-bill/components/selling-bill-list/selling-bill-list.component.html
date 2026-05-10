@@ -110,6 +110,9 @@
                                 tooltipPosition="top" />
                             <p-button icon="pi pi-download" [rounded]="true" [text]="true" severity="info"
                                 (onClick)="downloadPdf(bill)" pTooltip="Download" tooltipPosition="top" />
+                            <p-button *ngIf="bill.remainingAmount > 0" icon="pi pi-wallet" [rounded]="true" [text]="true"
+                                severity="success" (onClick)="openPaymentDialog(bill)" pTooltip="Add Payment"
+                                tooltipPosition="top" />
                             <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
                                 (onClick)="openEditDialog(bill)" pTooltip="Edit" tooltipPosition="top" />
                             <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
@@ -150,3 +153,6 @@
 
 <app-selling-bill-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
     (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
+
+<app-selling-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
+    (saved)="onPaymentSaved()" (closed)="showPaymentDialog = false" />

@@ -30,6 +30,32 @@ export class AgencyAdvancedComponent implements OnInit {
 
     showDetailDialog = false;
     selectedDetail: ViewAgencyAllDetailDto | null = null;
+    expandedYearRows: any = {};
+
+    showPaymentDialog = false;
+    selectedBill: any = null;
+
+    openPaymentDialog(bill: any): void {
+        this.selectedBill = {
+            id: bill.id,
+            billNo: bill.billNo,
+            agencyName: this.selectedDetail?.agencyName || ''
+        };
+        this.showPaymentDialog = true;
+    }
+
+    onPaymentSaved(): void {
+        this.showPaymentDialog = false;
+        if (this.selectedDetail) {
+            // Refresh detail to show updated amounts
+            this.openDetailDialog({ id: this.selectedDetail.id } as any);
+        }
+        this.loadAgencies(); // Refresh the main list too
+    }
+
+    onPaymentDialogClosed(): void {
+        this.showPaymentDialog = false;
+    }
 
     ngOnInit(): void {
         this.loadAgencies();

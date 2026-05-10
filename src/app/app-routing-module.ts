@@ -92,6 +92,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/account-profile/account-profile.module').then(m => m.AccountProfileModule)
   },
   {
+    path: 'product',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/product/product.module').then(m => m.ProductModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth'
   }

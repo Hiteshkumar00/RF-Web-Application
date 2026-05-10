@@ -6,6 +6,7 @@ import { PaymentAccountDto } from '../models/payment-account.model';
 import { CreatePaymentAccountDto } from '../models/create-payment-account.dto';
 import { UpdatePaymentAccountDto } from '../models/update-payment-account.dto';
 import { PaymentHistoryDto, PaymentHistoryFilterDto } from '../models/payment-history.dto';
+import { CreatePaymentTransfer, PaymentTransfer, PaymentTransferFilter, UpdatePaymentTransfer } from '../models/payment-transfer.model';
 
 @Injectable({
     providedIn: 'root'
@@ -36,5 +37,26 @@ export class PaymentAccountApiService {
 
     getHistory(filter: PaymentHistoryFilterDto): Observable<PaymentHistoryDto[]> {
         return this.http.post<PaymentHistoryDto[]>(`${this.apiUrl}/GetHistory`, filter);
+    }
+
+    // Payment Transfer
+    getTransfers(filter: PaymentTransferFilter): Observable<PaymentTransfer[]> {
+        return this.http.post<PaymentTransfer[]>(`${this.apiUrl}/GetTransfers`, filter);
+    }
+
+    createTransfer(dto: CreatePaymentTransfer): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}/CreateTransfer`, dto);
+    }
+
+    updateTransfer(dto: UpdatePaymentTransfer): Observable<void> {
+        return this.http.put<void>(`${this.apiUrl}/UpdateTransfer`, dto);
+    }
+
+    deleteTransfer(id: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/DeleteTransfer`, { params: { id } });
+    }
+
+    getTransferById(id: number): Observable<PaymentTransfer> {
+        return this.http.get<PaymentTransfer>(`${this.apiUrl}/GetTransferById`, { params: { id } });
     }
 }

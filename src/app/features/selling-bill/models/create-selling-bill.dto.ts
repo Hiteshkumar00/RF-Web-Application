@@ -8,7 +8,6 @@ export interface CreateSellingBillDto {
     phoneNo: string;
     address?: string;
     date: string;
-    discount: number;
     items: SellingBillItemDto[];
     payments: SellingBillPaymentDto[];
 }

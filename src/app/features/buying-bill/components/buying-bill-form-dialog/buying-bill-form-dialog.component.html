@@ -60,14 +60,15 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
                 </div>
 
-                <p-table [value]="items.controls" [scrollable]="true"
+                <p-table [value]="stocks.controls" [scrollable]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small bg-opacity-10">
                             <th style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
-                            <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
-                            <th style="min-width: 150px">{{ labels.PRICE }}</th>
-                            <th style="min-width: 150px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
+                            <th style="min-width: 130px">{{ labels.PRICE }}</th>
+                            <th style="min-width: 130px">{{ labels.DISCOUNT }}</th>
+                            <th style="min-width: 130px" class="text-end">{{ labels.TOTAL }}</th>
                             <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
@@ -75,26 +76,34 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-iconField iconPosition="right">
-                                    <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions"
-                                        (completeMethod)="searchItems($event)" field="itemName"
-                                        (onSelect)="onSelectItem($event, i)" placeholder="Item Name" styleClass="w-100"
-                                        inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
-                                        [autofocus]="true" [delay]="100" appVoiceTyping>
-                                        <ng-template let-suggestion pTemplate="item">
-                                            <div class="d-flex justify-content-between align-items-center w-100 gap-4">
-                                                <span class="fw-bold">{{ suggestion.itemName }}</span>
-                                                <div class="d-flex flex-column align-items-end">
-                                                    <span class="text-success small fw-semibold">{{ suggestion.price |
-                                                        currency:'INR' }}</span>
-                                                    <span class="text-muted extra-small"
-                                                        style="font-size: 0.7rem;">Bought {{ suggestion.count }}
-                                                        times</span>
+                                    <p-select [options]="productOptions" formControlName="productId"
+                                        (onChange)="onProductChange($event, i)" placeholder="Select Product"
+                                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
+                                        optionLabel="label" optionValue="value" [autofocus]="true">
+                                        <ng-template let-item pTemplate="item">
+                                            <div class="d-flex justify-content-between align-items-center w-100">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span
+                                                        class="badge bg-secondary-subtle text-secondary small border">#{{
+                                                        item.data.id }}</span>
+                                                    <span class="fw-bold">{{ item.data.productName }}</span>
+                                                </div>
+                                                <div *ngIf="item.data.warrantyYear || item.data.warrantyMonth || item.data.warrantyDay"
+                                                    class="text-info small border border-info border-opacity-25 px-2 py-0 rounded-pill bg-info bg-opacity-10 d-flex align-items-center">
+                                                    <i class="pi pi-shield me-1" style="font-size: 0.7rem;"></i>
+                                                    <span style="font-size: 0.75rem;" class="fw-semibold">
+                                                        {{ item.data.warrantyYear ? item.data.warrantyYear + 'Y ' : ''
+                                                        }}
+                                                        {{ item.data.warrantyMonth ? item.data.warrantyMonth + 'M ' : ''
+                                                        }}
+                                                        {{ item.data.warrantyDay ? item.data.warrantyDay + 'D' : '' }}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-select>
                                     <p-inputIcon
-                                        *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
+                                        *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched"
                                         class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
                                         tooltipPosition="top" />
                                 </p-iconField>
@@ -104,11 +113,17 @@
                                     inputStyleClass="w-100 text-center" class="p-inputtext-sm" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
+                                <p-inputNumber formControlName="purchasePrice" mode="currency" currency="INR"
+                                    locale="en-IN" styleClass="w-100" inputStyleClass="w-100 text-end"
+                                    class="p-inputtext-sm" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
                                     styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td class="text-end fw-bold">
-                                {{ (control.get('price')?.value * control.get('quantity')?.value) | currency:'INR' }}
+                                {{ (control.get('quantity')?.value * (control.get('purchasePrice')?.value -
+                                control.get('discount')?.value)) | currency:'INR' }}
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -118,7 +133,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 5 : 4"
+                            <td [attr.colspan]="mode !== 'view' ? 6 : 5"
                                 class="text-center p-4 text-muted small italic">
                                 No items added. Please add at least one item.
                             </td>
@@ -128,7 +143,7 @@
             </div>
 
             <!-- Expenses and Payments Section -->
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <!-- Payments Table -->
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
                     <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>{{ labels.PAYMENTS_SECTION }}
@@ -170,7 +185,8 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 4 : 3" class="text-center p-3 text-muted small italic">
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
+                                class="text-center p-3 text-muted small italic">
                                 No payments added.
                             </td>
                         </tr>
@@ -235,120 +251,114 @@
                                         <p-table [value]="getExpencePayments(i).controls"
                                             styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm">
                                             <ng-template pTemplate="header">
-                                                <tr class="small">
-                                                    <th style="width: 35%">Payment Account</th>
-                                                    <th style="width: 30%">Date</th>
-                                                    <th style="width: 25%" class="text-end">Amount</th>
-                                                    <th style="width: 10%" class="text-center"
-                                                        *ngIf="mode !== 'view'"></th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-paymentCtrl let-pIndex="rowIndex">
-                                                <tr [formGroup]="$any(paymentCtrl)">
-                                                    <td>
-                                                        <p-select [options]="paymentAccountOptions"
-                                                            formControlName="paymentAccountId" optionLabel="label"
-                                                            optionValue="value" placeholder="Select Account"
-                                                            styleClass="w-100 text-start" appendTo="body"
-                                                            size="small" />
-                                                    </td>
-                                                    <td>
-                                                        <p-datepicker formControlName="date" [showIcon]="true"
-                                                            dateFormat="dd-mm-yy" appendTo="body" styleClass="w-100"
-                                                            size="small" placeholder="Exp Date" />
-                                                    </td>
-                                                    <td>
-                                                        <p-inputNumber formControlName="amount" mode="currency"
-                                                            currency="INR" locale="en-IN" styleClass="w-100"
-                                                            inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
-                                                    </td>
-                                                    <td class="text-center" *ngIf="mode !== 'view'">
-                                                        <p-button icon="pi pi-trash" severity="danger" [text]="true"
-                                                            [rounded]="true" size="small"
-                                                            (onClick)="removeExpencePayment(i, pIndex)" />
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="emptymessage">
-                                                <tr>
-                                                    <td [attr.colspan]="mode !== 'view' ? 4 : 3"
-                                                        class="text-center p-2 text-muted small italic">
-                                                        No payments added yet.
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                        </p-table>
-                                    </div>
-                                </td>
+                            <tr class="small">
+                                <th style="width: 35%">Payment Account</th>
+                                <th style="width: 30%">Date</th>
+                                <th style="width: 25%" class="text-end">Amount</th>
+                                <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'"></th>
                             </tr>
-                        </ng-container>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-paymentCtrl let-pIndex="rowIndex">
+                        <tr [formGroup]="$any(paymentCtrl)">
+                            <td>
+                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select Account"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small" placeholder="Exp Date" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    size="small" (onClick)="removeExpencePayment(i, pIndex)" />
+                            </td>
+                        </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-3 text-muted small italic">
-                                No expenses added.
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
+                                class="text-center p-2 text-muted small italic">
+                                No payments added yet.
                             </td>
                         </tr>
                     </ng-template>
                 </p-table>
             </div>
+            </td>
+            </tr>
+            </ng-container>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="mode !== 'view' ? 3 : 2" class="text-center p-3 text-muted small italic">
+                        No expenses added.
+                    </td>
+                </tr>
+            </ng-template>
+            </p-table>
+        </div>
 
-            <!-- Summary Column -->
-            <div class="col-md-5">
-                <!-- Buying Bill Main Summary -->
-                <div class="card border-1 p-4 mb-3 shadow-sm rounded-3 mt-1 justify-content-center">
-                    <h6 class="fw-bold mb-4 border-bottom pb-2">Buying Bill Summary</h6>
+        <!-- Summary Column -->
+        <div class="col-md-4">
+            <!-- Buying Bill Main Summary -->
+            <div class="card border-1 p-4 mb-3 shadow-sm rounded-3 mt-1 justify-content-center">
+                <h6 class="fw-bold mb-4 border-bottom pb-2">Buying Bill Summary</h6>
 
-                    <div class="d-flex justify-content-between mb-2 align-items-center">
-                        <span class="text-muted">{{ labels.TOTAL_AMOUNT }}:</span>
-                        <span class="fw-semibold">{{ totalItemsAmount | currency:'INR' }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-3 align-items-center">
-                        <span class="text-muted">{{ labels.DISCOUNT }}:</span>
-                        <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                            styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center text-info">
-                        <span class="fw-bold">{{ labels.FINAL_AMOUNT }}:</span>
-                        <span class="fw-bold h5 mb-0">{{ netAmount | currency:'INR' }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between mb-2 align-items-center text-success mt-3">
-                        <span class="fw-semibold">{{ labels.PAID_AMOUNT }}:</span>
-                        <span class="fw-semibold">{{ totalPaidAmount | currency:'INR' }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between pt-2 border-top mt-1"
-                        [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
-                        <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
-                        <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
-                    </div>
+                <div class="d-flex justify-content-between mb-2 align-items-center">
+                    <span class="text-muted">{{ labels.TOTAL_AMOUNT }}:</span>
+                    <span class="fw-semibold">{{ totalItemsAmount | currency:'INR' }}</span>
                 </div>
 
-                <!-- Expenses Summary (Separated) -->
-                <div class="card border-1 border-warning p-3 shadow-sm rounded-3 bg-warning bg-opacity-10 mt-3"
-                    *ngIf="totalExpenceAmount > 0">
-                    <h6 class="fw-bold mb-2 text-warning border-bottom border-warning pb-2"><i
-                            class="pi pi-truck me-2"></i>Related Expenses</h6>
+                <div class="d-flex justify-content-between mb-3 align-items-center">
+                    <span class="text-muted">{{ labels.DISCOUNT }}:</span>
+                    <span class="fw-semibold text-danger">- {{ totalDiscountAmount | currency:'INR' }}</span>
+                </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="fw-semibold text-warning-emphasis">Total Expenses:</span>
-                        <span class="fw-semibold text-warning-emphasis">{{ totalExpenceAmount | currency:'INR' }}</span>
-                    </div>
+                <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center text-info">
+                    <span class="fw-bold">{{ labels.FINAL_AMOUNT }}:</span>
+                    <span class="fw-bold h5 mb-0">{{ netAmount | currency:'INR' }}</span>
+                </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="fw-semibold text-success">Paid Expense:</span>
-                        <span class="fw-semibold text-success">{{ totalExpencePaidAmount | currency:'INR' }}</span>
-                    </div>
+                <div class="d-flex justify-content-between mb-2 align-items-center text-success mt-3">
+                    <span class="fw-semibold">{{ labels.PAID_AMOUNT }}:</span>
+                    <span class="fw-semibold">{{ totalPaidAmount | currency:'INR' }}</span>
+                </div>
 
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top border-warning mt-1">
-                        <span class="fw-bold text-danger">Remaining Expense:</span>
-                        <span class="fw-bold text-danger h6 mb-0">{{ totalExpenceRemainingAmount | currency:'INR' }}</span>
-                    </div>
+                <div class="d-flex justify-content-between pt-2 border-top mt-1"
+                    [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
+                    <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
+                    <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
+                </div>
+
+            </div>
+
+            <!-- Expenses Summary (Separated) -->
+            <div class="card border-1 border-warning p-3 shadow-sm rounded-3 bg-warning bg-opacity-10 mt-3"
+                *ngIf="totalExpenceAmount > 0">
+                <h6 class="fw-bold mb-2 text-warning border-bottom border-warning pb-2"><i
+                        class="pi pi-truck me-2"></i>Related Expenses</h6>
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold text-warning-emphasis">Total Expenses:</span>
+                    <span class="fw-semibold text-warning-emphasis">{{ totalExpenceAmount | currency:'INR' }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold text-success">Paid Expense:</span>
+                    <span class="fw-semibold text-success">{{ totalExpencePaidAmount | currency:'INR' }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center pt-2 border-top border-warning mt-1">
+                    <span class="fw-bold text-danger">Remaining Expense:</span>
+                    <span class="fw-bold text-danger h6 mb-0">{{ totalExpenceRemainingAmount | currency:'INR' }}</span>
                 </div>
             </div>
+        </div>
         </div>
     </form>
 
@@ -370,3 +380,6 @@
     </ng-template>
 
 </p-dialog>
+
+<app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill" (saved)="onPaymentSaved()"
+    (closed)="onPaymentDialogClosed()" />

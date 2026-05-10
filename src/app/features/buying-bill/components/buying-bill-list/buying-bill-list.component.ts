@@ -34,6 +34,9 @@ export class BuyingBillListComponent implements OnInit {
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedId?: number;
 
+    showPaymentDialog = false;
+    selectedBill?: BuyingBillListDto;
+
     ngOnInit(): void {
         this.loadData();
         this.updateExportMenu();
@@ -91,6 +94,21 @@ export class BuyingBillListComponent implements OnInit {
 
     onFormDialogClosed(): void {
         this.showFormDialog = false;
+    }
+
+    openPaymentDialog(bill: BuyingBillListDto): void {
+        this.selectedBill = bill;
+        this.showPaymentDialog = true;
+    }
+
+    onPaymentSaved(): void {
+        this.showPaymentDialog = false;
+        this.loadData();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
+    }
+
+    onPaymentDialogClosed(): void {
+        this.showPaymentDialog = false;
     }
 
     confirmDelete(item: BuyingBillListDto): void {

@@ -38,8 +38,10 @@
                             <div class="col-6 text-end fw-bold text-info">{{ m.buyingPendingAmount | currency:'INR' }}</div>
                             <div class="col-6 text-muted">Expense Remaining:</div>
                             <div class="col-6 text-end fw-bold text-warning">{{ m.expencePendingAmount | currency:'INR' }}</div>
-                            <div class="col-6 text-muted border-top pt-1 mt-1">Profit:</div>
-                            <div class="col-6 text-end fw-bold text-success border-top pt-1 mt-1">{{ m.totalProfit | currency:'INR' }}</div>
+                            <div class="col-6 text-muted border-top pt-1 mt-1">Gross Profit:</div>
+                            <div class="col-6 text-end fw-bold text-success border-top pt-1 mt-1">{{ m.grossProfit | currency:'INR' }}</div>
+                            <div class="col-6 text-muted">Net Profit:</div>
+                            <div class="col-6 text-end fw-bold text-success">{{ m.totalProfit | currency:'INR' }}</div>
                         </div>
                     </div>
                 </div>

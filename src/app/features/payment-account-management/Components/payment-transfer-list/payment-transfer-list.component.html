@@ -1,0 +1,74 @@
+<div class="container-fluid py-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">Payment Transfers</h5>
+                <div class="d-flex gap-2">
+                    <p-button icon="pi pi-arrow-left" label="Back" severity="secondary" [text]="true" size="small"
+                        [routerLink]="['..']" />
+                    <p-button icon="pi pi-plus" label="New Transfer" (onClick)="openCreate()"
+                        styleClass="p-button-sm shadow-sm" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <p-table [value]="transfers" [loading]="loading" [rows]="10" [paginator]="true"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [globalFilterFields]="['fromPaymentAccountName', 'toPaymentAccountName', 'description']"
+                [scrollable]="true" [scrollHeight]="globalConfig.tableScrollHeight"
+                styleClass="p-datatable-striped p-datatable-sm">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 10rem; text-align: center;">Actions</th>
+                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="fromPaymentAccountName">From Account <p-sortIcon
+                                field="fromPaymentAccountName"></p-sortIcon></th>
+                        <th pSortableColumn="toPaymentAccountName">To Account <p-sortIcon
+                                field="toPaymentAccountName"></p-sortIcon></th>
+                        <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+                        <th>Description</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-transfer>
+                    <tr>
+                        <td class="text-center">
+                            <div class="d-flex gap-2 justify-content-center">
+                                <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                    pTooltip="View" tooltipPosition="top" (onClick)="openView(transfer)" />
+                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn"
+                                    size="small" pTooltip="Edit" tooltipPosition="top"
+                                    (onClick)="openUpdate(transfer)" />
+                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                                    size="small" pTooltip="Delete" tooltipPosition="top"
+                                    (onClick)="deleteTransfer(transfer.id)" />
+                            </div>
+                        </td>
+                        <td class="small">{{transfer.date | rfDate}}</td>
+                        <td>{{transfer.fromPaymentAccountName}}</td>
+                        <td>{{transfer.toPaymentAccountName}}</td>
+                        <td class="fw-bold">{{transfer.amount | currency: 'INR'}}</td>
+                        <td>{{transfer.description}}</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="6" class="text-center py-5 opacity-50">
+                            <i class="pi pi-database me-2" style="font-size: 1.5rem;"></i>
+                            No transfers found.
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+
+<app-payment-transfer-form-dialog [visible]="displayDialog" [mode]="dialogMode" [id]="selectedId"
+    (onSave)="onDialogSave()" (onClose)="onDialogClose()">
+</app-payment-transfer-form-dialog>

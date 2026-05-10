@@ -1,16 +1,20 @@
-export interface BuyingBillItemDto {
+export interface StockDto {
     id: number;
-    itemName: string;
+    productId: number;
+    productName?: string;
     quantity: number;
-    price: number;
+    purchasePrice: number;
+    discount: number;
+    date?: string;
 }
 
-export interface CreateBuyingBillItemDto {
-    itemName: string;
+export interface CreateStockDto {
+    productId: number;
     quantity: number;
-    price: number;
+    purchasePrice: number;
+    discount: number;
 }
 
-export interface UpdateBuyingBillItemDto extends CreateBuyingBillItemDto {
+export interface UpdateStockDto extends CreateStockDto {
     id?: number;
 }

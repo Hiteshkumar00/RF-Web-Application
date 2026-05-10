@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PaymentAccountListComponent } from './Components/payment-account-list/payment-account-list.component';
 import { PaymentHistoryListComponent } from './Components/payment-history-list/payment-history-list.component';
+import { PaymentTransferListComponent } from './Components/payment-transfer-list/payment-transfer-list.component';
 import { adminGuard } from '../../core/guards/admin.guard';
 
 const routes: Routes = [
@@ -13,6 +14,11 @@ const routes: Routes = [
     {
         path: 'history',
         component: PaymentHistoryListComponent,
+        canActivate: [adminGuard]
+    },
+    {
+        path: 'transfer',
+        component: PaymentTransferListComponent,
         canActivate: [adminGuard]
     }
 ];
