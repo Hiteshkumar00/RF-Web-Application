@@ -17,7 +17,6 @@ export class SellingBillFormService {
             phoneNo: [null, [Validators.required, Validators.maxLength(20)]],
             address: [null, [Validators.maxLength(500)]],
             date: [new Date(), [Validators.required]],
-            discount: [0, [Validators.min(0)]],
             items: this.fb.array([], [Validators.required, Validators.minLength(1)]),
             payments: this.fb.array([]),
             sendEmail: [false],
@@ -26,20 +25,13 @@ export class SellingBillFormService {
     }
 
     createItemForm(item?: any): FormGroup {
-        const hasWarrenty = !!(item?.warrenty && (item.warrenty.year > 0 || item.warrenty.month > 0 || item.warrenty.day > 0));
-
         return this.fb.group({
             id: [item?.id || 0],
-            itemName: [item?.itemName || null, [Validators.required, Validators.maxLength(250)]],
+            productId: [item?.productId || null, [Validators.required]],
+            productName: [item?.productName || null], // For UI display
             quantity: [item?.quantity || 1, [Validators.required, Validators.min(1)]],
             price: [item?.price || null, [Validators.required, Validators.min(0.01)]],
-            hasWarrenty: [hasWarrenty],
-            warrenty: this.fb.group({
-                id: [item?.warrenty?.id || 0],
-                year: [item?.warrenty?.year || 0, [Validators.min(0), Validators.max(50)]],
-                month: [item?.warrenty?.month || 0, [Validators.min(0), Validators.max(11)]],
-                day: [item?.warrenty?.day || 0, [Validators.min(0), Validators.max(31)]]
-            })
+            discount: [item?.discount || 0, [Validators.min(0)]]
         });
     }
 
@@ -60,8 +52,7 @@ export class SellingBillFormService {
             email: data.email,
             phoneNo: data.phoneNo,
             address: data.address,
-            date: new Date(data.date),
-            discount: data.discount
+            date: new Date(data.date)
         });
 
         const itemsArray = form.get('items') as FormArray;

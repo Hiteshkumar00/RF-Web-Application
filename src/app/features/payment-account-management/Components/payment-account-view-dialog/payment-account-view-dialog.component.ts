@@ -13,6 +13,7 @@ export class PaymentAccountViewDialogComponent implements OnChanges {
 
     @Input() visible = false;
     @Input() account: PaymentAccountDto | null = null;
+    @Output() visibleChange = new EventEmitter<boolean>();
     @Output() closed = new EventEmitter<void>();
 
     labels = PaymentAccountLabels;

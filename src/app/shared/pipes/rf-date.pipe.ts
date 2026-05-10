@@ -3,7 +3,8 @@ import { DatePipe } from '@angular/common';
 import { AccountDetailsService } from '../../core/services/account-details.service';
 
 @Pipe({
-  name: 'rfDate'
+  name: 'rfDate',
+  standalone: true
 })
 export class RfDatePipe implements PipeTransform {
   private accountDetailsService = inject(AccountDetailsService);

@@ -30,6 +30,7 @@ export class AgencyAdvancedComponent implements OnInit {
 
     showDetailDialog = false;
     selectedDetail: ViewAgencyAllDetailDto | null = null;
+    expandedYearRows: any = {};
 
     ngOnInit(): void {
         this.loadAgencies();

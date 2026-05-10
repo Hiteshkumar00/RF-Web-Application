@@ -60,14 +60,15 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
                 </div>
 
-                <p-table [value]="items.controls" [scrollable]="true"
+                <p-table [value]="stocks.controls" [scrollable]="true"
                     styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small bg-opacity-10">
                             <th style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
-                            <th style="min-width: 100px">{{ labels.QUANTITY }}</th>
-                            <th style="min-width: 150px">{{ labels.PRICE }}</th>
-                            <th style="min-width: 150px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
+                            <th style="min-width: 130px">{{ labels.PRICE }}</th>
+                            <th style="min-width: 130px">{{ labels.DISCOUNT }}</th>
+                            <th style="min-width: 130px" class="text-end">{{ labels.TOTAL }}</th>
                             <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
@@ -75,16 +76,16 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-iconField iconPosition="right">
-                                    <p-autoComplete formControlName="itemName" [suggestions]="filteredSuggestions"
-                                        (completeMethod)="searchItems($event)" field="itemName"
-                                        (onSelect)="onSelectItem($event, i)" placeholder="Item Name" styleClass="w-100"
+                                    <p-autoComplete formControlName="productName" [suggestions]="filteredSuggestions"
+                                        (completeMethod)="searchItems($event)" field="productName"
+                                        (onSelect)="onSelectItem($event, i)" placeholder="Select Product" styleClass="w-100"
                                         inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true"
                                         [autofocus]="true" [delay]="100" appVoiceTyping>
                                         <ng-template let-suggestion pTemplate="item">
                                             <div class="d-flex justify-content-between align-items-center w-100 gap-4">
-                                                <span class="fw-bold">{{ suggestion.itemName }}</span>
+                                                <span class="fw-bold">{{ suggestion.productName }}</span>
                                                 <div class="d-flex flex-column align-items-end">
-                                                    <span class="text-success small fw-semibold">{{ suggestion.price |
+                                                    <span class="text-success small fw-semibold">{{ suggestion.purchasePrice |
                                                         currency:'INR' }}</span>
                                                     <span class="text-muted extra-small"
                                                         style="font-size: 0.7rem;">Bought {{ suggestion.count }}
@@ -94,7 +95,7 @@
                                         </ng-template>
                                     </p-autoComplete>
                                     <p-inputIcon
-                                        *ngIf="control.get('itemName')?.invalid && control.get('itemName')?.touched"
+                                        *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched"
                                         class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
                                         tooltipPosition="top" />
                                 </p-iconField>
@@ -104,11 +105,15 @@
                                     inputStyleClass="w-100 text-center" class="p-inputtext-sm" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="price" mode="currency" currency="INR" locale="en-IN"
+                                <p-inputNumber formControlName="purchasePrice" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
                                     styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td class="text-end fw-bold">
-                                {{ (control.get('price')?.value * control.get('quantity')?.value) | currency:'INR' }}
+                                {{ (control.get('quantity')?.value * (control.get('purchasePrice')?.value - control.get('discount')?.value)) | currency:'INR' }}
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -118,7 +123,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 5 : 4"
+                            <td [attr.colspan]="mode !== 'view' ? 6 : 5"
                                 class="text-center p-4 text-muted small italic">
                                 No items added. Please add at least one item.
                             </td>
@@ -306,8 +311,7 @@
 
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
-                        <p-inputNumber formControlName="discount" mode="currency" currency="INR" locale="en-IN"
-                            styleClass="w-40" inputStyleClass="text-end" class="p-inputtext-sm" />
+                        <span class="fw-semibold text-danger">- {{ totalDiscountAmount | currency:'INR' }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center text-info">

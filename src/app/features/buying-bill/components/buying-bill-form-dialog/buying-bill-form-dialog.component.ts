@@ -1,6 +1,8 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { BuyingBillItemSuggestionDto } from '../../models/buying-bill-item-suggestion.dto';
+import { ProductApiService } from '../../../product/services/product-api.service';
+import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService } from 'primeng/api';
 import { BuyingBillApiService } from '../../services/buying-bill-api.service';
 import { BuyingBillFormService } from '../../services/buying-bill-form.service';
@@ -26,6 +28,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -44,14 +47,15 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     suggestions: BuyingBillItemSuggestionDto[] = [];
-    filteredSuggestions: BuyingBillItemSuggestionDto[] = [];
+    allProducts: ProductDto[] = [];
+    filteredSuggestions: ProductDto[] = [];
 
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
     expandedExpences: { [key: string]: boolean } = {};
 
-    get items(): FormArray {
-        return this.form.get('items') as FormArray;
+    get stocks(): FormArray {
+        return this.form.get('stocks') as FormArray;
     }
 
     get payments(): FormArray {
@@ -73,17 +77,24 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     get totalItemsAmount(): number {
         if (!this.form) return 0;
-        return this.items.controls.reduce((acc, control) => {
-            const price = control.get('price')?.value || 0;
+        return this.stocks.controls.reduce((acc, control) => {
+            const price = control.get('purchasePrice')?.value || 0;
             const quantity = control.get('quantity')?.value || 0;
             return acc + (price * quantity);
         }, 0);
     }
 
-    get netAmount(): number {
+    get totalDiscountAmount(): number {
         if (!this.form) return 0;
-        const discount = this.form.get('discount')?.value || 0;
-        return this.totalItemsAmount - discount;
+        return this.stocks.controls.reduce((acc, control) => {
+            const discount = control.get('discount')?.value || 0;
+            const quantity = control.get('quantity')?.value || 0;
+            return acc + (discount * quantity);
+        }, 0);
+    }
+
+    get netAmount(): number {
+        return this.totalItemsAmount - this.totalDiscountAmount;
     }
 
     get totalExpenceAmount(): number {
@@ -146,7 +157,15 @@ export class BuyingBillFormDialogComponent implements OnChanges {
             this.form.get('agencyId')?.valueChanges.subscribe(val => {
                 this.loadSuggestions(val);
             });
+
+            this.loadAllProducts();
         }
+    }
+
+    private loadAllProducts(): void {
+        this.productApiService.getAll().subscribe({
+            next: (data) => this.allProducts = data
+        });
     }
 
     private loadSuggestions(agencyId?: number): void {
@@ -163,8 +182,8 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     searchItems(event: any): void {
         const query = (event.query || '').toLowerCase();
-        this.filteredSuggestions = this.suggestions.filter(s =>
-            s.itemName.toLowerCase().includes(query)
+        this.filteredSuggestions = this.allProducts.filter(p => 
+            p.productName.toLowerCase().includes(query)
         );
     }
 
@@ -176,21 +195,12 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     }
 
     onSelectItem(event: any, index: number): void {
-        const suggestion = event.value as BuyingBillItemSuggestionDto || event;
-        const itemName = typeof suggestion === 'string' ? suggestion : suggestion.itemName;
-        const price = typeof suggestion === 'string' ? null : suggestion.price;
-
-        const itemForm = this.items.at(index);
-        if (price !== null) {
-            itemForm.patchValue({
-                itemName: itemName,
-                price: price
-            });
-        } else {
-            itemForm.patchValue({
-                itemName: itemName
-            });
-        }
+        const product = event.value as ProductDto || event;
+        const itemForm = this.stocks.at(index);
+        itemForm.patchValue({
+            productId: product.id,
+            productName: product.productName
+        });
     }
 
     onSelectExpenseType(event: any, index: number): void {

@@ -24,4 +24,8 @@ export class DashboardApiService {
     getAllTimeMetrics(): Observable<AllTimeDashboardItemDto[]> {
         return this.http.get<AllTimeDashboardItemDto[]>(`${this.basePath}/GetAllTimeDashboard`);
     }
+
+    getProductProfitMetrics(): Observable<any> {
+        return this.http.get<any>(`${this.basePath}/GetProductProfitMetrics`);
+    }
 }

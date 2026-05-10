@@ -1,0 +1,158 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Available Stock & Profit Summary</h5>
+            <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="loadData()" [loading]="loading" />
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table #dt [value]="productProfits" [loading]="loading" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" dataKey="productId"
+            [expandedRowKeys]="expandedRows">
+
+            <ng-template #caption>
+                <div class="d-flex justify-content-end gap-2 px-2 py-1">
+                    <p-button label="Expand All" icon="pi pi-plus" [text]="true" size="small" (onClick)="expandAll()" />
+                    <p-button label="Collapse All" icon="pi pi-minus" [text]="true" size="small" severity="secondary"
+                        (onClick)="collapseAll()" />
+                </div>
+            </ng-template>
+
+            <ng-template #header>
+                <tr class="text-uppercase small">
+                    <th style="width: 3rem"></th>
+                    <th style="width: 80px">Image</th>
+                    <th pSortableColumn="productName">Product Name <p-sortIcon field="productName" /></th>
+                    <th pSortableColumn="totalSoldCount" class="text-end">Sold Qty <p-sortIcon field="totalSoldCount" />
+                    </th>
+                    <th pSortableColumn="totalPurchaseCount" class="text-end">Purchase Qty <p-sortIcon
+                            field="totalPurchaseCount" /></th>
+                    <th pSortableColumn="totalSellingAmount" class="text-end">Selling Amt <p-sortIcon
+                            field="totalSellingAmount" /></th>
+                    <th pSortableColumn="totalProfit" class="text-end">Profit <p-sortIcon field="totalProfit" /></th>
+                    <th pSortableColumn="availableStock" class="text-center">Stock <p-sortIcon field="availableStock" />
+                    </th>
+                    <th style="width: 100px" class="text-center">Action</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-item let-expanded="expanded">
+                <tr>
+                    <td>
+                        <p-button type="button" pRipple [pRowToggler]="item" [text]="true" [rounded]="true"
+                            [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                    </td>
+                    <td>
+                        <p-image *ngIf="item.imageLink" [src]="item.imageLink" [alt]="item.productName"
+                            [preview]="true" [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
+                            styleClass="shadow-sm border rounded" />
+                        <div *ngIf="!item.imageLink"
+                            style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                            class="border bg-light">
+                            <i class="pi pi-image text-muted"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold">{{item.productName}}</div>
+                    </td>
+                    <td class="text-end fw-semibold">{{item.totalSoldCount}}</td>
+                    <td class="text-end fw-semibold text-secondary">{{item.totalPurchaseCount}}</td>
+                    <td class="text-end fw-semibold">{{item.totalSellingAmount | currency:'INR'}}</td>
+                    <td class="text-end">
+                        <span class="fw-bold"
+                            [ngClass]="item.totalProfit > 0 ? 'text-success' : (item.totalProfit < 0 ? 'text-danger' : 'text-muted')">
+                            {{item.totalProfit | currency:'INR'}}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <p-tag [value]="item.availableStock.toString()"
+                            [severity]="getStockSeverity(item.availableStock)" />
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(item.productId)" pTooltip="View Details"
+                                tooltipPosition="left" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(item.productId)" pTooltip="Edit Product"
+                                tooltipPosition="left" />
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template #expandedrow let-item>
+                <tr>
+                    <td colspan="9">
+                        <div class="p-3 bg-light border-start border-4 border-primary rounded-end">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="pi pi-history me-2 text-primary"></i>
+                                <h6 class="mb-0 fw-bold">Stock History (FIFO Analysis)</h6>
+                            </div>
+
+                            <p-table [value]="item.stockHistory"
+                                styleClass="p-datatable-sm p-datatable-gridlines shadow-sm rounded overflow-hidden">
+                                <ng-template #header>
+                <tr class="small text-uppercase">
+                    <th style="width: 150px">Bill No</th>
+                    <th>Agency Name</th>
+                    <th style="width: 120px">Date</th>
+                    <th class="text-center">Initial Qty</th>
+                    <th class="text-end">Purchase Price</th>
+                    <th class="text-end">Discount</th>
+                    <th class="text-end">Total Amount</th>
+                    <th class="text-center bg-primary-subtle fw-bold">Remaining Qty</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-history>
+                <tr [ngClass]="{'bg-warning-subtle text-muted italic': history.remainingQty === 0}">
+                    <td class="fw-bold">{{history.billNo}}</td>
+                    <td>{{history.agencyName}}</td>
+                    <td>{{history.date | rfDate}}</td>
+                    <td class="text-center">{{history.quantity}}</td>
+                    <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
+                    <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
+                    <td class="text-end fw-semibold">{{history.totalAmount | currency:'INR'}}</td>
+                    <td class="text-center fw-bold" [ngClass]="history.remainingQty > 0 ? 'text-primary' : ''">
+                        {{history.remainingQty}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="8" class="text-center py-3 text-muted italic">No stock entries recorded.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div *ngIf="item.availableStock < 0"
+            class="mt-3 p-2 bg-danger-subtle text-danger border border-danger rounded small shadow-sm">
+            <i class="pi pi-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> Current stock is negative ({{item.availableStock}} items).
+            This indicates sales were recorded before sufficient stock was added.
+        </div>
+    </div>
+    </td>
+    </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+        <tr>
+            <td colspan="9" class="text-center p-5">
+                <div class="py-4">
+                    <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                    <span class="text-muted">No product profit data available for the selected period.</span>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
+
+    <app-product-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
+        (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
+
+</div>
+</div>

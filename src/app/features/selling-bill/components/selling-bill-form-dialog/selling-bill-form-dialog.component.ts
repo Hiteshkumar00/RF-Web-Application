@@ -1,6 +1,8 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { SellingBillItemSuggestionDto } from '../../models/selling-bill.model';
+import { ProductApiService } from '../../../product/services/product-api.service';
+import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillFormService } from '../../services/selling-bill-form.service';
@@ -31,6 +33,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private downloadService = inject(BillDownloadService);
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -43,11 +46,11 @@ export class SellingBillFormDialogComponent implements OnChanges {
     labels = SellingBillConstants.LABELS;
     form!: FormGroup;
     accountOptions: DropdownOption[] = [];
-    globalHasWarrenty: boolean = false;
     private isClosing = false;
 
     suggestions: SellingBillItemSuggestionDto[] = [];
-    filteredSuggestions: SellingBillItemSuggestionDto[] = [];
+    allProducts: ProductDto[] = [];
+    filteredSuggestions: ProductDto[] = [];
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -75,10 +78,17 @@ export class SellingBillFormDialogComponent implements OnChanges {
         }, 0);
     }
 
-    get finalAmount(): number {
+    get totalDiscount(): number {
         if (!this.form) return 0;
-        const discount = this.form.get('discount')?.value || 0;
-        return this.totalAmount - discount;
+        return this.items.controls.reduce((acc, control) => {
+            const discount = control.get('discount')?.value || 0;
+            const quantity = control.get('quantity')?.value || 0;
+            return acc + (discount * quantity);
+        }, 0);
+    }
+
+    get finalAmount(): number {
+        return this.totalAmount - this.totalDiscount;
     }
 
     get paidAmount(): number {
@@ -114,20 +124,25 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.apiService.getById(this.id).subscribe({
                     next: (data) => {
                         this.formService.patchForm(this.form, data);
-                        this.globalHasWarrenty = data.items.some(i => !!(i.warrenty && (i.warrenty.year > 0 || i.warrenty.month > 0 || i.warrenty.day > 0)));
                         if (this.mode === 'view') {
                             this.form.disable();
                         }
                     }
                 });
             } else {
-                this.globalHasWarrenty = false;
                 this.addItem();
             }
             if (this.mode != 'view') {
                 this.loadSuggestions();
+                this.loadAllProducts();
             }
         }
+    }
+
+    private loadAllProducts(): void {
+        this.productApiService.getAll().subscribe({
+            next: (data) => this.allProducts = data
+        });
     }
 
     private loadSuggestions(): void {
@@ -139,27 +154,19 @@ export class SellingBillFormDialogComponent implements OnChanges {
 
     searchItems(event: any): void {
         const query = (event.query || '').toLowerCase();
-        this.filteredSuggestions = this.suggestions.filter(s =>
-            s.itemName.toLowerCase().includes(query)
+        this.filteredSuggestions = this.allProducts.filter(p => 
+            p.productName.toLowerCase().includes(query)
         );
     }
 
     onSelectItem(event: any, index: number): void {
-        const suggestion = event.value as SellingBillItemSuggestionDto || event;
-        const itemName = typeof suggestion === 'string' ? suggestion : suggestion.itemName;
-        const price = typeof suggestion === 'string' ? null : suggestion.price;
-
+        const product = event.value as ProductDto || event;
         const itemForm = this.items.at(index);
-        if (price !== null) {
-            itemForm.patchValue({
-                itemName: itemName,
-                price: price
-            });
-        } else {
-            itemForm.patchValue({
-                itemName: itemName
-            });
-        }
+        itemForm.patchValue({
+            productId: product.id,
+            productName: product.productName,
+            price: itemForm.get('price')?.value || null // Keep existing price if any
+        });
     }
 
     private loadOptions(): void {
@@ -194,10 +201,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
         const payload = {
             ...formValue,
             date: this.helperService.setDate(formValue.date),
-            items: formValue.items.map((item: any) => ({
-                ...item,
-                warrenty: this.globalHasWarrenty ? item.warrenty : null
-            })),
             payments: formValue.payments.map((p: any) => ({
                 ...p,
                 date: this.helperService.setDate(p.date)
