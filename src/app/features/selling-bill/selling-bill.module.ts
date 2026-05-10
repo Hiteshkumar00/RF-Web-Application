@@ -6,11 +6,13 @@ import { SellingBillRoutingModule } from './selling-bill-routing.module';
 
 import { SellingBillListComponent } from './components/selling-bill-list/selling-bill-list.component';
 import { SellingBillFormDialogComponent } from './components/selling-bill-form-dialog/selling-bill-form-dialog.component';
+import { SellingBillPaymentDialogComponent } from './components/selling-bill-payment-dialog/selling-bill-payment-dialog.component';
 
 @NgModule({
     declarations: [
         SellingBillListComponent,
-        SellingBillFormDialogComponent
+        SellingBillFormDialogComponent,
+        SellingBillPaymentDialogComponent
     ],
     imports: [
         CommonModule,

@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { SellingBillListDto, SellingBillDetailsDto, SellingBillItemSuggestionDto } from '../models/selling-bill.model';
 import { CreateSellingBillDto } from '../models/create-selling-bill.dto';
 import { UpdateSellingBillDto } from '../models/update-selling-bill.dto';
+import { SellingBillPaymentDto } from '../models/selling-bill-payment.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -47,5 +48,9 @@ export class SellingBillApiService {
 
     sendEmailMessage(id: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.basePath}/SendEmailMessage/${id}`, {});
+    }
+
+    updatePayments(billId: number, payments: SellingBillPaymentDto[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/UpdatePayments/${billId}`, payments);
     }
 }

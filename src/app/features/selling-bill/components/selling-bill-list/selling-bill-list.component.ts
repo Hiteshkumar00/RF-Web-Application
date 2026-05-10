@@ -37,8 +37,21 @@ export class SellingBillListComponent implements OnInit {
     exportMenuItems: MenuItem[] = [];
 
     showFormDialog = false;
+    showPaymentDialog = false;
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedId?: number;
+    selectedBill?: SellingBillListDto;
+
+    openPaymentDialog(item: SellingBillListDto): void {
+        this.selectedBill = item;
+        this.showPaymentDialog = true;
+    }
+
+    onPaymentSaved(): void {
+        this.showPaymentDialog = false;
+        this.loadData();
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
+    }
 
     get canSendWhatsApp(): boolean {
         return this.accountDetailsService.enableWhatsApp;

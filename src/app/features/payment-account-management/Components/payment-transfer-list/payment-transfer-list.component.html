@@ -14,38 +14,48 @@
 
         <div class="card-body p-0">
             <p-table [value]="transfers" [loading]="loading" [rows]="10" [paginator]="true"
-                [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
-                [rowsPerPageOptions]="[10, 25, 50]" [globalFilterFields]="['fromPaymentAccountName', 'toPaymentAccountName', 'description']"
-                [scrollable]="true" [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm">
-                
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
+                [rowsPerPageOptions]="[10, 25, 50]"
+                [globalFilterFields]="['fromPaymentAccountName', 'toPaymentAccountName', 'description']"
+                [scrollable]="true" [scrollHeight]="globalConfig.tableScrollHeight"
+                styleClass="p-datatable-striped p-datatable-sm">
+
                 <ng-template pTemplate="header">
                     <tr>
+                        <th style="width: 10rem; text-align: center;">Actions</th>
                         <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
-                        <th pSortableColumn="fromPaymentAccountName">From Account <p-sortIcon field="fromPaymentAccountName"></p-sortIcon></th>
-                        <th pSortableColumn="toPaymentAccountName">To Account <p-sortIcon field="toPaymentAccountName"></p-sortIcon></th>
+                        <th pSortableColumn="fromPaymentAccountName">From Account <p-sortIcon
+                                field="fromPaymentAccountName"></p-sortIcon></th>
+                        <th pSortableColumn="toPaymentAccountName">To Account <p-sortIcon
+                                field="toPaymentAccountName"></p-sortIcon></th>
                         <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
                         <th>Description</th>
-                        <th style="width: 10rem; text-align: center;">Actions</th>
                     </tr>
                 </ng-template>
-                
+
                 <ng-template pTemplate="body" let-transfer>
                     <tr>
-                        <td>{{transfer.date | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{transfer.fromPaymentAccountName}}</td>
-                        <td>{{transfer.toPaymentAccountName}}</td>
-                        <td class="fw-bold">{{transfer.amount | currency: 'INR'}}</td>
-                        <td>{{transfer.description}}</td>
                         <td class="text-center">
                             <div class="d-flex gap-2 justify-content-center">
+                                <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
+                                    pTooltip="View" tooltipPosition="top" (onClick)="openView(transfer)" />
+                                <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="warn"
+                                    size="small" pTooltip="Edit" tooltipPosition="top"
+                                    (onClick)="openUpdate(transfer)" />
                                 <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
                                     size="small" pTooltip="Delete" tooltipPosition="top"
                                     (onClick)="deleteTransfer(transfer.id)" />
                             </div>
                         </td>
+                        <td class="small">{{transfer.date | rfDate}}</td>
+                        <td>{{transfer.fromPaymentAccountName}}</td>
+                        <td>{{transfer.toPaymentAccountName}}</td>
+                        <td class="fw-bold">{{transfer.amount | currency: 'INR'}}</td>
+                        <td>{{transfer.description}}</td>
                     </tr>
                 </ng-template>
-                
+
                 <ng-template pTemplate="emptymessage">
                     <tr>
                         <td colspan="6" class="text-center py-5 opacity-50">

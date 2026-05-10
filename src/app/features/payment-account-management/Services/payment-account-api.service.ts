@@ -55,4 +55,8 @@ export class PaymentAccountApiService {
     deleteTransfer(id: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/DeleteTransfer`, { params: { id } });
     }
+
+    getTransferById(id: number): Observable<PaymentTransfer> {
+        return this.http.get<PaymentTransfer>(`${this.apiUrl}/GetTransferById`, { params: { id } });
+    }
 }

@@ -48,10 +48,14 @@ export class PaymentTransferFormDialogComponent implements OnChanges {
             this.form = this.formService.createForm();
 
             if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                // We don't have a specific getTransferById yet, but we could add it.
-                // For now, let's assume we fetch it from the list or add the endpoint.
-                // Re-checking backend, I didn't add GetTransferById. I'll add it if needed.
-                // But for now, let's just get it from the list if possible or use GetTransfers with filter.
+                this.apiService.getTransferById(this.id).subscribe({
+                    next: (data) => {
+                        this.formService.patchForm(this.form, data);
+                        if (this.mode === 'view') {
+                            this.form.disable();
+                        }
+                    }
+                });
             }
         }
     }
