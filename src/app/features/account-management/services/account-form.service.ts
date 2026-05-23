@@ -12,6 +12,7 @@ export class AccountFormService {
         return this.fb.group({
             profileName: ['', [Validators.required, Validators.maxLength(100)]],
             profileLogoLink: [null],
+            signatureLink: [null],
             title: [null, [Validators.maxLength(250)]],
             address: [null, [Validators.maxLength(500)]],
             phone: [null, [Validators.maxLength(50)]],
@@ -42,6 +43,7 @@ export class AccountFormService {
         form.patchValue({
             profileName: account.profileName,
             profileLogoLink: account.profileLogoLink ?? null,
+            signatureLink: account.signatureLink ?? null,
             title: account.title ?? null,
             address: account.address ?? null,
             phone: account.phone ?? null,

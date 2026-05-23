@@ -2,6 +2,7 @@ export interface AccountDto {
     id: number;
     profileName: string;
     profileLogoLink?: string | null;
+    signatureLink?: string | null;
     title?: string | null;
     address?: string | null;
     phone?: string | null;

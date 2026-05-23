@@ -40,6 +40,21 @@
             }
         </div>
 
+        <!-- Signature Link -->
+        <div class="d-flex flex-column gap-2 border rounded p-3 bg-opacity-10 mt-3">
+            <p-floatlabel variant="on">
+                <input id="signatureLink" type="text" pInputText formControlName="signatureLink" class="w-100" />
+                <label for="signatureLink">{{ labels.SIGNATURE_LINK }}</label>
+            </p-floatlabel>
+            @if (form.get('signatureLink')?.value) {
+            <div class="mt-1 text-center border rounded p-2 shadow-sm d-flex align-items-center justify-content-center"
+                style="min-height: 80px;">
+                <p-image [src]="form.get('signatureLink')?.value" height="60" [preview]="true"
+                    styleClass="border rounded shadow-sm" />
+            </div>
+            }
+        </div>
+
         <!-- Title / Tagline -->
         <div>
             <p-floatlabel variant="on">
