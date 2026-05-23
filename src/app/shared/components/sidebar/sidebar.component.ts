@@ -36,12 +36,6 @@ export class SidebarComponent implements OnInit {
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
-                        label: 'Payment',
-                        icon: 'pi pi-fw pi-wallet',
-                        routerLink: ['/dashboard/payment'],
-                        routerLinkActiveOptions: { exact: true }
-                    },
-                    {
                         label: 'Performance',
                         icon: 'pi pi-fw pi-chart-line',
                         routerLink: ['/dashboard/performance'],
@@ -108,15 +102,15 @@ export class SidebarComponent implements OnInit {
                 icon: 'pi pi-fw pi-building',
                 items: [
                     {
-                        label: 'Management',
-                        icon: 'pi pi-fw pi-list',
-                        routerLink: ['/agency/manage'],
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-chart-bar',
+                        routerLink: ['/agency/advanced'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
-                        label: 'Advanced View',
-                        icon: 'pi pi-fw pi-chart-bar',
-                        routerLink: ['/agency/advanced'],
+                        label: 'Management',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/agency/manage'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
@@ -128,31 +122,37 @@ export class SidebarComponent implements OnInit {
                 ]
             },
             {
-                label: 'Payment Account',
+                label: 'Payments',
                 icon: 'pi pi-fw pi-wallet',
                 items: [
                     {
-                        label: 'Account List',
-                        icon: 'pi pi-fw pi-list',
-                        routerLink: ['/payment-account-management'],
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-wallet',
+                        routerLink: ['/dashboard/payment'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
-                        label: 'Payment History',
+                        label: 'History',
                         icon: 'pi pi-fw pi-history',
                         routerLink: ['/payment-account-management/history'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {
-                        label: 'Payment Transfer',
+                        label: 'Transfer',
                         icon: 'pi pi-fw pi-sync',
                         routerLink: ['/payment-account-management/transfer'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Accounts',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/payment-account-management'],
                         routerLinkActiveOptions: { exact: true }
                     }
                 ]
             },
             {
-                label: 'Account Person',
+                label: 'Account Persons',
                 icon: 'pi pi-fw pi-users',
                 routerLink: ['/account-person-management'],
                 routerLinkActiveOptions: { exact: true }
