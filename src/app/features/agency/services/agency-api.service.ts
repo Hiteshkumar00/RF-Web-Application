@@ -45,4 +45,8 @@ export class AgencyApiService {
         const params = new HttpParams().set('agencyId', agencyId.toString());
         return this.http.get<ViewAgencyAllDetailDto>(`${this.basePath}/ViewAllDetail`, { params });
     }
+
+    payOldestBills(dto: any): Observable<void> {
+        return this.http.post<void>(`${this.basePath}/PayOldestBills`, dto);
+    }
 }

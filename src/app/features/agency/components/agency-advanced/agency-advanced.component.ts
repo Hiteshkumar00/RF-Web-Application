@@ -8,6 +8,9 @@ import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MenuItem } from 'primeng/api';
 import { AgencyTableColumns } from '../../constants/agency-table.constants';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { DropdownService } from '../../../../shared/services/dropdown.service';
+import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 
 @Component({
     selector: 'app-agency-advanced',
@@ -19,7 +22,9 @@ export class AgencyAdvancedComponent implements OnInit {
         private agencyApiService: AgencyApiService,
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
-        private helperService: HelperService
+        private helperService: HelperService,
+        private fb: FormBuilder,
+        private dropdownService: DropdownService
     ) {}
 
     labels = AgencyLabels;
@@ -34,6 +39,11 @@ export class AgencyAdvancedComponent implements OnInit {
 
     showPaymentDialog = false;
     selectedBill: any = null;
+
+    showAgencyPaymentDialog = false;
+    agencyPaymentForm!: FormGroup;
+    selectedAgencyForPayment: AgencyAdvancedListDto | null = null;
+    accountOptions: DropdownOption[] = [];
 
     openPaymentDialog(bill: any): void {
         this.selectedBill = {
@@ -60,6 +70,82 @@ export class AgencyAdvancedComponent implements OnInit {
     ngOnInit(): void {
         this.loadAgencies();
         this.updateExportMenu();
+        this.initAgencyPaymentForm();
+        this.loadAccountOptions();
+    }
+
+    private initAgencyPaymentForm(): void {
+        this.agencyPaymentForm = this.fb.group({
+            payments: this.fb.array([])
+        });
+    }
+
+    get agencyPayments(): FormArray {
+        return this.agencyPaymentForm.get('payments') as FormArray;
+    }
+
+    get totalAgencyPaid(): number {
+        return this.agencyPayments.controls.reduce((sum, control) => sum + (control.get('amount')?.value || 0), 0);
+    }
+
+    addAgencyPayment(): void {
+        const paymentGroup = this.fb.group({
+            amount: [null, [Validators.required, Validators.min(0.01)]],
+            paymentAccountId: [null, Validators.required],
+            date: [new Date(), Validators.required]
+        });
+        this.agencyPayments.push(paymentGroup);
+    }
+
+    removeAgencyPayment(index: number): void {
+        this.agencyPayments.removeAt(index);
+    }
+
+    private loadAccountOptions(): void {
+        this.dropdownService.getPaymentAccountOptions().subscribe({
+            next: (options) => this.accountOptions = options
+        });
+    }
+
+    openAgencyPaymentDialog(agency: AgencyAdvancedListDto): void {
+        this.selectedAgencyForPayment = agency;
+        this.agencyPayments.clear();
+        this.addAgencyPayment();
+        this.showAgencyPaymentDialog = true;
+    }
+
+    submitAgencyPayment(): void {
+        if (this.agencyPaymentForm.invalid || !this.selectedAgencyForPayment) {
+            this.agencyPaymentForm.markAllAsTouched();
+            return;
+        }
+
+        if (this.totalAgencyPaid > this.selectedAgencyForPayment.totalPendingAmount) {
+            return; // Handled in template
+        }
+
+        const formValue = this.agencyPaymentForm.value;
+        const payments = formValue.payments.map((p: any) => ({
+            ...p,
+            date: this.helperService.setDate(p.date)
+        }));
+
+        const dto = {
+            agencyId: this.selectedAgencyForPayment.id,
+            payments: payments
+        };
+
+        this.agencyApiService.payOldestBills(dto).subscribe({
+            next: () => {
+                this.showAgencyPaymentDialog = false;
+                this.loadAgencies();
+            }
+        });
+    }
+
+    onAgencyPaymentDialogClosed(): void {
+        this.showAgencyPaymentDialog = false;
+        this.selectedAgencyForPayment = null;
     }
 
     public updateExportMenu(): void {

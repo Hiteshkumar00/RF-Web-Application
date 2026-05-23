@@ -73,6 +73,10 @@
                         <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
                             [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top"
                             (onClick)="openDetailDialog(agency)" />
+                        <p-button icon="pi pi-wallet" [rounded]="true" [text]="true" severity="success" size="small"
+                            pTooltip="Make Payment" tooltipPosition="top"
+                            *ngIf="agency.totalPendingAmount > 0"
+                            (onClick)="openAgencyPaymentDialog(agency)" />
                     </td>
                     } @else if (col.field === 'agencyName') {
                     <td><span class="fw-semibold">{{ agency.agencyName }}</span></td>
@@ -374,3 +378,115 @@
 
 <app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
     (saved)="onPaymentSaved()" (closed)="onPaymentDialogClosed()" />
+
+<!-- Agency Payment Dialog -->
+<p-dialog [(visible)]="showAgencyPaymentDialog" [modal]="true" [style]="{ width: '800px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <div>
+                <span class="p-dialog-title m-0">Make Agency Payment</span>
+                <div class="text-sm opacity-70" *ngIf="selectedAgencyForPayment">
+                    Agency: {{ selectedAgencyForPayment.agencyName }}
+                </div>
+            </div>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="onAgencyPaymentDialogClosed()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="agencyPaymentForm" (ngSubmit)="submitAgencyPayment()" class="pt-2" *ngIf="agencyPaymentForm">
+        <div class="row g-4">
+            <!-- Summary Info -->
+            <div class="col-12" *ngIf="selectedAgencyForPayment">
+                <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2 shadow-sm border">
+                    <div class="d-flex gap-4">
+                        <div>
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Bills</div>
+                            <div class="h6 mb-0 fw-bold text-secondary">{{ selectedAgencyForPayment.totalBillsAmount | currency: 'INR' }}</div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Paid</div>
+                            <div class="h5 mb-0 fw-bold text-success">{{ selectedAgencyForPayment.totalPaidAmount | currency: 'INR' }}</div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Payment Amount</div>
+                            <div class="h5 mb-0 fw-bold text-primary">{{ totalAgencyPaid | currency: 'INR' }}</div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-xs text-uppercase fw-bold text-muted mb-1">Pending Amount</div>
+                        <div class="h5 mb-0 fw-bold" [class.text-danger]="selectedAgencyForPayment.totalPendingAmount > 0" [class.text-success]="selectedAgencyForPayment.totalPendingAmount <= 0">
+                            {{ selectedAgencyForPayment.totalPendingAmount | currency: 'INR' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments List -->
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-2">
+                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">Payment Installments</h6>
+                    <p-button icon="pi pi-plus" label="Add Payment" styleClass="p-button-sm p-button-outlined"
+                        (onClick)="addAgencyPayment()" />
+                </div>
+
+                <p-message severity="error" text="Total payment amount exceeds the pending amount." *ngIf="totalAgencyPaid > (selectedAgencyForPayment?.totalPendingAmount || 0)" styleClass="w-100 mb-3" />
+
+                <div formArrayName="payments">
+                    <p-table [value]="agencyPayments.controls" styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                        <ng-template pTemplate="header">
+                            <tr class="bg-light">
+                                <th style="width: 35%">Account</th>
+                                <th style="width: 30%">Date</th>
+                                <th style="width: 25%">Amount</th>
+                                <th style="width: 10%" class="text-center">Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-control let-i="rowIndex">
+                            <tr [formGroup]="$any(control)">
+                                <td>
+                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                        optionLabel="label" optionValue="value" placeholder="Select Account"
+                                        styleClass="w-100 text-start" appendTo="body" size="small" />
+                                    <p-message severity="error" text="Req" variant="simple" size="small"
+                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
+                                </td>
+                                <td>
+                                    <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                        appendTo="body" styleClass="w-100" size="small" />
+                                </td>
+                                <td>
+                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                        styleClass="w-100" placeholder="0.00" size="small" />
+                                    <p-message severity="error" text="Invalid" variant="simple" size="small"
+                                        *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched" />
+                                </td>
+                                <td class="text-center">
+                                    <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                        (onClick)="removeAgencyPayment(i)" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="4" class="text-center p-4 text-muted small">
+                                    No payments added yet.
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3" *ngIf="agencyPaymentForm">
+            <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="onAgencyPaymentDialogClosed()" />
+            <p-button label="Pay Oldest Bills" icon="pi pi-check" (onClick)="submitAgencyPayment()"
+                [disabled]="agencyPaymentForm.invalid || totalAgencyPaid > (selectedAgencyForPayment?.totalPendingAmount || 0) || totalAgencyPaid <= 0" severity="primary" class="shadow-sm" />
+        </div>
+    </ng-template>
+</p-dialog>
