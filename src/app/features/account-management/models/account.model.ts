@@ -12,6 +12,7 @@ export interface AccountDto {
     shortDateFormat?: string | null;
     enableSuggestions: boolean;
     enableVoiceTyping: boolean;
+    showStatistics: boolean;
     whatsAppNumber?: string | null;
     enableWhatsApp: boolean;
     enableAdvancedWhatsApp: boolean;

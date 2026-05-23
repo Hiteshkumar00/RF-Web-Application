@@ -11,6 +11,8 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 @Component({
     selector: 'app-agency-advanced',
@@ -24,7 +26,8 @@ export class AgencyAdvancedComponent implements OnInit {
         private excelService: ExcelService,
         private helperService: HelperService,
         private fb: FormBuilder,
-        private dropdownService: DropdownService
+        private dropdownService: DropdownService,
+        public accountDetailsService: AccountDetailsService
     ) {}
 
     labels = AgencyLabels;
@@ -39,6 +42,27 @@ export class AgencyAdvancedComponent implements OnInit {
 
     showPaymentDialog = false;
     selectedBill: any = null;
+
+    // Summary totals
+    get totalAllBills(): number {
+        return this.agencies.reduce((sum, a) => sum + (a.totalBillsAmount || 0), 0);
+    }
+
+    get totalAllPaid(): number {
+        return this.agencies.reduce((sum, a) => sum + (a.totalPaidAmount || 0), 0);
+    }
+
+    get totalAllPending(): number {
+        return this.agencies.reduce((sum, a) => sum + (a.totalPendingAmount || 0), 0);
+    }
+
+    get statisticCards(): StatisticCard[] {
+        return [
+            { title: 'Total Bills Amount', amount: this.totalAllBills, colorClass: 'info', icon: 'pi-file' },
+            { title: 'Total Paid', amount: this.totalAllPaid, colorClass: 'success', icon: 'pi-check-circle' },
+            { title: 'Total Pending', amount: this.totalAllPending, colorClass: '', icon: 'pi-clock', isRemaining: true }
+        ];
+    }
 
     showAgencyPaymentDialog = false;
     agencyPaymentForm!: FormGroup;

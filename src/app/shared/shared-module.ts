@@ -25,6 +25,7 @@ import { RfShortDatePipe } from './pipes/rf-short-date.pipe';
 import { VoiceTypingComponent } from './components/voice-typing/voice-typing.component';
 import { VoiceTypingDirective } from './directives/voice-typing.directive';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
+import { StatisticsCardsComponent } from './components/statistics-cards/statistics-cards.component';
 
 // New PrimeNG Imports
 import { TableModule } from 'primeng/table';
@@ -53,7 +54,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 @NgModule({
-  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent],
+  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -140,7 +141,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     AutoCompleteModule,
     SplitButtonModule,
     MenuModule,
-    ImagePreviewComponent
+    ImagePreviewComponent,
+    StatisticsCardsComponent
   ],
   providers: []
 })

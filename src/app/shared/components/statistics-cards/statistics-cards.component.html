@@ -1,0 +1,21 @@
+<!-- Summary Cards -->
+<div class="row g-4 mb-4" *ngIf="accountDetailsService.showStatistics && cards.length > 0">
+    <div *ngFor="let card of cards" class="col-md-4">
+        <div class="card metric-card border-0 shadow-sm p-4 h-100 bg-opacity-10"
+             [ngClass]="'bg-' + getColorClass(card)">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="text-muted small fw-semibold text-uppercase mb-1">{{ card.title }}</div>
+                    <div class="fs-2 fw-bold"
+                         [ngClass]="'text-' + (card.colorClass === 'info' ? 'info-emphasis' : getColorClass(card))">
+                        {{ card.amount | currency:'INR' }}
+                    </div>
+                </div>
+                <div class="icon-circle text-white shadow-sm"
+                     [ngClass]="'bg-' + getColorClass(card)">
+                    <i class="pi fs-4" [ngClass]="card.icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -95,9 +95,16 @@
 
                             <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                 <span class="text-muted fw-semibold"><i class="pi pi-microphone me-2"></i>Voice Typing</span>
-                                <p-tag [severity]="account.enableVoiceTyping ? 'info' : 'secondary'"
+                                <p-tag [severity]="account.enableVoiceTyping ? 'success' : 'secondary'"
                                     [value]="account.enableVoiceTyping ? 'Enabled' : 'Disabled'"
                                     [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                            </div>
+
+                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <span class="text-muted fw-semibold"><i class="pi pi-chart-bar me-2"></i>Show Statistics</span>
+                                <p-tag [severity]="account.showStatistics ? 'success' : 'secondary'"
+                                    [value]="account.showStatistics ? 'Enabled' : 'Disabled'"
+                                    [icon]="account.showStatistics ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
                             </div>
 
                             <div *ngIf="account.enableWhatsApp"
