@@ -16,7 +16,7 @@
                     <label for="productName" class="block mb-2 font-semibold">Product Name <span
                             class="text-danger">*</span></label>
                     <input id="productName" type="text" pInputText formControlName="productName"
-                        class="w-100 p-inputtext-sm shadow-sm" placeholder="e.g. Sofa Set" />
+                        class="w-100 p-inputtext-sm shadow-sm" placeholder="e.g. Sofa Set" appVoiceTyping />
                     <small class="text-danger"
                         *ngIf="form.get('productName')?.invalid && form.get('productName')?.touched">
                         Product name is required.

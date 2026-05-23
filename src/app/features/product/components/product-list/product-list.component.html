@@ -7,7 +7,7 @@
                     <p-inputIcon styleClass="pi pi-search" />
                     <input type="text" pInputText placeholder="Search products..."
                         (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                        class="p-inputtext-sm shadow-sm" style="width: 250px;" />
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
                 </p-iconField>
                 <p-button icon="pi pi-plus" label="New Product" (onClick)="openCreateDialog()"
                     styleClass="p-button-sm shadow-sm" />
