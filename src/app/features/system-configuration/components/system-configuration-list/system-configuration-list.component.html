@@ -12,13 +12,13 @@
         </div>
 
         <div class="card-body p-0">
-            <p-table [value]="configurations" [loading]="loading" [scrollable]="true"
+            <p-table [resizableColumns]="true" [value]="configurations" [loading]="loading" [scrollable]="true"
                 [scrollHeight]="globalConfig.tableScrollHeight"
-                styleClass="p-datatable-striped p-datatable-sm">
+                styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Property</th>
-                        <th style="width: 25rem;">Value</th>
+                        <th pResizableColumn>Property</th>
+                        <th pResizableColumn style="width: 25rem;">Value</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-config>

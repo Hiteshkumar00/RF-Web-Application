@@ -72,14 +72,14 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                <p-table [resizableColumns]="true" [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
-                            <th style="width: 35%">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="width: 30%">{{ labels.DATE }}</th>
-                            <th style="width: 25%" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
+                            <th pResizableColumn style="width: 35%">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th pResizableColumn style="width: 30%">{{ labels.DATE }}</th>
+                            <th pResizableColumn style="width: 25%" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">

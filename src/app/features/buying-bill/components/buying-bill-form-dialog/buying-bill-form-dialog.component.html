@@ -54,16 +54,16 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addItem()" />
                 </div>
 
-                <p-table [value]="stocks.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm">
+                <p-table [resizableColumns]="true" [value]="stocks.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small bg-opacity-10">
-                            <th style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
-                            <th style="min-width: 80px">{{ labels.QUANTITY }}</th>
-                            <th style="min-width: 130px">{{ labels.PRICE }}</th>
-                            <th style="min-width: 130px">{{ labels.DISCOUNT }}</th>
-                            <th style="min-width: 130px" class="text-end">{{ labels.TOTAL }}</th>
-                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
+                            <th pResizableColumn style="min-width: 80px">{{ labels.QUANTITY }}</th>
+                            <th pResizableColumn style="min-width: 130px">{{ labels.PRICE }}</th>
+                            <th pResizableColumn style="min-width: 130px">{{ labels.DISCOUNT }}</th>
+                            <th pResizableColumn style="min-width: 130px" class="text-end">{{ labels.TOTAL }}</th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -142,14 +142,14 @@
                         styleClass="p-button-sm p-button-outlined p-button-success" (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                <p-table [resizableColumns]="true" [value]="payments.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small">
-                            <th style="min-width: 180px">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="min-width: 150px">{{ labels.DATE }}</th>
-                            <th style="min-width: 130px" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="min-width: 180px">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th pResizableColumn style="min-width: 150px">{{ labels.DATE }}</th>
+                            <th pResizableColumn style="min-width: 130px" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -191,14 +191,14 @@
                         styleClass="p-button-sm p-button-outlined p-button-warning" (onClick)="addExpence()" />
                 </div>
 
-                <p-table [value]="expences.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm">
+                <p-table [resizableColumns]="true" [value]="expences.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small">
-                            <th style="width: 3rem"></th>
-                            <th style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
-                            <th style="min-width: 130px" class="text-end">Total Amount</th>
-                            <th style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="width: 3rem"></th>
+                            <th pResizableColumn style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
+                            <th pResizableColumn style="min-width: 130px" class="text-end">Total Amount</th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -238,14 +238,14 @@
                                                 styleClass="p-button-sm p-button-outlined p-button-secondary py-1 px-2 text-xs"
                                                 (onClick)="addExpencePayment(i)" />
                                         </div>
-                                        <p-table [value]="getExpencePayments(i).controls"
-                                            styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm">
+                                        <p-table [resizableColumns]="true" [value]="getExpencePayments(i).controls"
+                                            styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm" columnResizeMode="expand">
                                             <ng-template pTemplate="header">
                             <tr class="small">
-                                <th style="width: 35%">Payment Account</th>
-                                <th style="width: 30%">Date</th>
-                                <th style="width: 25%" class="text-end">Amount</th>
-                                <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'"></th>
+                                <th pResizableColumn style="width: 35%">Payment Account</th>
+                                <th pResizableColumn style="width: 30%">Date</th>
+                                <th pResizableColumn style="width: 25%" class="text-end">Amount</th>
+                                <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'"></th>
                             </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-paymentCtrl let-pIndex="rowIndex">

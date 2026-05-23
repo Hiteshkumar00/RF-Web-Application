@@ -24,44 +24,44 @@
         </div>
 
         <div class="card-body p-0">
-            <p-table #dt [value]="expenses" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            <p-table [resizableColumns]="true" #dt [value]="expenses" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
                 [(selection)]="selectedExpenses" (selectionChange)="updateExportMenu()"
-                [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm"
-                [globalFilterFields]="['expenceType', 'agencyName']">
+                [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
+                [globalFilterFields]="['expenceType', 'agencyName']" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
                     <tr class="text-uppercase small">
-                        <th style="width: 4rem">
+                        <th pResizableColumn style="width: 4rem">
                             <p-tableHeaderCheckbox />
                         </th>
                         @for (col of columns; track col.field) {
                         @if (col.field === 'actions') {
-                        <th style="width: 12rem; text-align: center;">{{ col.header }}</th>
+                        <th pResizableColumn style="width: 12rem; text-align: center;">{{ col.header }}</th>
                         } @else if (col.field === 'totalAmount' || col.field === 'paidAmount' || col.field === 'remainingAmount') {
-                        <th [pSortableColumn]="col.field" style="min-width: 190px;">
+                        <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 190px;">
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 {{ col.header }} <p-sortIcon [field]="col.field" />
                                 <p-columnFilter type="numeric" [field]="col.field" display="menu" />
                             </div>
                         </th>
                         } @else if (col.field === 'id') {
-                        <th [pSortableColumn]="col.field" style="min-width: 100px;">
+                        <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 100px;">
                             <div class="d-flex align-items-center gap-1">
                                 {{ col.header }} <p-sortIcon [field]="col.field" />
                                 <p-columnFilter type="numeric" [field]="col.field" display="menu" class="ms-auto" />
                             </div>
                         </th>
                         } @else if (col.field === 'date') {
-                        <th [pSortableColumn]="col.field" style="min-width: 170px;">
+                        <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 170px;">
                             <div class="d-flex align-items-center gap-1">
                                 {{ col.header }} <p-sortIcon [field]="col.field" />
                                 <p-columnFilter type="date" [field]="col.field" display="menu" class="ms-auto" />
                             </div>
                         </th>
                         } @else {
-                        <th [pSortableColumn]="col.field" style="min-width: 200px;">
+                        <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 200px;">
                             <div class="d-flex align-items-center gap-1">
                                 {{ col.header }} <p-sortIcon [field]="col.field" />
                                 <p-columnFilter type="text" [field]="col.field" display="menu" class="ms-auto" />

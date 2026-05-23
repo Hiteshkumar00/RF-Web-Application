@@ -59,61 +59,61 @@
 
         <!-- Grid -->
         <div class="card-body p-0">
-            <p-table #dt [value]="history" [loading]="loading" [paginator]="true" [rows]="10" [scrollable]="true"
+            <p-table [resizableColumns]="true" #dt [value]="history" [loading]="loading" [paginator]="true" [rows]="10" [scrollable]="true"
                 [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
                 [(selection)]="selectedHistory" (selectionChange)="updateExportMenu()"
-                styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+                styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 responsiveLayout="scroll"
-                [globalFilterFields]="['paymentAccountName', 'accountPersonName', 'description', 'paymentType', 'billNo']">
+                [globalFilterFields]="['paymentAccountName', 'accountPersonName', 'description', 'paymentType', 'billNo']" columnResizeMode="expand">
                 <ng-template pTemplate="header">
                     <tr class="text-uppercase small">
-                        <th style="width: 4rem">
+                        <th pResizableColumn style="width: 4rem">
                             <p-tableHeaderCheckbox />
                         </th>
-                        <th pSortableColumn="paymentAccountName" style="min-width: 250px">
+                        <th pResizableColumn pSortableColumn="paymentAccountName" style="min-width: 250px">
                             <div class="d-flex align-items-center gap-1">
                                 Payment Account <p-sortIcon field="paymentAccountName" />
                                 <p-columnFilter type="text" field="paymentAccountName" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th pSortableColumn="accountPersonName" style="min-width: 250px">
+                        <th pResizableColumn pSortableColumn="accountPersonName" style="min-width: 250px">
                             <div class="d-flex align-items-center gap-1">
                                 Account Person <p-sortIcon field="accountPersonName" />
                                 <p-columnFilter type="text" field="accountPersonName" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th style="min-width: 300px">
+                        <th pResizableColumn style="min-width: 300px">
                             <div class="d-flex align-items-center gap-1">
                                 Payment Description
                                 <p-columnFilter type="text" field="description" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th pSortableColumn="direction" style="min-width: 250px">
+                        <th pResizableColumn pSortableColumn="direction" style="min-width: 250px">
                             <div class="d-flex align-items-center gap-1">
                                 Received or Paid <p-sortIcon field="direction" />
                                 <p-columnFilter type="text" field="direction" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th pSortableColumn="amount" style="min-width: 250px">
+                        <th pResizableColumn pSortableColumn="amount" style="min-width: 250px">
                             <div class="d-flex align-items-center justify-content-end gap-1">
                                 Amount <p-sortIcon field="amount" />
                                 <p-columnFilter type="numeric" field="amount" display="menu" />
                             </div>
                         </th>
-                        <th pSortableColumn="date" style="min-width: 200px">
+                        <th pResizableColumn pSortableColumn="date" style="min-width: 200px">
                             <div class="d-flex align-items-center gap-1">
                                 Payment Date <p-sortIcon field="date" />
                                 <p-columnFilter type="date" field="date" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th pSortableColumn="paymentType" style="min-width: 250px">
+                        <th pResizableColumn pSortableColumn="paymentType" style="min-width: 250px">
                             <div class="d-flex align-items-center gap-1">
                                 Payment Type <p-sortIcon field="paymentType" />
                                 <p-columnFilter type="text" field="paymentType" display="menu" class="ms-auto" />
                             </div>
                         </th>
-                        <th style="min-width: 150px">
+                        <th pResizableColumn style="min-width: 150px">
                             <div class="d-flex align-items-center gap-1">
                                 Bill No
                                 <p-columnFilter type="text" field="billNo" display="menu" class="ms-auto" />

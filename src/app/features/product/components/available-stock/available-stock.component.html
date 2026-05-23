@@ -7,11 +7,11 @@
     </div>
 
     <div class="card-body p-0">
-        <p-table #dt [value]="productProfits" [loading]="loading" [rows]="10" [paginator]="true" [scrollable]="true"
+        <p-table [resizableColumns]="true" #dt [value]="productProfits" [loading]="loading" [rows]="10" [paginator]="true" [scrollable]="true"
             [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
-            styleClass="p-datatable-sm p-datatable-striped" [showCurrentPageReport]="true"
+            styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" dataKey="productId"
-            [expandedRowKeys]="expandedRows">
+            [expandedRowKeys]="expandedRows" columnResizeMode="expand">
 
             <ng-template #caption>
                 <div class="d-flex justify-content-end gap-2 px-2 py-1">
@@ -23,18 +23,18 @@
 
             <ng-template #header>
                 <tr class="text-uppercase small">
-                    <th style="width: 3rem"></th>
-                    <th style="width: 80px">Image</th>
-                    <th style="width: 100px" class="text-center">Action</th>
-                    <th pSortableColumn="productName">Product Name <p-sortIcon field="productName" /></th>
-                    <th pSortableColumn="totalSoldCount" class="text-end">Sold Qty <p-sortIcon field="totalSoldCount" />
+                    <th pResizableColumn style="width: 3rem"></th>
+                    <th pResizableColumn style="width: 80px">Image</th>
+                    <th pResizableColumn style="width: 100px" class="text-center">Action</th>
+                    <th pResizableColumn pSortableColumn="productName">Product Name <p-sortIcon field="productName" /></th>
+                    <th pResizableColumn pSortableColumn="totalSoldCount" class="text-end">Sold Qty <p-sortIcon field="totalSoldCount" />
                     </th>
-                    <th pSortableColumn="totalPurchaseCount" class="text-end">Purchase Qty <p-sortIcon
+                    <th pResizableColumn pSortableColumn="totalPurchaseCount" class="text-end">Purchase Qty <p-sortIcon
                             field="totalPurchaseCount" /></th>
-                    <th pSortableColumn="totalSellingAmount" class="text-end">Selling Amt <p-sortIcon
+                    <th pResizableColumn pSortableColumn="totalSellingAmount" class="text-end">Selling Amt <p-sortIcon
                             field="totalSellingAmount" /></th>
-                    <th pSortableColumn="totalProfit" class="text-end">Profit <p-sortIcon field="totalProfit" /></th>
-                    <th pSortableColumn="availableStock" class="text-center">Stock <p-sortIcon field="availableStock" />
+                    <th pResizableColumn pSortableColumn="totalProfit" class="text-end">Profit <p-sortIcon field="totalProfit" /></th>
+                    <th pResizableColumn pSortableColumn="availableStock" class="text-center">Stock <p-sortIcon field="availableStock" />
                     </th>
                 </tr>
             </ng-template>
@@ -93,19 +93,19 @@
                                 <h6 class="mb-0 fw-bold">Stock History (FIFO Analysis)</h6>
                             </div>
 
-                            <p-table [value]="item.stockHistory"
-                                styleClass="p-datatable-sm p-datatable-gridlines shadow-sm rounded overflow-hidden">
+                            <p-table [resizableColumns]="true" [value]="item.stockHistory"
+                                styleClass="p-datatable-sm p-datatable-gridlines shadow-sm rounded overflow-hidden" columnResizeMode="expand">
                                 <ng-template #header>
                 <tr class="small text-uppercase">
-                    <th style="width: 150px">Bill No</th>
-                    <th>Agency Name</th>
-                    <th style="width: 120px">Date</th>
-                    <th class="text-center">Initial Qty</th>
-                    <th class="text-end">Purchase Price</th>
-                    <th class="text-end">Discount</th>
-                    <th class="text-end">Net Price</th>
-                    <th class="text-end">Total Amount</th>
-                    <th class="text-center fw-bold">Remaining Qty</th>
+                    <th pResizableColumn style="width: 150px">Bill No</th>
+                    <th pResizableColumn>Agency Name</th>
+                    <th pResizableColumn style="width: 120px">Date</th>
+                    <th pResizableColumn class="text-center">Initial Qty</th>
+                    <th pResizableColumn class="text-end">Purchase Price</th>
+                    <th pResizableColumn class="text-end">Discount</th>
+                    <th pResizableColumn class="text-end">Net Price</th>
+                    <th pResizableColumn class="text-end">Total Amount</th>
+                    <th pResizableColumn class="text-center fw-bold">Remaining Qty</th>
                 </tr>
             </ng-template>
             <ng-template #body let-history>

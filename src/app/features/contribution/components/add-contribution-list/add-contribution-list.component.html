@@ -10,19 +10,19 @@
 
         <div class="card-body p-0">
             <!-- Data Table -->
-            <p-table [value]="contributions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            <p-table [resizableColumns]="true" [value]="contributions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} contributions"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
                 [scrollHeight]="globalConfig.tableScrollHeight"
-                styleClass="p-datatable-striped p-datatable-sm">
+                styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th pSortableColumn="id" style="width: 5rem;">ID <p-sortIcon field="id" /></th>
-                        <th style="width: 12rem; text-align: center;">Actions</th>
-                        <th pSortableColumn="accountPersonName">Person Name <p-sortIcon field="accountPersonName" /></th>
-                        <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
-                        <th pSortableColumn="totalAmount">Total Amount <p-sortIcon field="totalAmount" /></th>
+                        <th pResizableColumn pSortableColumn="id" style="width: 5rem;">ID <p-sortIcon field="id" /></th>
+                        <th pResizableColumn style="width: 12rem; text-align: center;">Actions</th>
+                        <th pResizableColumn pSortableColumn="accountPersonName">Person Name <p-sortIcon field="accountPersonName" /></th>
+                        <th pResizableColumn pSortableColumn="date">Date <p-sortIcon field="date" /></th>
+                        <th pResizableColumn pSortableColumn="totalAmount">Total Amount <p-sortIcon field="totalAmount" /></th>
                     </tr>
                 </ng-template>
 
