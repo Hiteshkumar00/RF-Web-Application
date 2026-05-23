@@ -16,14 +16,11 @@
             <!-- Agency -->
             <div class="col-12">
                 <p-floatlabel>
-                    <p-iconField iconPosition="right">
-                        <p-select id="agencyId" [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
-                            optionValue="value" [placeholder]="labels.AGENCY" class="w-100" appendTo="body" />
-                        <p-inputIcon *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched"
-                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.AGENCY_REQUIRED"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-select id="agencyId" [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
+                        optionValue="value" [placeholder]="labels.AGENCY" class="w-100" appendTo="body" />
                 </p-floatlabel>
+                <p-message severity="error" [text]="labels.AGENCY_REQUIRED" variant="simple" size="small"
+                    *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched" />
             </div>
 
             <!-- Name -->

@@ -77,10 +77,13 @@
                                     appendTo="body" styleClass="w-100" size="small" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" placeholder="0.00" size="small" />
-                                <p-message severity="error" text="Invalid" variant="simple" size="small"
-                                    *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched" />
+                                <p-iconField iconPosition="right">
+                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                        styleClass="w-100" placeholder="0.00" size="small" />
+                                    <p-inputIcon *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
+                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Invalid"
+                                        tooltipPosition="top" />
+                                </p-iconField>
                             </td>
                             <td class="text-center">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"

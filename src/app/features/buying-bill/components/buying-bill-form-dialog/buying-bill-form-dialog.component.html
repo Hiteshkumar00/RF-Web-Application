@@ -15,14 +15,11 @@
             <div class="col-md-4">
                 <div class="field">
                     <label for="agencyId" class="block mb-2 font-semibold">{{ labels.AGENCY }}</label>
-                    <p-iconField iconPosition="right">
-                        <p-select [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
-                            optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start"
-                            appendTo="body" size="small" />
-                        <p-inputIcon *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched"
-                            class="pi pi-info-circle text-danger pe-6" [pTooltip]="labels.AGENCY + ' is required'"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-select [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
+                        optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start"
+                        appendTo="body" size="small" />
+                    <p-message severity="error" [text]="labels.AGENCY + ' is required'" variant="simple" size="small"
+                        *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched" />
                 </div>
             </div>
 
@@ -41,13 +38,10 @@
             <div class="col-md-4">
                 <div class="field">
                     <label for="date" class="block mb-2 font-semibold">{{ labels.DATE }}</label>
-                    <p-iconField iconPosition="right">
-                        <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
-                            appendTo="body" styleClass="w-100" size="small" />
-                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
-                            class="pi pi-info-circle text-danger ps-2" [pTooltip]="labels.DATE + ' is required'"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                        appendTo="body" styleClass="w-100" size="small" />
+                    <p-message severity="error" [text]="labels.DATE + ' is required'" variant="simple" size="small"
+                        *ngIf="form.get('date')?.invalid && form.get('date')?.touched" />
                 </div>
             </div>
 
@@ -75,7 +69,6 @@
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
-                                <p-iconField iconPosition="right">
                                     <p-select [options]="productOptions" formControlName="productId"
                                         (onChange)="onProductChange($event, i)" placeholder="Select Product"
                                         styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
@@ -102,11 +95,8 @@
                                             </div>
                                         </ng-template>
                                     </p-select>
-                                    <p-inputIcon
-                                        *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched"
-                                        class="pi pi-info-circle text-danger pe-6" pTooltip="Required"
-                                        tooltipPosition="top" />
-                                </p-iconField>
+                                    <p-message severity="error" text="Required" variant="simple" size="small"
+                                        *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched" />
                             </td>
                             <td>
                                 <p-inputNumber formControlName="quantity" [showButtons]="false" styleClass="w-100"

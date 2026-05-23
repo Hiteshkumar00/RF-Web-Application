@@ -43,10 +43,13 @@
             <div class="col-md-6">
                 <div class="field mb-2">
                     <label for="amount" class="block mb-2 font-semibold">Amount</label>
-                    <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                        styleClass="w-100" placeholder="0.00" size="small" />
-                    <p-message severity="error" text="Valid amount is required." size="small" variant="simple"
-                        *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid" />
+                    <p-iconField iconPosition="right">
+                        <p-inputNumber id="amount" formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                            styleClass="w-100" placeholder="0.00" size="small" />
+                        <p-inputIcon *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid"
+                            class="pi pi-info-circle text-danger pe-2" pTooltip="Valid amount is required."
+                            tooltipPosition="top" />
+                    </p-iconField>
                 </div>
             </div>
 
