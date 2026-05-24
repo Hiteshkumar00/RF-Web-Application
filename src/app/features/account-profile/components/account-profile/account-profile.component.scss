@@ -48,4 +48,8 @@
     .p-card-body {
         padding: 0;
     }
+
+    .p-avatar img {
+        object-fit: cover !important;
+    }
 }

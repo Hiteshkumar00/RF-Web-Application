@@ -49,6 +49,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { TabsModule } from 'primeng/tabs';
+import { AvatarModule } from 'primeng/avatar';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -93,7 +95,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     SplitButtonModule,
     MenuModule,
     RfDatePipe,
-    RfShortDatePipe
+    RfShortDatePipe,
+    TabsModule,
+    AvatarModule
   ],
   exports: [
     CommonModule,
@@ -142,7 +146,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     SplitButtonModule,
     MenuModule,
     ImagePreviewComponent,
-    StatisticsCardsComponent
+    StatisticsCardsComponent,
+    TabsModule,
+    AvatarModule
   ],
   providers: []
 })
