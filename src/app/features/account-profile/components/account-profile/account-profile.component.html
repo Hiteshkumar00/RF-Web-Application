@@ -39,10 +39,11 @@
                             <p-tabs value="0">
                                 <p-tablist>
                                     <p-tab value="0">Profile</p-tab>
-                                    <p-tab value="1">Settings</p-tab>
-                                    <p-tab value="2">Features</p-tab>
-                                    <p-tab value="3">WhatsApp Config</p-tab>
-                                    <p-tab value="4">Email Config</p-tab>
+                                    <p-tab value="1">Contact Info</p-tab>
+                                    <p-tab value="2">Settings</p-tab>
+                                    <p-tab value="3">Features</p-tab>
+                                    <p-tab value="4">WhatsApp Config</p-tab>
+                                    <p-tab value="5">Email Config</p-tab>
                                 </p-tablist>
 
                                 <p-tabpanels>
@@ -77,13 +78,16 @@
 
                                         <!-- New Branding Fields -->
                                         <div *ngIf="account.title"
-                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i class="pi pi-tag me-2"></i>{{
                                                 labels.TITLE}}
                                             </span>
                                             <span class="fw-bold">{{ account.title }}</span>
                                         </div>
 
+                                    </p-tabpanel>
+
+                                    <p-tabpanel value="1">
                                         <div *ngIf="account.phone"
                                             class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i class="pi pi-phone me-2"></i>{{
@@ -108,14 +112,14 @@
                                         </div>
 
                                         <div *ngIf="account.address"
-                                            class="info-item p-3 border-bottom d-flex flex-column align-items-start gap-2">
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i class="pi pi-map-marker me-2"></i>{{
                                                 labels.ADDRESS }}</span>
-                                            <span class="fw-bold w-100 text-end">{{ account.address }}</span>
+                                            <span class="fw-bold">{{ account.address }}</span>
                                         </div>
                                     </p-tabpanel>
 
-                                    <p-tabpanel value="1">
+                                    <p-tabpanel value="2">
                                         <div
                                             class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
@@ -129,8 +133,7 @@
                                             <span class="fw-bold">{{ account.dateFormat || 'dd-MMMM-yyyy (Default)'
                                                 }}</span>
                                         </div>
-                                        <div
-                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
                                                     class="pi pi-calendar-plus me-2"></i>Short Date
                                                 Format</span>
@@ -139,7 +142,7 @@
                                         </div>
                                     </p-tabpanel>
 
-                                    <p-tabpanel value="2">
+                                    <p-tabpanel value="3">
                                         <div
                                             class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
@@ -159,8 +162,7 @@
                                                 [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
                                         </div>
 
-                                        <div
-                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
                                                     class="pi pi-chart-bar me-2"></i>Show
                                                 Statistics</span>
@@ -170,7 +172,7 @@
                                         </div>
                                     </p-tabpanel>
 
-                                    <p-tabpanel value="3">
+                                    <p-tabpanel value="4">
                                         <div *ngIf="account.enableWhatsApp"
                                             class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
@@ -183,7 +185,7 @@
                                         </div>
 
                                         <div *ngIf="!account.enableWhatsApp"
-                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
                                                     class="pi pi-whatsapp me-2"></i>WhatsApp</span>
                                             <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
@@ -228,10 +230,10 @@
                                         </div>
                                     </p-tabpanel>
 
-                                    <p-tabpanel value="4">
+                                    <p-tabpanel value="5">
                                         <!-- Email Section -->
                                         <div *ngIf="!account.enableEmail"
-                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
                                                     class="pi pi-envelope me-2"></i>Email
                                                 Services</span>

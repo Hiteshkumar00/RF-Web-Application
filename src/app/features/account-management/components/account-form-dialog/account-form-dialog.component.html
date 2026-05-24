@@ -13,10 +13,11 @@
         <p-tabs value="0">
             <p-tablist>
                 <p-tab value="0">Profile</p-tab>
-                <p-tab value="1">Settings</p-tab>
-                <p-tab value="2">Features</p-tab>
-                <p-tab value="3">WhatsApp Config</p-tab>
-                <p-tab value="4">Email Config</p-tab>
+                <p-tab value="1">Contact Info</p-tab>
+                <p-tab value="2">Settings</p-tab>
+                <p-tab value="3">Features</p-tab>
+                <p-tab value="4">WhatsApp Config</p-tab>
+                <p-tab value="5">Email Config</p-tab>
             </p-tablist>
 
             <p-tabpanels>
@@ -78,6 +79,11 @@
                             </p-floatlabel>
                         </div>
 
+                    </div>
+                </p-tabpanel>
+
+                <p-tabpanel value="1">
+                    <div class="d-flex flex-column gap-3 pt-2">
                         <!-- Phone & Email Row -->
                         <div class="row g-3">
                             <div class="col-6">
@@ -110,11 +116,10 @@
                                 <label for="address">{{ labels.ADDRESS }}</label>
                             </p-floatlabel>
                         </div>
-
                     </div>
                 </p-tabpanel>
 
-                <p-tabpanel value="1">
+                <p-tabpanel value="2">
                     <div class="d-flex flex-column gap-3 pt-2">
                         <!-- Currency Type -->
                         <div>
@@ -145,7 +150,7 @@
                     </div>
                 </p-tabpanel>
 
-                <p-tabpanel value="2">
+                <p-tabpanel value="3">
                     <div class="d-flex flex-column gap-3 pt-2">
                         <!-- Enable Suggestions -->
                         <div
@@ -176,7 +181,7 @@
                     </div>
                 </p-tabpanel>
 
-                <p-tabpanel value="3">
+                <p-tabpanel value="4">
                     <div class="d-flex flex-column gap-3 pt-2">
                         <!-- Enable WhatsApp -->
                         <div
@@ -233,7 +238,7 @@
                     </div>
                 </p-tabpanel>
 
-                <p-tabpanel value="4">
+                <p-tabpanel value="5">
                     <div class="d-flex flex-column gap-3 pt-2">
                         <!-- Enable Email -->
                         <div
