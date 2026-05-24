@@ -17,9 +17,3 @@ export interface SellingBillDetailsDto extends UpdateSellingBillDto {
     totalAmount: number;
     netAmount: number;
 }
-
-export interface SellingBillItemSuggestionDto {
-    itemName: string;
-    count: number;
-    price: number;
-}

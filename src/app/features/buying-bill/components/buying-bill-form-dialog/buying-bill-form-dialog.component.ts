@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { BuyingBillItemSuggestionDto } from '../../models/buying-bill-item-suggestion.dto';
 import { ProductApiService } from '../../../product/services/product-api.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService } from 'primeng/api';

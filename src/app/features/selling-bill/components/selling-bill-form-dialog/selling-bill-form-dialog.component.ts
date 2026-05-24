@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { SellingBillItemSuggestionDto } from '../../models/selling-bill.model';
 import { ProductApiService } from '../../../product/services/product-api.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -48,7 +47,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
     accountOptions: DropdownOption[] = [];
     private isClosing = false;
 
-    suggestions: SellingBillItemSuggestionDto[] = [];
     productOptions: any[] = [];
 
     get items(): FormArray {
@@ -131,9 +129,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
             } else {
                 this.addItem();
             }
-            if (this.mode != 'view') {
-                this.loadSuggestions();
-            }
             this.loadAllProducts();
         }
     }
@@ -158,12 +153,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
         });
     }
 
-    private loadSuggestions(): void {
-        if (!this.accountDetailsService.enableSuggestions) return;
-        this.apiService.getItemSuggestions().subscribe({
-            next: (data) => this.suggestions = data
-        });
-    }
+
 
 
     onProductChange(event: any, index: number): void {
