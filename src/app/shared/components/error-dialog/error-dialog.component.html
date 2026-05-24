@@ -1,5 +1,5 @@
 <p-dialog [visible]="(errorService.visible | async) ?? false" (onHide)="errorService.close()" [modal]="true"
-    [closable]="false" [style]="{ width: '420px' }" [draggable]="false" [resizable]="false">
+    [closable]="false" [style]="{ width: '650px', 'max-width': '95vw' }" [contentStyle]="{ 'max-height': '500px', 'overflow-y': 'auto' }" [draggable]="false" [resizable]="false">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
