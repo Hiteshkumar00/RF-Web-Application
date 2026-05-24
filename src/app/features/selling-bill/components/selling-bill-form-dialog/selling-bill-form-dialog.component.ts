@@ -133,8 +133,8 @@ export class SellingBillFormDialogComponent implements OnChanges {
             }
             if (this.mode != 'view') {
                 this.loadSuggestions();
-                this.loadAllProducts();
             }
+            this.loadAllProducts();
         }
     }
 

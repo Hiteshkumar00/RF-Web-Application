@@ -127,7 +127,13 @@
                         <div class="fw-semibold">{{ bill.customerName }}</div>
                     </td>
                     <td>
-                        <div class="small text-muted"><i class="pi pi-phone small me-1"></i>{{ bill.phoneNo }}</div>
+                        <div class="small text-muted">
+                            @if (bill.phoneNo) {
+                            <i class="pi pi-phone small me-1"></i>{{ bill.phoneNo }}
+                            } @else {
+                            —
+                            }
+                        </div>
                     </td>
                     <td class="small">{{ bill.date | rfDate }}</td>
                     <td class="text-end fw-semibold">{{ bill.totalAmount | currency:'INR' }}</td>
