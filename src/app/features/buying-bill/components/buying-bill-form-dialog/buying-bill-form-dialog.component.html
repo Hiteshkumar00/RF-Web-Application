@@ -16,8 +16,8 @@
                 <div class="field">
                     <label for="agencyId" class="block mb-2 font-semibold">{{ labels.AGENCY }}</label>
                     <p-select [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
-                        optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start"
-                        appendTo="body" size="small" />
+                        optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start" appendTo="body"
+                        size="small" />
                     <p-message severity="error" [text]="labels.AGENCY + ' is required'" variant="simple" size="small"
                         *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched" />
                 </div>
@@ -55,7 +55,8 @@
                 </div>
 
                 <p-table [resizableColumns]="true" [value]="stocks.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm" columnResizeMode="expand">
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-auto shadow-sm"
+                    columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small bg-opacity-10">
                             <th pResizableColumn style="min-width: 350px">{{ labels.ITEM_NAME }}</th>
@@ -63,40 +64,29 @@
                             <th pResizableColumn style="min-width: 130px">{{ labels.PRICE }}</th>
                             <th pResizableColumn style="min-width: 130px">{{ labels.DISCOUNT }}</th>
                             <th pResizableColumn style="min-width: 130px" class="text-end">{{ labels.TOTAL }}</th>
-                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'">
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
-                                    <p-select [options]="productOptions" formControlName="productId"
-                                        (onChange)="onProductChange($event, i)" placeholder="Select Product"
-                                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
-                                        optionLabel="label" optionValue="value" [autofocus]="true">
-                                        <ng-template let-item pTemplate="item">
-                                            <div class="d-flex justify-content-between align-items-center w-100">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <span
-                                                        class="badge bg-secondary-subtle text-secondary small border">#{{
-                                                        item.data.id }}</span>
-                                                    <span class="fw-bold">{{ item.data.productName }}</span>
-                                                </div>
-                                                <div *ngIf="item.data.warrantyYear || item.data.warrantyMonth || item.data.warrantyDay"
-                                                    class="text-info small border border-info border-opacity-25 px-2 py-0 rounded-pill bg-info bg-opacity-10 d-flex align-items-center">
-                                                    <i class="pi pi-shield me-1" style="font-size: 0.7rem;"></i>
-                                                    <span style="font-size: 0.75rem;" class="fw-semibold">
-                                                        {{ item.data.warrantyYear ? item.data.warrantyYear + 'Y ' : ''
-                                                        }}
-                                                        {{ item.data.warrantyMonth ? item.data.warrantyMonth + 'M ' : ''
-                                                        }}
-                                                        {{ item.data.warrantyDay ? item.data.warrantyDay + 'D' : '' }}
-                                                    </span>
-                                                </div>
+                                <p-select [options]="productOptions" formControlName="productId"
+                                    (onChange)="onProductChange($event, i)" placeholder="Select Product"
+                                    styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
+                                    optionLabel="label" optionValue="value" [autofocus]="true">
+                                    <ng-template let-item pTemplate="item">
+                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="badge bg-secondary-subtle text-secondary small border">#{{
+                                                    item.data.id }}</span>
+                                                <span>{{ item.label }}</span>
                                             </div>
-                                        </ng-template>
-                                    </p-select>
-                                    <p-message severity="error" text="Required" variant="simple" size="small"
-                                        *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched" />
+                                        </div>
+                                    </ng-template>
+                                </p-select>
+                                <p-message severity="error" text="Required" variant="simple" size="small"
+                                    *ngIf="control.get('productId')?.invalid && control.get('productId')?.touched" />
                             </td>
                             <td>
                                 <p-inputNumber formControlName="quantity" [showButtons]="false" styleClass="w-100"
@@ -143,13 +133,15 @@
                 </div>
 
                 <p-table [resizableColumns]="true" [value]="payments.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm" columnResizeMode="expand">
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm"
+                    columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small">
                             <th pResizableColumn style="min-width: 180px">{{ labels.PAYMENT_ACCOUNT }}</th>
                             <th pResizableColumn style="min-width: 150px">{{ labels.DATE }}</th>
                             <th pResizableColumn style="min-width: 130px" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'">
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -192,13 +184,15 @@
                 </div>
 
                 <p-table [resizableColumns]="true" [value]="expences.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm" columnResizeMode="expand">
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm"
+                    columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="text-uppercase small">
                             <th pResizableColumn style="width: 3rem"></th>
                             <th pResizableColumn style="min-width: 150px">{{ labels.EXPENCE_TYPE }}</th>
                             <th pResizableColumn style="min-width: 130px" class="text-end">Total Amount</th>
-                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'"></th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'">
+                            </th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -239,13 +233,15 @@
                                                 (onClick)="addExpencePayment(i)" />
                                         </div>
                                         <p-table [resizableColumns]="true" [value]="getExpencePayments(i).controls"
-                                            styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm" columnResizeMode="expand">
+                                            styleClass="p-datatable-sm p-datatable-gridlines border rounded shadow-sm"
+                                            columnResizeMode="expand">
                                             <ng-template pTemplate="header">
                             <tr class="small">
                                 <th pResizableColumn style="width: 35%">Payment Account</th>
                                 <th pResizableColumn style="width: 30%">Date</th>
                                 <th pResizableColumn style="width: 25%" class="text-end">Amount</th>
-                                <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'"></th>
+                                <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'">
+                                </th>
                             </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-paymentCtrl let-pIndex="rowIndex">
