@@ -13,24 +13,24 @@
         </div>
 
         <div class="card-body p-0">
-            <p-table [value]="transfers" [loading]="loading" [rows]="10" [paginator]="true"
+            <p-table [resizableColumns]="true" [value]="transfers" [loading]="loading" [rows]="10" [paginator]="true"
                 [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
                 [rowsPerPageOptions]="[10, 25, 50]"
                 [globalFilterFields]="['fromPaymentAccountName', 'toPaymentAccountName', 'description']"
                 [scrollable]="true" [scrollHeight]="globalConfig.tableScrollHeight"
-                styleClass="p-datatable-striped p-datatable-sm">
+                styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width: 10rem; text-align: center;">Actions</th>
-                        <th pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
-                        <th pSortableColumn="fromPaymentAccountName">From Account <p-sortIcon
+                        <th pResizableColumn style="width: 10rem; text-align: center;">Actions</th>
+                        <th pResizableColumn pSortableColumn="date">Date <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pResizableColumn pSortableColumn="fromPaymentAccountName">From Account <p-sortIcon
                                 field="fromPaymentAccountName"></p-sortIcon></th>
-                        <th pSortableColumn="toPaymentAccountName">To Account <p-sortIcon
+                        <th pResizableColumn pSortableColumn="toPaymentAccountName">To Account <p-sortIcon
                                 field="toPaymentAccountName"></p-sortIcon></th>
-                        <th pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
-                        <th>Description</th>
+                        <th pResizableColumn pSortableColumn="amount">Amount <p-sortIcon field="amount"></p-sortIcon></th>
+                        <th pResizableColumn>Description</th>
                     </tr>
                 </ng-template>
 

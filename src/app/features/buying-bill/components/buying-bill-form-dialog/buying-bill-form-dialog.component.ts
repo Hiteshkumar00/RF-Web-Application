@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { BuyingBillItemSuggestionDto } from '../../models/buying-bill-item-suggestion.dto';
 import { ProductApiService } from '../../../product/services/product-api.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService } from 'primeng/api';
@@ -192,11 +191,19 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private loadAllProducts(): void {
         this.productApiService.getAll().subscribe({
             next: (data) => {
-                this.productOptions = data.map(p => ({
-                    label: p.productName,
-                    value: p.id,
-                    data: p
-                }));
+                this.productOptions = data.map(p => {
+                    const warrantyParts = [];
+                    if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
+                    if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
+                    if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
+                    const warrantyStr = warrantyParts.join(' ');
+                    const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
+                    return {
+                        label: label,
+                        value: p.id,
+                        data: p
+                    };
+                });
             }
         });
     }
@@ -212,6 +219,17 @@ export class BuyingBillFormDialogComponent implements OnChanges {
                 productName: product.productName
             });
         }
+    }
+
+    getProductWarranty(productId: number): string | null {
+        const option = this.productOptions.find(o => o.value === productId);
+        if (!option?.data) return null;
+        const p = option.data;
+        const parts = [];
+        if (p.warrantyYear) parts.push(`${p.warrantyYear}Y`);
+        if (p.warrantyMonth) parts.push(`${p.warrantyMonth}M`);
+        if (p.warrantyDay) parts.push(`${p.warrantyDay}D`);
+        return parts.length > 0 ? parts.join(' ') : null;
     }
 
     private loadSuggestions(agencyId?: number): void {
@@ -345,7 +363,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     downloadPdf(): void {
         if (!this.id) return;
-        
+
         this.apiService.downloadInvoice(this.id).subscribe({
             next: (blob) => {
                 const formValue = this.form.getRawValue();

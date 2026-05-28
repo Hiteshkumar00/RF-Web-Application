@@ -1,3 +1,6 @@
+<!-- Summary Cards -->
+<app-statistics-cards [cards]="statisticCards"></app-statistics-cards>
+
 <div class="card border-0 shadow-sm">
     <div class="card-header py-3 border-0">
         <div class="d-flex align-items-center justify-content-between">
@@ -16,40 +19,40 @@
     </div>
 
     <div class="card-body p-0">
-        <p-table #dt [value]="agencies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        <p-table [resizableColumns]="true" #dt [value]="agencies" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} agencies"
             [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
             [(selection)]="selectedAgencies" (selectionChange)="updateExportMenu()"
-            [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-sm p-datatable-striped"
-            [globalFilterFields]="['agencyName', 'address']">
+            [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines"
+            [globalFilterFields]="['agencyName', 'address']" columnResizeMode="expand">
 
             <ng-template pTemplate="header">
                 <tr class="text-uppercase small">
-                    <th style="width: 4rem">
+                    <th pResizableColumn style="width: 4rem">
                         <p-tableHeaderCheckbox />
                     </th>
                     @for (col of columns; track col.field) {
                     @if (col.field === 'id') {
-                    <th [pSortableColumn]="col.field" style="min-width: 90px">
+                    <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 90px">
                         <div class="d-flex align-items-center gap-1">
                             {{ col.header }} <p-sortIcon [field]="col.field" />
                             <p-columnFilter type="numeric" [field]="col.field" display="menu" class="ms-auto" />
                         </div>
                     </th>
                     } @else if (col.field === 'actions') {
-                    <th style="min-width: 100px" class="text-center">{{ col.header }}</th>
+                    <th pResizableColumn style="min-width: 100px" class="text-center">{{ col.header }}</th>
                     } @else if (col.field === 'totalBillsAmount' || col.field === 'totalPaidAmount' || col.field ===
                     'totalPendingAmount' ||
                     col.field === 'totalExpenceAmount' || col.field === 'totalExpencePaidAmount' || col.field ===
                     'totalExpencePendingAmount') {
-                    <th [pSortableColumn]="col.field" style="min-width: 180px">
+                    <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 180px">
                         <div class="d-flex align-items-center justify-content-end gap-1">
                             {{ col.header }} <p-sortIcon [field]="col.field" />
                             <p-columnFilter type="numeric" [field]="col.field" display="menu" />
                         </div>
                     </th>
                     } @else {
-                    <th [pSortableColumn]="col.field" style="min-width: 250px">
+                    <th pResizableColumn [pSortableColumn]="col.field" style="min-width: 250px">
                         <div class="d-flex align-items-center gap-1">
                             {{ col.header }} <p-sortIcon [field]="col.field" />
                             <p-columnFilter type="text" [field]="col.field" display="menu" class="ms-auto" />
@@ -73,6 +76,10 @@
                         <p-button icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" size="small"
                             [pTooltip]="labels.VIEW_DETAIL" tooltipPosition="top"
                             (onClick)="openDetailDialog(agency)" />
+                        <p-button icon="pi pi-wallet" [rounded]="true" [text]="true" severity="success" size="small"
+                            pTooltip="Make Payment" tooltipPosition="top"
+                            *ngIf="agency.totalPendingAmount > 0"
+                            (onClick)="openAgencyPaymentDialog(agency)" />
                     </td>
                     } @else if (col.field === 'agencyName') {
                     <td><span class="fw-semibold">{{ agency.agencyName }}</span></td>
@@ -235,14 +242,14 @@
                 <h6 class="fw-bold mb-0 small text-uppercase fw-bold">{{ labels.AGENCY_PERSONS }}</h6>
             </div>
             <div class="card border-0 shadow-sm overflow-hidden">
-                <p-table [value]="selectedDetail.agencyPersons"
-                    styleClass="p-datatable-sm p-datatable-striped shadow-none">
+                <p-table [resizableColumns]="true" [value]="selectedDetail.agencyPersons"
+                    styleClass="p-datatable-sm p-datatable-striped shadow-none p-datatable-gridlines" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="fs-xs text-uppercase opacity-75">
-                            <th class="py-3 px-3">Name</th>
-                            <th class="py-3 px-3">Phone</th>
-                            <th class="py-3 px-3">Email</th>
-                            <th class="py-3 px-3 text-center">Occupation</th>
+                            <th pResizableColumn class="py-3 px-3">Name</th>
+                            <th pResizableColumn class="py-3 px-3">Phone</th>
+                            <th pResizableColumn class="py-3 px-3">Email</th>
+                            <th pResizableColumn class="py-3 px-3 text-center">Occupation</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-person>
@@ -277,14 +284,14 @@
                 </div>
             </div>
 
-            <p-table [value]="selectedDetail.billsByYear" dataKey="businessYearId" [expandedRowKeys]="expandedYearRows"
-                styleClass="p-datatable-sm p-datatable-gridlines shadow-sm rounded overflow-hidden">
+            <p-table [resizableColumns]="true" [value]="selectedDetail.billsByYear" dataKey="businessYearId" [expandedRowKeys]="expandedYearRows"
+                styleClass="p-datatable-sm p-datatable-gridlines shadow-sm rounded overflow-hidden" columnResizeMode="expand">
                 <ng-template #header>
                     <tr class="fs-xs text-uppercase opacity-75">
-                        <th style="width: 3rem"></th>
-                        <th>Fiscal Year</th>
-                        <th>Date Range</th>
-                        <th class="text-center">Bill Count</th>
+                        <th pResizableColumn style="width: 3rem"></th>
+                        <th pResizableColumn>Fiscal Year</th>
+                        <th pResizableColumn>Date Range</th>
+                        <th pResizableColumn class="text-center">Bill Count</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-yearGroup let-expanded="expanded">
@@ -310,19 +317,19 @@
                     <tr>
                         <td colspan="4">
                             <div class="p-3 border rounded shadow-sm mx-2 my-2">
-                                <p-table [value]="yearGroup.bills"
-                                    styleClass="p-datatable-sm p-datatable-striped shadow-none border">
+                                <p-table [resizableColumns]="true" [value]="yearGroup.bills"
+                                    styleClass="p-datatable-sm p-datatable-striped shadow-none border p-datatable-gridlines" columnResizeMode="expand">
                                     <ng-template #header>
                     <tr class="fs-xs text-uppercase opacity-75 bg-light">
-                        <th class="py-2 px-3">Bill No</th>
-                        <th class="py-2 px-3">Date</th>
-                        <th class="text-end py-2 px-3">Bill Total</th>
-                        <th class="text-end py-2 px-3">Bill Paid</th>
-                        <th class="text-end py-2 px-3">Bill Rem.</th>
-                        <th class="text-end py-2 px-3">Exp. Total</th>
-                        <th class="text-end py-2 px-3">Exp. Paid</th>
-                        <th class="text-end py-2 px-3">Exp. Rem.</th>
-                        <th class="text-center py-2 px-3">Actions</th>
+                        <th pResizableColumn class="py-2 px-3">Bill No</th>
+                        <th pResizableColumn class="py-2 px-3">Date</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Bill Total</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Bill Paid</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Bill Rem.</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Exp. Total</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Exp. Paid</th>
+                        <th pResizableColumn class="text-end py-2 px-3">Exp. Rem.</th>
+                        <th pResizableColumn class="text-center py-2 px-3">Actions</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-bill>
@@ -374,3 +381,118 @@
 
 <app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
     (saved)="onPaymentSaved()" (closed)="onPaymentDialogClosed()" />
+
+<!-- Agency Payment Dialog -->
+<p-dialog [(visible)]="showAgencyPaymentDialog" [modal]="true" [style]="{ width: '800px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <div>
+                <span class="p-dialog-title m-0">Make Agency Payment</span>
+                <div class="text-sm opacity-70" *ngIf="selectedAgencyForPayment">
+                    Agency: {{ selectedAgencyForPayment.agencyName }}
+                </div>
+            </div>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="onAgencyPaymentDialogClosed()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="agencyPaymentForm" (ngSubmit)="submitAgencyPayment()" class="pt-2" *ngIf="agencyPaymentForm">
+        <div class="row g-4">
+            <!-- Summary Info -->
+            <div class="col-12" *ngIf="selectedAgencyForPayment">
+                <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-2 shadow-sm border">
+                    <div class="d-flex gap-4">
+                        <div>
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Bills</div>
+                            <div class="h6 mb-0 fw-bold text-secondary">{{ selectedAgencyForPayment.totalBillsAmount | currency: 'INR' }}</div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Total Paid</div>
+                            <div class="h5 mb-0 fw-bold text-success">{{ selectedAgencyForPayment.totalPaidAmount | currency: 'INR' }}</div>
+                        </div>
+                        <div class="border-start ps-4">
+                            <div class="text-xs text-uppercase fw-bold text-muted mb-1">Payment Amount</div>
+                            <div class="h5 mb-0 fw-bold text-primary">{{ totalAgencyPaid | currency: 'INR' }}</div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-xs text-uppercase fw-bold text-muted mb-1">Pending Amount</div>
+                        <div class="h5 mb-0 fw-bold" [class.text-danger]="selectedAgencyForPayment.totalPendingAmount > 0" [class.text-success]="selectedAgencyForPayment.totalPendingAmount <= 0">
+                            {{ selectedAgencyForPayment.totalPendingAmount | currency: 'INR' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments List -->
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-between mb-3 mt-2">
+                    <h6 class="mb-0 fw-bold border-start border-4 border-primary ps-2">Payment Installments</h6>
+                    <p-button icon="pi pi-plus" label="Add Payment" styleClass="p-button-sm p-button-outlined"
+                        (onClick)="addAgencyPayment()" />
+                </div>
+
+                <p-message severity="error" text="Total payment amount exceeds the pending amount." *ngIf="totalAgencyPaid > (selectedAgencyForPayment?.totalPendingAmount || 0)" styleClass="w-100 mb-3" />
+
+                <div formArrayName="payments">
+                    <p-table [resizableColumns]="true" [value]="agencyPayments.controls" styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden" columnResizeMode="expand">
+                        <ng-template pTemplate="header">
+                            <tr class="bg-light">
+                                <th pResizableColumn style="width: 35%">Account</th>
+                                <th pResizableColumn style="width: 30%">Date</th>
+                                <th pResizableColumn style="width: 25%">Amount</th>
+                                <th pResizableColumn style="width: 10%" class="text-center">Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-control let-i="rowIndex">
+                            <tr [formGroup]="$any(control)">
+                                <td>
+                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                        optionLabel="label" optionValue="value" placeholder="Select Account"
+                                        styleClass="w-100 text-start" appendTo="body" size="small" />
+                                    <p-message severity="error" text="Req" variant="simple" size="small"
+                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
+                                </td>
+                                <td>
+                                    <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                        appendTo="body" styleClass="w-100" size="small" />
+                                </td>
+                                <td>
+                                    <p-iconField iconPosition="right">
+                                        <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                            styleClass="w-100" placeholder="0.00" size="small" />
+                                        <p-inputIcon *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
+                                            class="pi pi-info-circle text-danger pe-2" pTooltip="Invalid"
+                                            tooltipPosition="top" />
+                                    </p-iconField>
+                                </td>
+                                <td class="text-center">
+                                    <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                        (onClick)="removeAgencyPayment(i)" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="4" class="text-center p-4 text-muted small">
+                                    No payments added yet.
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 justify-content-end pt-3 mt-3" *ngIf="agencyPaymentForm">
+            <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="onAgencyPaymentDialogClosed()" />
+            <p-button label="Pay Oldest Bills" icon="pi pi-check" (onClick)="submitAgencyPayment()"
+                [disabled]="agencyPaymentForm.invalid || totalAgencyPaid > (selectedAgencyForPayment?.totalPendingAmount || 0) || totalAgencyPaid <= 0" severity="primary" class="shadow-sm" />
+        </div>
+    </ng-template>
+</p-dialog>

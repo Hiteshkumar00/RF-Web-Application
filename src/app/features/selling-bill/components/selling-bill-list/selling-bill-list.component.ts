@@ -10,6 +10,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
+import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -25,7 +26,7 @@ export class SellingBillListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        private accountDetailsService: AccountDetailsService,
+        public accountDetailsService: AccountDetailsService,
         private whatsAppService: WhatsAppService,
         private emailService: EmailService
     ) {}
@@ -59,6 +60,27 @@ export class SellingBillListComponent implements OnInit {
 
     get canSendEmail(): boolean {
         return this.accountDetailsService.enableEmail;
+    }
+
+    // Summary totals
+    get totalSellingAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.netAmount || 0), 0);
+    }
+
+    get totalReceivedAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
+    }
+
+    get totalRemainingAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.remainingAmount || 0), 0);
+    }
+
+    get statisticCards(): StatisticCard[] {
+        return [
+            { title: 'Total Sales', amount: this.totalSellingAmount, colorClass: 'info', icon: 'pi-chart-line' },
+            { title: 'Total Received', amount: this.totalReceivedAmount, colorClass: 'success', icon: 'pi-check-circle' },
+            { title: 'Remaining Balance', amount: this.totalRemainingAmount, colorClass: '', icon: 'pi-clock', isRemaining: true }
+        ];
     }
 
     ngOnInit(): void {

@@ -20,6 +20,7 @@ export class AccountLabels {
     // Form fields
     public static readonly PROFILE_NAME = 'Profile Name';
     public static readonly PROFILE_LOGO_LINK = 'Profile Logo Link';
+    public static readonly SIGNATURE_LINK = 'Signature Link';
     public static readonly TITLE = 'Business Title/Tagline';
     public static readonly ADDRESS = 'Full Address';
     public static readonly PHONE = 'Contact Phone';

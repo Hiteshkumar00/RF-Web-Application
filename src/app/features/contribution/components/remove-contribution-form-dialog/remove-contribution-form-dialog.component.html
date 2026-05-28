@@ -25,13 +25,10 @@
             <div class="col-md-6">
                 <div class="field">
                     <label for="date" class="block mb-2 font-semibold">Date</label>
-                    <p-iconField iconPosition="right">
                         <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
                             styleClass="w-100" appendTo="body" size="small" />
-                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
-                            class="pi pi-info-circle text-danger ps-2" pTooltip="Date is required"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                        <p-message severity="error" text="Date is required" variant="simple" size="small"
+                            *ngIf="form.get('date')?.invalid && form.get('date')?.touched" />
                 </div>
             </div>
 
@@ -57,28 +54,24 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                <p-table [resizableColumns]="true" [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
-                            <th style="width: 35%">Payment Account</th>
-                            <th style="width: 30%">Date</th>
-                            <th style="width: 25%">Amount</th>
-                            <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
+                            <th pResizableColumn style="width: 35%">Payment Account</th>
+                            <th pResizableColumn style="width: 30%">Date</th>
+                            <th pResizableColumn style="width: 25%">Amount</th>
+                            <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)">
                             <td>
-                                <p-iconField iconPosition="right">
-                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
-                                        optionLabel="label" optionValue="value" placeholder="Select Account"
-                                        styleClass="w-100 text-start" appendTo="body" size="small" />
-                                    <p-inputIcon
-                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched"
-                                        class="pi pi-info-circle text-danger pe-8" pTooltip="Required"
-                                        tooltipPosition="top" />
-                                </p-iconField>
+                                <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select Account"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                                <p-message severity="error" text="Required" variant="simple" size="small"
+                                    *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
                             </td>
                             <td>
                                 <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"

@@ -12,7 +12,7 @@
         <div class="card-body p-0">
 
     <!-- Table -->
-    <p-table
+    <p-table [resizableColumns]="true"
         [value]="agencies"
         [paginator]="true"
         [rows]="10"
@@ -22,15 +22,15 @@
         [sortMode]="'multiple'"
         [scrollable]="true"
         [scrollHeight]="globalConfig.tableScrollHeight"
-        styleClass="p-datatable-striped p-datatable-sm">
+        styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
         <ng-template pTemplate="header">
             <tr>
                 @for (col of columns; track col.field) {
                     @if (col.field === 'actions') {
-                        <th style="width: 10rem; text-align: center;">{{ col.header }}</th>
+                        <th pResizableColumn style="width: 10rem; text-align: center;">{{ col.header }}</th>
                     } @else {
-                        <th [pSortableColumn]="col.field">
+                        <th pResizableColumn [pSortableColumn]="col.field">
                             {{ col.header }}
                             <p-sortIcon [field]="col.field" />
                         </th>

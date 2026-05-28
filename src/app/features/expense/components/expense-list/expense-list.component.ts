@@ -8,6 +8,8 @@ import { ExpenseTableColumns } from '../../constants/expense-table.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 @Component({
     selector: 'app-expense-list',
@@ -21,7 +23,8 @@ export class ExpenseListComponent implements OnInit {
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
-        private helperService: HelperService
+        private helperService: HelperService,
+        public accountDetailsService: AccountDetailsService
     ) {}
 
     labels = ExpenseLabels;
@@ -60,6 +63,14 @@ export class ExpenseListComponent implements OnInit {
 
     get totalRemainingAmount(): number {
         return this.expenses.reduce((sum, e) => sum + (e.remainingAmount || 0), 0);
+    }
+
+    get statisticCards(): StatisticCard[] {
+        return [
+            { title: 'Total Expense', amount: this.totalExpenseAmount, colorClass: 'info', icon: 'pi-wallet' },
+            { title: 'Total Paid', amount: this.totalPaidAmount, colorClass: 'success', icon: 'pi-check-circle' },
+            { title: 'Total Remaining', amount: this.totalRemainingAmount, colorClass: '', icon: 'pi-clock', isRemaining: true }
+        ];
     }
 
     ngOnInit(): void {

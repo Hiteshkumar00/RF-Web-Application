@@ -4,7 +4,19 @@
             <p-card styleClass="shadow-lg border-round-xl overflow-hidden">
                 <ng-template pTemplate="header">
                     <div class="bg-primary p-4 text-white d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-3" *ngIf="account">
+                            <p-avatar *ngIf="account.profileLogoLink" [image]="account.profileLogoLink" size="xlarge"
+                                shape="circle" styleClass="shadow-sm"
+                                [style]="{ 'width': '60px', 'height': '60px' }"></p-avatar>
+                            <p-avatar *ngIf="!account.profileLogoLink" icon="pi pi-image" size="xlarge" shape="circle"
+                                styleClass="shadow-sm text-muted"
+                                [style]="{ 'width': '60px', 'height': '60px' }"></p-avatar>
+                            <div class="d-flex flex-column">
+                                <h4 class="m-0 fw-bold text-white">{{ account.profileName }}</h4>
+                                <span class="text-white-80 small mt-1">Account ID: {{ account.id }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3" *ngIf="!account">
                             <i class="pi pi-briefcase fs-3"></i>
                             <h4 class="m-0 fw-bold">{{ isEditMode ? 'Edit Account' : 'Account Profile' }}</h4>
                         </div>
@@ -20,163 +32,246 @@
 
                 <div *ngIf="!isLoading && account" class="p-2">
                     <!-- View Mode -->
-                    <div class="animate-fade-in shadow-sm p-3 border rounded">
-                        <div class="text-center mb-5 mt-3">
-                            <div class="profile-logo-container mb-3 mx-auto">
-                                <img *ngIf="account.profileLogoLink" [src]="account.profileLogoLink"
-                                    [alt]="account.profileName" class="profile-logo shadow-sm" />
-                                <div *ngIf="!account.profileLogoLink" class="profile-logo-placeholder">
-                                    <i class="pi pi-image text-4xl opacity-20"></i>
-                                </div>
-                            </div>
-                            <h3 class="fw-bold text-primary mb-1">{{ account.profileName }}</h3>
-                            <p class="text-muted small">Account ID: {{ account.id }}</p>
-                        </div>
+                    <div class="animate-fade-in shadow-sm p-3 border rounded overflow-auto">
 
-                        <div class="info-list">
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-id-card me-2"></i>Profile
-                                    Name</span>
-                                <span class="fw-bold">{{ account.profileName }}</span>
-                            </div>
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i
-                                        class="pi pi-money-bill me-2"></i>Currency</span>
-                                <span class="fw-bold">{{ account.currencyType || 'Not Set' }}</span>
-                            </div>
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i
-                                        class="pi pi-calendar me-2"></i>Date Format</span>
-                                <span class="fw-bold">{{ account.dateFormat || 'dd-MMMM-yyyy (Default)' }}</span>
-                            </div>
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i
-                                        class="pi pi-calendar-plus me-2"></i>Short Date Format</span>
-                                <span class="fw-bold">{{ account.shortDateFormat || 'dd-MMM-yyyy (Default)' }}</span>
-                            </div>
 
-                            <!-- New Branding Fields -->
-                            <div *ngIf="account.title"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-tag me-2"></i>{{ labels.TITLE }}</span>
-                                <span class="fw-bold">{{ account.title }}</span>
-                            </div>
+                        <div class="info-list mt-4">
+                            <p-tabs value="0">
+                                <p-tablist>
+                                    <p-tab value="0">Profile</p-tab>
+                                    <p-tab value="1">Contact Info</p-tab>
+                                    <p-tab value="2">Settings</p-tab>
+                                    <p-tab value="3">Features</p-tab>
+                                    <p-tab value="4">WhatsApp Config</p-tab>
+                                    <p-tab value="5">Email Config</p-tab>
+                                </p-tablist>
 
-                            <div *ngIf="account.phone"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-phone me-2"></i>{{ labels.PHONE }}</span>
-                                <span class="fw-bold">{{ account.phone }}</span>
-                            </div>
+                                <p-tabpanels>
+                                    <p-tabpanel value="0">
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-id-card me-2"></i>Profile
+                                                Name</span>
+                                            <span class="fw-bold">{{ account.profileName }}</span>
+                                        </div>
 
-                            <div *ngIf="account.email"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>{{ labels.EMAIL }}</span>
-                                <span class="fw-bold">{{ account.email }}</span>
-                            </div>
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-image me-2"></i>Profile
+                                                Logo</span>
+                                            <img *ngIf="account.profileLogoLink" [src]="account.profileLogoLink"
+                                                alt="Profile Logo" class="shadow-sm border rounded p-1"
+                                                style="max-height: 40px;" />
+                                            <span *ngIf="!account.profileLogoLink" class="text-muted fst-italic">Not
+                                                Set</span>
+                                        </div>
 
-                            <div *ngIf="account.gstin"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-info-circle me-2"></i>{{ labels.GSTIN }}</span>
-                                <span class="fw-bold">{{ account.gstin }}</span>
-                            </div>
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-pencil me-2"></i>Authorized
+                                                Signatory</span>
+                                            <img [src]="account.signatureLink" alt="Signature"
+                                                class="shadow-sm border rounded p-1" style="max-height: 40px;" />
+                                        </div>
 
-                            <div *ngIf="account.address"
-                                class="info-item p-3 border-bottom d-flex flex-column align-items-start gap-2">
-                                <span class="text-muted fw-semibold"><i class="pi pi-map-marker me-2"></i>{{ labels.ADDRESS }}</span>
-                                <span class="fw-bold w-100 text-end">{{ account.address }}</span>
-                            </div>
+                                        <!-- New Branding Fields -->
+                                        <div *ngIf="account.title"
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-tag me-2"></i>{{
+                                                labels.TITLE}}
+                                            </span>
+                                            <span class="fw-bold">{{ account.title }}</span>
+                                        </div>
 
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-sparkles me-2"></i>Suggestions</span>
-                                <p-tag [severity]="account.enableSuggestions ? 'success' : 'secondary'"
-                                    [value]="account.enableSuggestions ? 'Enabled' : 'Disabled'"
-                                    [icon]="account.enableSuggestions ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
-                            </div>
+                                    </p-tabpanel>
 
-                            <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-microphone me-2"></i>Voice Typing</span>
-                                <p-tag [severity]="account.enableVoiceTyping ? 'info' : 'secondary'"
-                                    [value]="account.enableVoiceTyping ? 'Enabled' : 'Disabled'"
-                                    [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
-                            </div>
+                                    <p-tabpanel value="1">
+                                        <div *ngIf="account.phone"
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-phone me-2"></i>{{
+                                                labels.PHONE }}
+                                            </span>
+                                            <span class="fw-bold">{{ account.phone }}</span>
+                                        </div>
 
-                            <div *ngIf="account.enableWhatsApp"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
-                                <div class="text-end">
-                                    <p-tag severity="success" value="Enabled" icon="pi pi-check-circle"
-                                        class="mb-1 d-block" />
-                                    <span class="fw-bold small">{{ account.whatsAppNumber }}</span>
-                                </div>
-                            </div>
+                                        <div *ngIf="account.email"
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>{{
+                                                labels.EMAIL }}</span>
+                                            <span class="fw-bold">{{ account.email }}</span>
+                                        </div>
 
-                            <div *ngIf="!account.enableWhatsApp"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>WhatsApp</span>
-                                <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
-                            </div>
+                                        <div *ngIf="account.gstin"
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-info-circle me-2"></i>{{
+                                                labels.GSTIN }}</span>
+                                            <span class="fw-bold">{{ account.gstin }}</span>
+                                        </div>
 
-                            <!-- Advanced WhatsApp Section -->
-                            <div *ngIf="!account.enableAdvancedWhatsApp"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>Advanced WhatsApp</span>
-                                <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
-                            </div>
+                                        <div *ngIf="account.address"
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-map-marker me-2"></i>{{
+                                                labels.ADDRESS }}</span>
+                                            <span class="fw-bold">{{ account.address }}</span>
+                                        </div>
+                                    </p-tabpanel>
 
-                            <div *ngIf="account.enableAdvancedWhatsApp"
-                                class="bg-success bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-success">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-muted fw-semibold"><i class="pi pi-whatsapp me-2"></i>Advanced WhatsApp</span>
-                                    <div class="text-end">
-                                        <p-tag severity="success" value="Enabled" icon="pi pi-check-circle" class="mb-1 d-block" />
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column gap-2 small">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Phone ID:</span>
-                                        <span class="fw-semibold">{{ account.whatsAppPhoneNumberId || '---' }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Business ID:</span>
-                                        <span class="fw-semibold">{{ account.whatsAppBusinessId || '---' }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Token:</span>
-                                        <span class="fw-semibold">••••••••••••••••</span>
-                                    </div>
-                                </div>
-                            </div>
+                                    <p-tabpanel value="2">
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-money-bill me-2"></i>Currency</span>
+                                            <span class="fw-bold">{{ account.currencyType || 'Not Set' }}</span>
+                                        </div>
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i class="pi pi-calendar me-2"></i>Date
+                                                Format</span>
+                                            <span class="fw-bold">{{ account.dateFormat || 'dd-MMMM-yyyy (Default)'
+                                                }}</span>
+                                        </div>
+                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-calendar-plus me-2"></i>Short Date
+                                                Format</span>
+                                            <span class="fw-bold">{{ account.shortDateFormat || 'dd-MMM-yyyy (Default)'
+                                                }}</span>
+                                        </div>
+                                    </p-tabpanel>
 
-                            <!-- Email Section -->
-                            <div *ngIf="!account.enableEmail"
-                                class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
-                                <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>Email Services</span>
-                                <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
-                            </div>
+                                    <p-tabpanel value="3">
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-sparkles me-2"></i>Suggestions</span>
+                                            <p-tag [severity]="account.enableSuggestions ? 'success' : 'secondary'"
+                                                [value]="account.enableSuggestions ? 'Enabled' : 'Disabled'"
+                                                [icon]="account.enableSuggestions ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                                        </div>
 
-                            <div *ngIf="account.enableEmail"
-                                class="bg-success bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-success">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-muted fw-semibold"><i class="pi pi-envelope me-2"></i>Email Services</span>
-                                    <div class="text-end">
-                                        <p-tag severity="success" value="Enabled" icon="pi pi-check-circle" class="mb-1 d-block" />
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column gap-2 small">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">SMTP Host:</span>
-                                        <span class="fw-semibold">{{ account.emailSmtpHost || '---' }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Username:</span>
-                                        <span class="fw-semibold">{{ account.emailSmtpUsername || '---' }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">SSL/TLS:</span>
-                                        <span class="fw-semibold">{{ account.emailSmtpEnableSsl ? 'Yes' : 'No' }}</span>
-                                    </div>
-                                </div>
-                            </div>
+                                        <div
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-microphone me-2"></i>Voice
+                                                Typing</span>
+                                            <p-tag [severity]="account.enableVoiceTyping ? 'success' : 'secondary'"
+                                                [value]="account.enableVoiceTyping ? 'Enabled' : 'Disabled'"
+                                                [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                                        </div>
+
+                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-chart-bar me-2"></i>Show
+                                                Statistics</span>
+                                            <p-tag [severity]="account.showStatistics ? 'success' : 'secondary'"
+                                                [value]="account.showStatistics ? 'Enabled' : 'Disabled'"
+                                                [icon]="account.showStatistics ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                                        </div>
+                                    </p-tabpanel>
+
+                                    <p-tabpanel value="4">
+                                        <div *ngIf="account.enableWhatsApp"
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-whatsapp me-2"></i>WhatsApp</span>
+                                            <div class="text-end">
+                                                <p-tag severity="success" value="Enabled" icon="pi pi-check-circle mr-1"
+                                                    class="mb-1 d-block" />
+                                                <span class="fw-bold small">{{ account.whatsAppNumber }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="!account.enableWhatsApp"
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-whatsapp me-2"></i>WhatsApp</span>
+                                            <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
+                                        </div>
+
+                                        <!-- Advanced WhatsApp Section -->
+                                        <div *ngIf="!account.enableAdvancedWhatsApp"
+                                            class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-whatsapp me-2"></i>Advanced
+                                                WhatsApp</span>
+                                            <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
+                                        </div>
+
+                                        <div *ngIf="account.enableAdvancedWhatsApp"
+                                            class="bg-success bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-success">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="text-muted fw-semibold"><i
+                                                        class="pi pi-whatsapp me-2"></i>Advanced
+                                                    WhatsApp</span>
+                                                <div class="text-end">
+                                                    <p-tag severity="success" value="Enabled"
+                                                        icon="pi pi-check-circle mr-1" class="mb-1 d-block" />
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-2 small">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Phone ID:</span>
+                                                    <span class="fw-semibold">{{ account.whatsAppPhoneNumberId || '---'
+                                                        }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Business ID:</span>
+                                                    <span class="fw-semibold">{{ account.whatsAppBusinessId || '---'
+                                                        }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Token:</span>
+                                                    <span class="fw-semibold">••••••••••••••••</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </p-tabpanel>
+
+                                    <p-tabpanel value="5">
+                                        <!-- Email Section -->
+                                        <div *ngIf="!account.enableEmail"
+                                            class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-envelope me-2"></i>Email
+                                                Services</span>
+                                            <p-tag severity="secondary" value="Disabled" icon="pi pi-times-circle" />
+                                        </div>
+
+                                        <div *ngIf="account.enableEmail"
+                                            class="bg-success bg-opacity-10 p-3 mt-2 rounded border-start border-3 border-success">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="text-muted fw-semibold"><i
+                                                        class="pi pi-envelope me-2"></i>Email
+                                                    Services</span>
+                                                <div class="text-end">
+                                                    <p-tag severity="success" value="Enabled"
+                                                        icon="pi pi-check-circle mr-1" class="mb-1 d-block" />
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-column gap-2 small">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">SMTP Host:</span>
+                                                    <span class="fw-semibold">{{ account.emailSmtpHost || '---'
+                                                        }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Username:</span>
+                                                    <span class="fw-semibold">{{ account.emailSmtpUsername || '---'
+                                                        }}</span>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">SSL/TLS:</span>
+                                                    <span class="fw-semibold">{{ account.emailSmtpEnableSsl ? 'Yes' :
+                                                        'No' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </p-tabpanel>
+                                </p-tabpanels>
+                            </p-tabs>
                         </div>
                     </div>
                 </div>

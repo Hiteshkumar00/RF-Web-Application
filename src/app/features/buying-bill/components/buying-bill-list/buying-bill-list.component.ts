@@ -7,6 +7,8 @@ import { BillDownloadService } from '../../../../shared/services/bill-download.s
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 @Component({
     selector: 'app-buying-bill-list',
@@ -21,7 +23,8 @@ export class BuyingBillListComponent implements OnInit {
         private downloadService: BillDownloadService,
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
-        private helperService: HelperService
+        private helperService: HelperService,
+        public accountDetailsService: AccountDetailsService
     ) {}
 
     title = BuyingBillConstants.BUYING_BILL_TITLE;
@@ -36,6 +39,27 @@ export class BuyingBillListComponent implements OnInit {
 
     showPaymentDialog = false;
     selectedBill?: BuyingBillListDto;
+
+    // Summary totals
+    get totalBuyingAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.finalAmount || 0), 0);
+    }
+
+    get totalPaidAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
+    }
+
+    get totalRemainingAmount(): number {
+        return this.bills.reduce((sum, b) => sum + (b.remainingAmount || 0), 0);
+    }
+
+    get statisticCards(): StatisticCard[] {
+        return [
+            { title: 'Total Purchases', amount: this.totalBuyingAmount, colorClass: 'info', icon: 'pi-shopping-cart' },
+            { title: 'Total Paid', amount: this.totalPaidAmount, colorClass: 'success', icon: 'pi-check-circle' },
+            { title: 'Remaining Balance', amount: this.totalRemainingAmount, colorClass: '', icon: 'pi-clock', isRemaining: true }
+        ];
+    }
 
     ngOnInit(): void {
         this.loadData();

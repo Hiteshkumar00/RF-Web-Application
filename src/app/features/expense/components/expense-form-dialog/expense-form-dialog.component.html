@@ -27,32 +27,26 @@
             <!-- Expense Type -->
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <p-iconField iconPosition="right">
-                        <p-autoComplete id="expenceType" formControlName="expenceType"
-                            [suggestions]="filteredExpenseTypeSuggestions" (completeMethod)="searchExpenseTypes($event)"
-                            (onSelect)="onSelectExpenseType($event)" styleClass="w-100"
-                            inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true" [delay]="100"
-                            [autofocus]="true" appVoiceTyping />
-                        <p-inputIcon *ngIf="form.get('expenceType')?.invalid && form.get('expenceType')?.touched"
-                            class="pi pi-info-circle text-danger pe-6" [pTooltip]="labels.EXPENSE_TYPE_REQUIRED"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-autoComplete id="expenceType" formControlName="expenceType"
+                        [suggestions]="filteredExpenseTypeSuggestions" (completeMethod)="searchExpenseTypes($event)"
+                        (onSelect)="onSelectExpenseType($event)" styleClass="w-100"
+                        inputStyleClass="w-100 p-inputtext-sm" appendTo="body" [dropdown]="true" [delay]="100"
+                        [autofocus]="true" appVoiceTyping />
                     <label for="expenceType">{{ labels.EXPENSE_TYPE }}</label>
                 </p-floatlabel>
+                <p-message severity="error" [text]="labels.EXPENSE_TYPE_REQUIRED" variant="simple" size="small"
+                    *ngIf="form.get('expenceType')?.invalid && form.get('expenceType')?.touched" />
             </div>
 
             <!-- Date -->
             <div class="col-md-6">
                 <p-floatlabel variant="on">
-                    <p-iconField iconPosition="right">
-                        <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
-                            class="w-100" appendTo="body" size="small" />
-                        <p-inputIcon *ngIf="form.get('date')?.invalid && form.get('date')?.touched"
-                            class="pi pi-info-circle text-danger ps-2" [pTooltip]="labels.DATE_REQUIRED"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                        class="w-100" appendTo="body" size="small" />
                     <label for="date">{{ labels.DATE }}</label>
                 </p-floatlabel>
+                <p-message severity="error" [text]="labels.DATE_REQUIRED" variant="simple" size="small"
+                    *ngIf="form.get('date')?.invalid && form.get('date')?.touched" />
             </div>
 
             <!-- Total Amount -->
@@ -78,28 +72,24 @@
                         styleClass="p-button-sm p-button-outlined" (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                <p-table [resizableColumns]="true" [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
-                            <th style="width: 35%">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th style="width: 30%">{{ labels.DATE }}</th>
-                            <th style="width: 25%" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
+                            <th pResizableColumn style="width: 35%">{{ labels.PAYMENT_ACCOUNT }}</th>
+                            <th pResizableColumn style="width: 30%">{{ labels.DATE }}</th>
+                            <th pResizableColumn style="width: 25%" class="text-end">{{ labels.AMOUNT }}</th>
+                            <th pResizableColumn style="width: 10%" class="text-center" *ngIf="mode !== 'view'">Action</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
                         <tr [formGroup]="$any(control)">
                             <td>
-                                <p-iconField iconPosition="right">
-                                    <p-select [options]="accountOptions" formControlName="paymentAccountId"
-                                        optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
-                                        styleClass="w-100 text-start" appendTo="body" size="small" />
-                                    <p-inputIcon
-                                        *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched"
-                                        class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ACCOUNT_REQUIRED"
-                                        tooltipPosition="top" />
-                                </p-iconField>
+                                <p-select [options]="accountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" [placeholder]="labels.PAYMENT_ACCOUNT"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" />
+                                <p-message severity="error" [text]="labels.ACCOUNT_REQUIRED" variant="simple" size="small"
+                                    *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
                             </td>
                             <td>
                                 <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"

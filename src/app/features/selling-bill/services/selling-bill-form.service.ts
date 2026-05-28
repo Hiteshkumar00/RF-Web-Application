@@ -14,7 +14,7 @@ export class SellingBillFormService {
             billNo: [null],
             customerName: [null, [Validators.required, Validators.maxLength(250)]],
             email: [null, [Validators.email, Validators.maxLength(250)]],
-            phoneNo: [null, [Validators.required, Validators.maxLength(20)]],
+            phoneNo: [null, [Validators.maxLength(20)]],
             address: [null, [Validators.maxLength(500)]],
             date: [new Date(), [Validators.required]],
             items: this.fb.array([], [Validators.required, Validators.minLength(1)]),

@@ -53,14 +53,14 @@
                         (onClick)="addPayment()" />
                 </div>
 
-                <p-table [value]="payments.controls"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden">
+                <p-table [resizableColumns]="true" [value]="payments.controls"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden" columnResizeMode="expand">
                     <ng-template pTemplate="header">
                         <tr class="bg-light">
-                            <th style="width: 35%">Account</th>
-                            <th style="width: 30%">Date</th>
-                            <th style="width: 25%">Amount</th>
-                            <th style="width: 10%" class="text-center">Action</th>
+                            <th pResizableColumn style="width: 35%">Account</th>
+                            <th pResizableColumn style="width: 30%">Date</th>
+                            <th pResizableColumn style="width: 25%">Amount</th>
+                            <th pResizableColumn style="width: 10%" class="text-center">Action</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-control let-i="rowIndex">
@@ -77,10 +77,13 @@
                                     appendTo="body" styleClass="w-100" size="small" />
                             </td>
                             <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" placeholder="0.00" size="small" />
-                                <p-message severity="error" text="Invalid" variant="simple" size="small"
-                                    *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched" />
+                                <p-iconField iconPosition="right">
+                                    <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                        styleClass="w-100" placeholder="0.00" size="small" />
+                                    <p-inputIcon *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched"
+                                        class="pi pi-info-circle text-danger pe-2" pTooltip="Invalid"
+                                        tooltipPosition="top" />
+                                </p-iconField>
                             </td>
                             <td class="text-center">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"

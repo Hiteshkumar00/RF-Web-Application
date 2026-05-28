@@ -73,29 +73,23 @@
             <!-- Role -->
             <div class="col-12">
                 <p-floatlabel>
-                    <p-iconField iconPosition="right">
-                        <p-select id="role" [options]="roleOptions" formControlName="role" optionLabel="label"
-                            optionValue="value" [placeholder]="labels.ROLE" class="w-100" appendTo="body" />
-                        <p-inputIcon *ngIf="form.get('role')?.invalid && form.get('role')?.touched"
-                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ROLE_REQUIRED"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-select id="role" [options]="roleOptions" formControlName="role" optionLabel="label"
+                        optionValue="value" [placeholder]="labels.ROLE" class="w-100" appendTo="body" />
                 </p-floatlabel>
+                <p-message severity="error" [text]="labels.ROLE_REQUIRED" variant="simple" size="small"
+                    *ngIf="form.get('role')?.invalid && form.get('role')?.touched" />
             </div>
 
             <!-- Account (shown for Admin/SuperAdmin roles) -->
             @if (showAccountField) {
             <div class="col-12">
                 <p-floatlabel>
-                    <p-iconField iconPosition="right">
-                        <p-select id="accountId" [options]="accountOptions" formControlName="accountId"
-                            optionLabel="label" optionValue="value" [placeholder]="labels.ACCOUNT" [showClear]="true"
-                            class="w-100" appendTo="body" />
-                        <p-inputIcon *ngIf="form.get('accountId')?.invalid && form.get('accountId')?.touched"
-                            class="pi pi-info-circle text-danger pe-8" [pTooltip]="labels.ACCOUNT_REQUIRED"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-select id="accountId" [options]="accountOptions" formControlName="accountId"
+                        optionLabel="label" optionValue="value" [placeholder]="labels.ACCOUNT" [showClear]="true"
+                        class="w-100" appendTo="body" />
                 </p-floatlabel>
+                <p-message severity="error" [text]="labels.ACCOUNT_REQUIRED" variant="simple" size="small"
+                    *ngIf="form.get('accountId')?.invalid && form.get('accountId')?.touched" />
             </div>
             }
 
@@ -103,17 +97,14 @@
             @if (mode === 'create') {
             <div class="col-12">
                 <p-floatlabel variant="on">
-                    <p-iconField iconPosition="right">
-                        <p-password inputId="password" formControlName="password" [toggleMask]="true" [feedback]="false"
-                            styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
-                        <p-inputIcon
-                            *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)"
-                            class="pi pi-info-circle text-danger pe-2"
-                            [pTooltip]="form.get('password')?.hasError('required') ? labels.PASSWORD_REQUIRED : labels.PASSWORD_MIN"
-                            tooltipPosition="top" />
-                    </p-iconField>
+                    <p-password inputId="password" formControlName="password" [toggleMask]="true" [feedback]="false"
+                        styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
                     <label for="password">{{ labels.PASSWORD }}</label>
                 </p-floatlabel>
+                <p-message severity="error"
+                    [text]="form.get('password')?.hasError('required') ? labels.PASSWORD_REQUIRED : labels.PASSWORD_MIN"
+                    variant="simple" size="small"
+                    *ngIf="form.get('password')?.invalid && (form.get('password')?.dirty || form.get('password')?.touched)" />
             </div>
             }
 
