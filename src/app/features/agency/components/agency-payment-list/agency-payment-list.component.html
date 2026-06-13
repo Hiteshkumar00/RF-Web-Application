@@ -1,0 +1,106 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Agency Payments</h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search payments..."
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
+                </p-iconField>
+                <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
+                <p-button icon="pi pi-plus" label="Record Payment" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table [resizableColumns]="true" #dt [value]="payments" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            [(selection)]="selectedPayments" (selectionChange)="updateExportMenu()"
+            styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['agencyName', 'description']" columnResizeMode="expand">
+            <ng-template pTemplate="header">
+                <tr class="text-uppercase small">
+                    <th pResizableColumn style="width: 4rem">
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th pResizableColumn pSortableColumn="id" style="min-width: 90px">
+                        <div class="d-flex align-items-center gap-1">
+                            ID <p-sortIcon field="id" />
+                            <p-columnFilter type="numeric" field="id" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn style="min-width: 150px" class="text-center">Action</th>
+                    <th pResizableColumn pSortableColumn="date" style="min-width: 170px">
+                        <div class="d-flex align-items-center gap-1">
+                            Payment Date <p-sortIcon field="date" />
+                            <p-columnFilter type="date" field="date" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="agencyName" style="min-width: 300px">
+                        <div class="d-flex align-items-center gap-1">
+                            Agency Name <p-sortIcon field="agencyName" />
+                            <p-columnFilter type="text" field="agencyName" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalAmount" style="min-width: 200px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            Amount Paid <p-sortIcon field="totalAmount" />
+                            <p-columnFilter type="numeric" field="totalAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="description" style="min-width: 250px">
+                        <div class="d-flex align-items-center gap-1">
+                            Description <p-sortIcon field="description" />
+                            <p-columnFilter type="text" field="description" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-payment>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="payment" />
+                    </td>
+                    <td class="fw-bold text-muted small">#{{ payment.id }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
+                                (onClick)="openViewDialog(payment)" pTooltip="View Detail" tooltipPosition="top" />
+                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
+                                (onClick)="openEditDialog(payment)" pTooltip="Edit Payment" tooltipPosition="top" />
+                            <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                                (onClick)="confirmDelete(payment)" pTooltip="Delete Payment" tooltipPosition="top" />
+                        </div>
+                    </td>
+                    <td class="small">{{ payment.date | rfDate }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ payment.agencyName }}</div>
+                    </td>
+                    <td class="text-end fw-bold text-success">{{ payment.totalAmount | currency:'INR' }}</td>
+                    <td>
+                        <span class="small text-muted">{{ payment.description || '—' }}</span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center p-4">
+                        <div class="py-4">
+                            <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                            <span class="text-muted">No agency payments found.</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-agency-payment-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
+    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />

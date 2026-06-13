@@ -45,8 +45,5 @@ export class BuyingBillApiService {
     downloadInvoice(id: number): Observable<Blob> {
         return this.http.get(`${this.basePath}/DownloadInvoice/${id}`, { responseType: 'blob' });
     }
-
-    updatePayments(billId: number, payments: any[]): Observable<boolean> {
-        return this.http.put<boolean>(`${this.basePath}/UpdatePayments/${billId}`, payments);
-    }
 }
+

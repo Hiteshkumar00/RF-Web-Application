@@ -37,27 +37,14 @@ export class BuyingBillListComponent implements OnInit {
     formDialogMode: 'create' | 'update' | 'view' = 'create';
     selectedId?: number;
 
-    showPaymentDialog = false;
-    selectedBill?: BuyingBillListDto;
-
     // Summary totals
     get totalBuyingAmount(): number {
         return this.bills.reduce((sum, b) => sum + (b.finalAmount || 0), 0);
     }
 
-    get totalPaidAmount(): number {
-        return this.bills.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
-    }
-
-    get totalRemainingAmount(): number {
-        return this.bills.reduce((sum, b) => sum + (b.remainingAmount || 0), 0);
-    }
-
     get statisticCards(): StatisticCard[] {
         return [
-            { title: 'Total Purchases', amount: this.totalBuyingAmount, colorClass: 'info', icon: 'pi-shopping-cart' },
-            { title: 'Total Paid', amount: this.totalPaidAmount, colorClass: 'success', icon: 'pi-check-circle' },
-            { title: 'Remaining Balance', amount: this.totalRemainingAmount, colorClass: '', icon: 'pi-clock', isRemaining: true }
+            { title: 'Total Purchases', amount: this.totalBuyingAmount, colorClass: 'info', icon: 'pi-shopping-cart' }
         ];
     }
 
@@ -120,20 +107,7 @@ export class BuyingBillListComponent implements OnInit {
         this.showFormDialog = false;
     }
 
-    openPaymentDialog(bill: BuyingBillListDto): void {
-        this.selectedBill = bill;
-        this.showPaymentDialog = true;
-    }
 
-    onPaymentSaved(): void {
-        this.showPaymentDialog = false;
-        this.loadData();
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
-    }
-
-    onPaymentDialogClosed(): void {
-        this.showPaymentDialog = false;
-    }
 
     confirmDelete(item: BuyingBillListDto): void {
         this.confirmationService.confirm({
@@ -183,9 +157,7 @@ export class BuyingBillListComponent implements OnInit {
             [this.labels.DISCOUNT]: item.discount,
             [this.labels.NET_AMOUNT]: item.netAmount,
             [this.labels.TOTAL_EXPENCE]: item.totalExpence,
-            [this.labels.FINAL_AMOUNT]: item.finalAmount,
-            [this.labels.PAID_AMOUNT]: item.paidAmount,
-            [this.labels.REMAINING_AMOUNT]: item.remainingAmount
+            [this.labels.FINAL_AMOUNT]: item.finalAmount
         }));
         this.excelService.exportAsExcelFile(data, onlySelected ? 'Buying_Bills_Selected' : 'Buying_Bills');
     }

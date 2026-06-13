@@ -7,6 +7,7 @@ import { AgencyAdvancedListDto } from '../models/agency-advanced.model';
 import { ViewAgencyAllDetailDto } from '../models/agency-all-detail.model';
 import { CreateAgencyDto } from '../models/agency-create.dto';
 import { UpdateAgencyDto } from '../models/agency-update.dto';
+import { AgencySummaryDto } from '../models/agency-summary.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -46,7 +47,9 @@ export class AgencyApiService {
         return this.http.get<ViewAgencyAllDetailDto>(`${this.basePath}/ViewAllDetail`, { params });
     }
 
-    payOldestBills(dto: any): Observable<void> {
-        return this.http.post<void>(`${this.basePath}/PayOldestBills`, dto);
+    getAgencySummary(agencyId: number): Observable<AgencySummaryDto> {
+        const params = new HttpParams().set('agencyId', agencyId.toString());
+        return this.http.get<AgencySummaryDto>(`${this.basePath}/GetSummary`, { params });
     }
 }
+

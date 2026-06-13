@@ -124,56 +124,7 @@
 
             <!-- Expenses and Payments Section -->
             <div class="col-md-8">
-                <!-- Payments Table -->
-                <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
-                    <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>{{ labels.PAYMENTS_SECTION }}
-                    </h6>
-                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Payment"
-                        styleClass="p-button-sm p-button-outlined p-button-success" (onClick)="addPayment()" />
-                </div>
 
-                <p-table [resizableColumns]="true" [value]="payments.controls" [scrollable]="true"
-                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm"
-                    columnResizeMode="expand">
-                    <ng-template pTemplate="header">
-                        <tr class="text-uppercase small">
-                            <th pResizableColumn style="min-width: 180px">{{ labels.PAYMENT_ACCOUNT }}</th>
-                            <th pResizableColumn style="min-width: 150px">{{ labels.DATE }}</th>
-                            <th pResizableColumn style="min-width: 130px" class="text-end">{{ labels.AMOUNT }}</th>
-                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'">
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-control let-i="rowIndex">
-                        <tr [formGroup]="$any(control)" class="align-middle">
-                            <td>
-                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
-                                    optionLabel="label" optionValue="value" placeholder="Select Account"
-                                    styleClass="w-100 text-start" appendTo="body" size="small" />
-                            </td>
-                            <td>
-                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
-                                    appendTo="body" styleClass="w-100" size="small" placeholder="Bill Date" />
-                            </td>
-                            <td>
-                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
-                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
-                            </td>
-                            <td class="text-center" *ngIf="mode !== 'view'">
-                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
-                                    (onClick)="removePayment(i)" />
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
-                                class="text-center p-3 text-muted small italic">
-                                No payments added.
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
 
                 <!-- Expenses Table -->
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-4 border-bottom pb-2">
@@ -310,16 +261,7 @@
                     <span class="fw-bold h5 mb-0">{{ netAmount | currency:'INR' }}</span>
                 </div>
 
-                <div class="d-flex justify-content-between mb-2 align-items-center text-success mt-3">
-                    <span class="fw-semibold">{{ labels.PAID_AMOUNT }}:</span>
-                    <span class="fw-semibold">{{ totalPaidAmount | currency:'INR' }}</span>
-                </div>
 
-                <div class="d-flex justify-content-between pt-2 border-top mt-1"
-                    [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
-                    <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
-                    <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
-                </div>
 
             </div>
 
@@ -366,6 +308,4 @@
     </ng-template>
 
 </p-dialog>
-
-<app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill" (saved)="onPaymentSaved()"
-    (closed)="onPaymentDialogClosed()" />
+

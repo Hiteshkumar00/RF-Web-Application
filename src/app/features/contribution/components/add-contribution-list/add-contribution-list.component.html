@@ -21,6 +21,7 @@
                         <th pResizableColumn pSortableColumn="id" style="width: 5rem;">ID <p-sortIcon field="id" /></th>
                         <th pResizableColumn style="width: 12rem; text-align: center;">Actions</th>
                         <th pResizableColumn pSortableColumn="accountPersonName">Person Name <p-sortIcon field="accountPersonName" /></th>
+                        <th pResizableColumn pSortableColumn="description">Description <p-sortIcon field="description" /></th>
                         <th pResizableColumn pSortableColumn="date">Date <p-sortIcon field="date" /></th>
                         <th pResizableColumn pSortableColumn="totalAmount">Total Amount <p-sortIcon field="totalAmount" /></th>
                     </tr>
@@ -40,6 +41,7 @@
                             </div>
                         </td>
                         <td>{{ item.accountPersonName || '-' }}</td>
+                        <td>{{ item.description || '-' }}</td>
                         <td>{{ item.date | rfDate }}</td>
                         <td class="fw-bold text-success">{{ item.totalAmount | currency:'INR' }}</td>
                     </tr>
@@ -47,7 +49,7 @@
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="5" class="text-center py-5 opacity-50">
+                        <td colspan="6" class="text-center py-5 opacity-50">
                             <i class="pi pi-info-circle me-2" style="font-size: 1.5rem;"></i>
                             No contributions found.
                         </td>

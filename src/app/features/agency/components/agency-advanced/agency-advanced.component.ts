@@ -6,11 +6,8 @@ import { AgencyLabels } from '../../constants/agency-labels.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { AgencyTableColumns } from '../../constants/agency-table.constants';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
-import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
@@ -25,9 +22,8 @@ export class AgencyAdvancedComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        private fb: FormBuilder,
-        private dropdownService: DropdownService,
-        public accountDetailsService: AccountDetailsService
+        public accountDetailsService: AccountDetailsService,
+        private messageService: MessageService
     ) {}
 
     labels = AgencyLabels;
@@ -41,7 +37,8 @@ export class AgencyAdvancedComponent implements OnInit {
     expandedYearRows: any = {};
 
     showPaymentDialog = false;
-    selectedBill: any = null;
+    selectedAgencyId?: number;
+
 
     // Summary totals
     get totalAllBills(): number {
@@ -64,113 +61,11 @@ export class AgencyAdvancedComponent implements OnInit {
         ];
     }
 
-    showAgencyPaymentDialog = false;
-    agencyPaymentForm!: FormGroup;
-    selectedAgencyForPayment: AgencyAdvancedListDto | null = null;
-    accountOptions: DropdownOption[] = [];
-
-    openPaymentDialog(bill: any): void {
-        this.selectedBill = {
-            id: bill.id,
-            billNo: bill.billNo,
-            agencyName: this.selectedDetail?.agencyName || ''
-        };
-        this.showPaymentDialog = true;
-    }
-
-    onPaymentSaved(): void {
-        this.showPaymentDialog = false;
-        if (this.selectedDetail) {
-            // Refresh detail to show updated amounts
-            this.openDetailDialog({ id: this.selectedDetail.id } as any);
-        }
-        this.loadAgencies(); // Refresh the main list too
-    }
-
-    onPaymentDialogClosed(): void {
-        this.showPaymentDialog = false;
-    }
-
     ngOnInit(): void {
         this.loadAgencies();
         this.updateExportMenu();
-        this.initAgencyPaymentForm();
-        this.loadAccountOptions();
     }
 
-    private initAgencyPaymentForm(): void {
-        this.agencyPaymentForm = this.fb.group({
-            payments: this.fb.array([])
-        });
-    }
-
-    get agencyPayments(): FormArray {
-        return this.agencyPaymentForm.get('payments') as FormArray;
-    }
-
-    get totalAgencyPaid(): number {
-        return this.agencyPayments.controls.reduce((sum, control) => sum + (control.get('amount')?.value || 0), 0);
-    }
-
-    addAgencyPayment(): void {
-        const paymentGroup = this.fb.group({
-            amount: [null, [Validators.required, Validators.min(0.01)]],
-            paymentAccountId: [null, Validators.required],
-            date: [new Date(), Validators.required]
-        });
-        this.agencyPayments.push(paymentGroup);
-    }
-
-    removeAgencyPayment(index: number): void {
-        this.agencyPayments.removeAt(index);
-    }
-
-    private loadAccountOptions(): void {
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.accountOptions = options
-        });
-    }
-
-    openAgencyPaymentDialog(agency: AgencyAdvancedListDto): void {
-        this.selectedAgencyForPayment = agency;
-        this.agencyPayments.clear();
-        this.addAgencyPayment();
-        this.showAgencyPaymentDialog = true;
-    }
-
-    submitAgencyPayment(): void {
-        if (this.agencyPaymentForm.invalid || !this.selectedAgencyForPayment) {
-            this.agencyPaymentForm.markAllAsTouched();
-            return;
-        }
-
-        if (this.totalAgencyPaid > this.selectedAgencyForPayment.totalPendingAmount) {
-            return; // Handled in template
-        }
-
-        const formValue = this.agencyPaymentForm.value;
-        const payments = formValue.payments.map((p: any) => ({
-            ...p,
-            date: this.helperService.setDate(p.date)
-        }));
-
-        const dto = {
-            agencyId: this.selectedAgencyForPayment.id,
-            payments: payments
-        };
-
-        this.agencyApiService.payOldestBills(dto).subscribe({
-            next: () => {
-                this.showAgencyPaymentDialog = false;
-                this.loadAgencies();
-            }
-        });
-    }
-
-    onAgencyPaymentDialogClosed(): void {
-        this.showAgencyPaymentDialog = false;
-        this.selectedAgencyForPayment = null;
-    }
 
     public updateExportMenu(): void {
         this.exportMenuItems = [
@@ -224,5 +119,24 @@ export class AgencyAdvancedComponent implements OnInit {
             'Exp. Rem.': item.totalExpencePendingAmount
         }));
         this.excelService.exportAsExcelFile(data, onlySelected ? 'Agencies_Advanced_Selected' : 'Agencies_Advanced');
+    }
+
+    openMakePaymentDialog(agency: AgencyAdvancedListDto): void {
+        this.selectedAgencyId = agency.id;
+        this.showPaymentDialog = true;
+    }
+
+    onPaymentSaved(): void {
+        this.showPaymentDialog = false;
+        this.loadAgencies();
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Agency payment recorded successfully.'
+        });
+    }
+
+    onPaymentDialogClosed(): void {
+        this.showPaymentDialog = false;
     }
 }

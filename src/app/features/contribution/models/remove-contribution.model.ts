@@ -18,6 +18,7 @@ export interface RemoveContributionDto {
 export interface RemoveContributionListDto {
     id: number;
     accountPersonName: string;
+    description?: string;
     date: string;
     totalAmount: number;
 }

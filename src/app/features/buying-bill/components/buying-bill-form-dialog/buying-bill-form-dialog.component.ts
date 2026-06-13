@@ -51,41 +51,8 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     filteredExpenseTypeSuggestions: string[] = [];
     expandedExpences: { [key: string]: boolean } = {};
 
-    showPaymentDialog = false;
-    selectedBill: any = null;
-
-    openPaymentDialog(): void {
-        const formValue = this.form.getRawValue();
-        this.selectedBill = {
-            id: this.id,
-            billNo: formValue.billNo,
-            agencyName: this.agencyOptions.find(o => o.value === formValue.agencyId)?.label || ''
-        };
-        this.showPaymentDialog = true;
-    }
-
-    onPaymentSaved(): void {
-        this.showPaymentDialog = false;
-        if (this.id) {
-            this.apiService.getById(this.id).subscribe({
-                next: (data) => {
-                    this.formService.patchForm(this.form, data);
-                    this.onSave.emit(); // Also notify the list that data has changed
-                }
-            });
-        }
-    }
-
-    onPaymentDialogClosed(): void {
-        this.showPaymentDialog = false;
-    }
-
     get stocks(): FormArray {
         return this.form.get('stocks') as FormArray;
-    }
-
-    get payments(): FormArray {
-        return this.form.get('payments') as FormArray;
     }
 
     get expences(): FormArray {
@@ -147,16 +114,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         return this.netAmount;
     }
 
-    get totalPaidAmount(): number {
-        if (!this.form) return 0;
-        return this.payments.controls.reduce((acc, control) => {
-            return acc + (control.get('amount')?.value || 0);
-        }, 0);
-    }
 
-    get remainingAmount(): number {
-        return this.finalAmount - this.totalPaidAmount;
-    }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
@@ -272,13 +230,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         this.formService.removeItem(this.form, index);
     }
 
-    addPayment(): void {
-        this.formService.addPayment(this.form);
-    }
 
-    removePayment(index: number): void {
-        this.formService.removePayment(this.form, index);
-    }
 
     addExpence(): void {
         this.formService.addExpence(this.form);
@@ -310,10 +262,6 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         const payload = {
             ...formValue,
             date: this.helperService.setDate(formValue.date),
-            payments: formValue.payments.map((p: any) => ({
-                ...p,
-                date: this.helperService.setDate(p.date)
-            })),
             expences: formValue.expences.map((e: any) => ({
                 ...e,
                 payments: e.payments.map((p: any) => ({
