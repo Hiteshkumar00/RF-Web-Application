@@ -32,13 +32,13 @@
                     <th pResizableColumn style="width: 4rem">
                         <p-tableHeaderCheckbox />
                     </th>
-                    <th pResizableColumn style="min-width: 140px" class="text-center">Action</th>
                     <th pResizableColumn pSortableColumn="id" style="min-width: 90px">
                         <div class="d-flex align-items-center gap-1">
                             Cust ID <p-sortIcon field="id" />
                             <p-columnFilter type="numeric" field="id" display="menu" class="ms-auto" />
                         </div>
                     </th>
+                    <th pResizableColumn style="min-width: 140px" class="text-center">Action</th>
                     <th pResizableColumn pSortableColumn="customerName" style="min-width: 200px">
                         <div class="d-flex align-items-center gap-1">
                             Customer Name <p-sortIcon field="customerName" />
@@ -89,6 +89,9 @@
                         <p-tableCheckbox [value]="customer" />
                     </td>
                     <td>
+                        <div class="fw-semibold text-muted">#{{ customer.id }}</div>
+                    </td>
+                    <td>
                         <div class="d-flex justify-content-center gap-1">
                             <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-secondary"
                                 (click)="openViewDialog(customer)" pTooltip="View Details" tooltipPosition="top"></button>
@@ -97,9 +100,6 @@
                             <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
                                 (click)="confirmDelete(customer)" pTooltip="Delete Customer" tooltipPosition="top"></button>
                         </div>
-                    </td>
-                    <td>
-                        <div class="fw-semibold text-muted">#{{ customer.id }}</div>
                     </td>
                     <td>
                         <div class="fw-semibold text-primary">{{ customer.customerName }}</div>
