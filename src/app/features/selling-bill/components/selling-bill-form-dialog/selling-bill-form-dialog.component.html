@@ -293,6 +293,11 @@
                     severity="help" size="small" [outlined]="true" tooltipPosition="top" pTooltip="Send Email" />
             </div>
 
+            <div class="d-flex gap-2" *ngIf="mode !== 'view'">
+                <p-button label="Add Product" icon="pi pi-plus" (onClick)="openAddProductDialog()"
+                    severity="secondary" size="small" [outlined]="true" />
+            </div>
+
             <div class="ms-auto d-flex gap-3 align-items-center">
                 <!-- Auto-Send Toggles -->
                 <div *ngIf="mode !== 'view'" class="d-flex align-items-center gap-3 me-2 border-end pe-3">
@@ -317,3 +322,10 @@
     </ng-template>
 
 </p-dialog>
+
+<app-product-form-dialog 
+    [visible]="showProductDialog" 
+    mode="create" 
+    (onSave)="onProductSave()" 
+    (onClose)="showProductDialog = false">
+</app-product-form-dialog>

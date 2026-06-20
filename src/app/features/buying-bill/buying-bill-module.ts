@@ -5,6 +5,7 @@ import { SharedModule } from '../../shared/shared-module';
 import { BuyingBillRoutingModule } from './buying-bill-routing-module';
 import { BuyingBillListComponent } from './components/buying-bill-list/buying-bill-list.component';
 import { BuyingBillFormDialogComponent } from './components/buying-bill-form-dialog/buying-bill-form-dialog.component';
+import { ProductModule } from '../product/product.module';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,8 @@ import { BuyingBillFormDialogComponent } from './components/buying-bill-form-dia
         CommonModule,
         ReactiveFormsModule,
         SharedModule,
-        BuyingBillRoutingModule
+        BuyingBillRoutingModule,
+        ProductModule
     ]
 })
 export class BuyingBillModule { }

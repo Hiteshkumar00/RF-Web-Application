@@ -55,6 +55,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     customerOptions: any[] = [];
     allCustomers: CustomerListDto[] = [];
     isNewCustomer = true;
+    showProductDialog = false;
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -146,7 +147,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private loadAllProducts(): void {
         this.productApiService.getAll().subscribe({
             next: (data) => {
-                this.productOptions = data.map(p => {
+                this.productOptions = (data || []).map(p => {
                     const warrantyParts = [];
                     if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
                     if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
@@ -161,6 +162,15 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 });
             }
         });
+    }
+
+    openAddProductDialog(): void {
+        this.showProductDialog = true;
+    }
+
+    onProductSave(): void {
+        this.loadAllProducts();
+        this.showProductDialog = false;
     }
 
 

@@ -46,6 +46,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     productOptions: any[] = [];
+    showProductDialog = false;
 
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
@@ -148,7 +149,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private loadAllProducts(): void {
         this.productApiService.getAll().subscribe({
             next: (data) => {
-                this.productOptions = data.map(p => {
+                this.productOptions = (data || []).map(p => {
                     const warrantyParts = [];
                     if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
                     if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
@@ -163,6 +164,15 @@ export class BuyingBillFormDialogComponent implements OnChanges {
                 });
             }
         });
+    }
+
+    openAddProductDialog(): void {
+        this.showProductDialog = true;
+    }
+
+    onProductSave(): void {
+        this.loadAllProducts();
+        this.showProductDialog = false;
     }
 
     onProductChange(event: any, index: number): void {
