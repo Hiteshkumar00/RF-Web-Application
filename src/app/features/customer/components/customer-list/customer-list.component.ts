@@ -67,7 +67,7 @@ export class CustomerListComponent implements OnInit {
       'Address': item.address || '-',
       'Bills Count': item.totalPurchases || 0,
       'Total Purchasing': item.totalNetAmount || 0,
-      'Remaining Dues': item.totalRemainingAmount || 0
+      'Total Remaining': item.totalRemainingAmount || 0
     }));
     this.excelService.exportAsExcelFile(data, onlySelected ? 'Customers_Selected' : 'Customers');
   }
@@ -88,7 +88,7 @@ export class CustomerListComponent implements OnInit {
   get statisticCards(): StatisticCard[] {
     return [
       { title: 'Total Customers', amount: this.totalCustomers, colorClass: 'info', icon: 'pi-users', isNumberOnly: true },
-      { title: 'Total Sales Dues', amount: this.totalRemainingAmount, colorClass: 'danger', icon: 'pi-clock', isRemaining: true },
+      { title: 'Total Remaining', amount: this.totalRemainingAmount, colorClass: 'danger', icon: 'pi-clock', isRemaining: true },
       { title: 'Total Purchasing', amount: this.totalPurchasingAmount, colorClass: 'success', icon: 'pi-shopping-bag' }
     ];
   }
