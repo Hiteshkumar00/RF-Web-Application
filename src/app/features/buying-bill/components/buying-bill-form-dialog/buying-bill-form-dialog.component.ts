@@ -81,8 +81,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         if (!this.form) return 0;
         return this.stocks.controls.reduce((acc, control) => {
             const discount = control.get('discount')?.value || 0;
-            const quantity = control.get('quantity')?.value || 0;
-            return acc + (discount * quantity);
+            return acc + discount;
         }, 0);
     }
 

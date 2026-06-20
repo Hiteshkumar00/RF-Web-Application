@@ -116,7 +116,7 @@
                     <td class="text-center">{{history.quantity}}</td>
                     <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
                     <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
-                    <td class="text-end fw-bold text-success">{{(history.purchasePrice - history.discount) | currency:'INR'}}</td>
+                    <td class="text-end fw-bold text-success">{{(history.purchasePrice - (history.quantity > 0 ? history.discount / history.quantity : 0)) | currency:'INR'}}</td>
                     <td class="text-end fw-semibold">{{history.totalAmount | currency:'INR'}}</td>
                     <td class="text-center fw-bold" [ngClass]="history.remainingQty > 0 ? 'text-primary' : ''">
                         {{history.remainingQty}}

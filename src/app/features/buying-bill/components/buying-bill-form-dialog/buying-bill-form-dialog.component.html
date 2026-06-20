@@ -102,8 +102,8 @@
                                     styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm" />
                             </td>
                             <td class="text-end fw-bold">
-                                {{ (control.get('quantity')?.value * (control.get('purchasePrice')?.value -
-                                control.get('discount')?.value)) | currency:'INR' }}
+                                {{ (control.get('quantity')?.value * control.get('purchasePrice')?.value -
+                                control.get('discount')?.value) | currency:'INR' }}
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
