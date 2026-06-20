@@ -87,6 +87,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/buying-bill/buying-bill-module').then(m => m.BuyingBillModule)
   },
   {
+    path: 'customer',
+    canActivate: [authGuard, adminGuard],
+    loadChildren: () => import('./features/customer/customer.module').then(m => m.CustomerModule)
+  },
+  {
     path: 'account-profile',
     canActivate: [authGuard, adminGuard],
     loadChildren: () => import('./features/account-profile/account-profile.module').then(m => m.AccountProfileModule)

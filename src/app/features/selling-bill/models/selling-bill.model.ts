@@ -3,6 +3,7 @@ import { UpdateSellingBillDto } from "./update-selling-bill.dto";
 export interface SellingBillListDto {
     id: number;
     billNo: string;
+    customerId?: number;
     customerName: string;
     phoneNo: string;
     date: string;

@@ -1,0 +1,63 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '500px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="close()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-2" *ngIf="form">
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="field">
+                    <label for="customerName" class="block mb-2 font-semibold">Customer Name <span
+                            class="text-danger">*</span></label>
+                    <input id="customerName" type="text" pInputText formControlName="customerName"
+                        class="w-100 p-inputtext-sm shadow-sm" placeholder="e.g. John Doe" appVoiceTyping />
+                    <small class="text-danger font-medium d-block mt-1"
+                        *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched">
+                        Customer name is required.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <label for="phoneNo" class="block mb-2 font-semibold">Phone Number</label>
+                    <input id="phoneNo" type="text" pInputText formControlName="phoneNo"
+                        class="w-100 p-inputtext-sm shadow-sm" placeholder="e.g. 9876543210" appVoiceTyping />
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <label for="email" class="block mb-2 font-semibold">Email Address</label>
+                    <input id="email" type="email" pInputText formControlName="email"
+                        class="w-100 p-inputtext-sm shadow-sm" placeholder="e.g. john@example.com" />
+                    <small class="text-danger font-medium d-block mt-1"
+                        *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+                        Please enter a valid email address.
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <label for="address" class="block mb-2 font-semibold">Address</label>
+                    <textarea id="address" pInputTextarea formControlName="address" rows="3"
+                        class="w-100 p-inputtext-sm shadow-sm form-control" placeholder="Enter complete address..."
+                        appVoiceTyping></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+            <p-button label="Cancel" icon="pi pi-times" [text]="true" severity="secondary" (onClick)="close()" />
+            <p-button *ngIf="mode !== 'view'" type="submit" label="Save Customer" icon="pi pi-check"
+                severity="primary" [loading]="saving" />
+        </div>
+    </form>
+</p-dialog>

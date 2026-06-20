@@ -4,9 +4,10 @@ import { SellingBillPaymentDto } from "./selling-bill-payment.dto";
 export interface UpdateSellingBillDto {
     id: number;
     billNo: string;
-    customerName: string;
+    customerId?: number;
+    customerName?: string;
     email?: string;
-    phoneNo: string;
+    phoneNo?: string;
     address?: string;
     date: string;
     items: SellingBillItemDto[];

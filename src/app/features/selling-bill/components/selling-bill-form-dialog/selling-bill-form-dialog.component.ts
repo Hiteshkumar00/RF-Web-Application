@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { ProductApiService } from '../../../product/services/product-api.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -15,6 +15,8 @@ import { AccountDetailsService } from '../../../../core/services/account-details
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
+import { CustomerApiService } from '../../../customer/services/customer-api.service';
+import { CustomerListDto } from '../../../customer/models/customer.model';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -34,6 +36,8 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private emailService = inject(EmailService);
     private productApiService = inject(ProductApiService);
 
+    private customerApiService = inject(CustomerApiService);
+
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
     @Input() id?: number;
@@ -48,6 +52,9 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     productOptions: any[] = [];
+    customerOptions: any[] = [];
+    allCustomers: CustomerListDto[] = [];
+    isNewCustomer = true;
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -119,13 +126,17 @@ export class SellingBillFormDialogComponent implements OnChanges {
             if ((this.mode === 'update' || this.mode === 'view') && this.id) {
                 this.apiService.getById(this.id).subscribe({
                     next: (data) => {
+                        this.isNewCustomer = !data.customerId;
                         this.formService.patchForm(this.form, data);
+                        this.onToggleCustomerMode(this.isNewCustomer);
                         if (this.mode === 'view') {
                             this.form.disable();
                         }
                     }
                 });
             } else {
+                this.isNewCustomer = true;
+                this.onToggleCustomerMode(true);
                 this.addItem();
             }
             this.loadAllProducts();
@@ -184,6 +195,70 @@ export class SellingBillFormDialogComponent implements OnChanges {
         this.dropdownService.getPaymentAccountOptions().subscribe({
             next: (options) => this.accountOptions = options
         });
+        this.customerApiService.getAll().subscribe({
+            next: (data) => {
+                this.allCustomers = data ?? [];
+                this.customerOptions = this.allCustomers.map(c => ({
+                    label: c.customerName + (c.phoneNo ? ` (${c.phoneNo})` : ''),
+                    value: c.id
+                }));
+            }
+        });
+    }
+
+    onCustomerChange(event: any): void {
+        const customerId = event.value;
+        const customer = this.allCustomers.find(c => c.id === customerId);
+        if (customer) {
+            this.form.patchValue({
+                customerName: customer.customerName,
+                phoneNo: customer.phoneNo || '',
+                email: customer.email || '',
+                address: customer.address || ''
+            });
+        }
+    }
+
+    onToggleCustomerMode(isNew: boolean): void {
+        this.isNewCustomer = isNew;
+        const nameControl = this.form.get('customerName');
+        const idControl = this.form.get('customerId');
+        
+        if (isNew) {
+            nameControl?.setValidators([Validators.required, Validators.maxLength(250)]);
+            idControl?.clearValidators();
+        } else {
+            nameControl?.clearValidators();
+            idControl?.setValidators([Validators.required]);
+        }
+        
+        nameControl?.updateValueAndValidity();
+        idControl?.updateValueAndValidity();
+
+        if (this.mode === 'view') {
+            this.form.disable();
+            return;
+        }
+
+        const controls = ['customerName', 'phoneNo', 'email', 'address'];
+        if (isNew) {
+            this.form.patchValue({ customerId: null });
+            controls.forEach(c => this.form.get(c)?.enable());
+        } else {
+            controls.forEach(c => this.form.get(c)?.disable());
+            const currentId = this.form.get('customerId')?.value;
+            if (currentId) {
+                const customer = this.allCustomers.find(cust => cust.id === currentId);
+                if (customer) {
+                    this.form.patchValue({
+                        customerName: customer.customerName,
+                        phoneNo: customer.phoneNo || '',
+                        email: customer.email || '',
+                        address: customer.address || ''
+                    });
+                }
+            }
+        }
     }
 
     addItem(): void {

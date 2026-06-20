@@ -14,10 +14,28 @@
             <!-- Customer Name -->
             <div class="col-md-4">
                 <div class="field">
-                    <label for="customerName" class="block mb-2 font-semibold">{{ labels.CUSTOMER_NAME }}</label>
-                    <p-iconField iconPosition="right">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <label class="font-semibold m-0">{{ labels.CUSTOMER_NAME }} <span class="text-danger">*</span></label>
+                        <div class="form-check form-switch m-0" *ngIf="mode !== 'view'">
+                            <input class="form-check-input" type="checkbox" role="switch" id="isNewCustomer" 
+                                [checked]="isNewCustomer" (change)="onToggleCustomerMode($any($event.target).checked)">
+                            <label class="form-check-label extra-small text-muted" for="isNewCustomer">New?</label>
+                        </div>
+                    </div>
+                    
+                    <!-- Existing Customer Selector -->
+                    <p-select *ngIf="!isNewCustomer" [options]="customerOptions" formControlName="customerId"
+                        (onChange)="onCustomerChange($event)" placeholder="Select Customer"
+                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
+                        optionLabel="label" optionValue="value">
+                    </p-select>
+                    <p-message severity="error" text="Customer is required" variant="simple" size="small"
+                        *ngIf="!isNewCustomer && form.get('customerId')?.invalid && form.get('customerId')?.touched" />
+
+                    <!-- New Customer Input -->
+                    <p-iconField iconPosition="right" *ngIf="isNewCustomer">
                         <input id="customerName" type="text" pInputText formControlName="customerName" appVoiceTyping
-                            class="w-100 p-inputtext-sm" />
+                            class="w-100 p-inputtext-sm" placeholder="Enter new customer name" />
                         <p-inputIcon *ngIf="form.get('customerName')?.invalid && form.get('customerName')?.touched"
                             class="pi pi-info-circle text-danger pe-2"
                             [pTooltip]="labels.CUSTOMER_NAME + ' is required'" tooltipPosition="top" />

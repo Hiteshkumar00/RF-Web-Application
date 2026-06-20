@@ -12,7 +12,8 @@ export class SellingBillFormService {
         return this.fb.group({
             id: [0],
             billNo: [null],
-            customerName: [null, [Validators.required, Validators.maxLength(250)]],
+            customerId: [null],
+            customerName: [null, [Validators.maxLength(250)]],
             email: [null, [Validators.email, Validators.maxLength(250)]],
             phoneNo: [null, [Validators.maxLength(20)]],
             address: [null, [Validators.maxLength(500)]],
@@ -48,6 +49,7 @@ export class SellingBillFormService {
         form.patchValue({
             id: data.id,
             billNo: data.billNo,
+            customerId: data.customerId || null,
             customerName: data.customerName,
             email: data.email,
             phoneNo: data.phoneNo,
