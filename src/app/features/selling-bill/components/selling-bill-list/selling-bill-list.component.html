@@ -26,7 +26,7 @@
             [(selection)]="selectedBills" (selectionChange)="updateExportMenu()"
             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            [globalFilterFields]="['customerName', 'phoneNo']" columnResizeMode="expand">
+            [globalFilterFields]="['customerId', 'customerName', 'phoneNo']" columnResizeMode="expand">
             <ng-template pTemplate="header">
                 <tr class="text-uppercase small">
                     <th pResizableColumn style="width: 4rem">
@@ -43,6 +43,12 @@
                         <div class="d-flex align-items-center gap-1">
                             {{ labels.BILL_NO }} <p-sortIcon field="billNo" />
                             <p-columnFilter type="text" field="billNo" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="customerId" style="min-width: 110px">
+                        <div class="d-flex align-items-center gap-1">
+                            Cust ID <p-sortIcon field="customerId" />
+                            <p-columnFilter type="numeric" field="customerId" display="menu" class="ms-auto" />
                         </div>
                     </th>
                     <th pResizableColumn pSortableColumn="customerName" style="min-width: 300px">
@@ -124,6 +130,9 @@
                     </td>
                     <td><span class="fw-semibold text-muted">{{ bill.billNo }}</span></td>
                     <td>
+                        <span class="fw-semibold text-muted">{{ bill.customerId ? '#' + bill.customerId : '—' }}</span>
+                    </td>
+                    <td>
                         <div class="fw-semibold">{{ bill.customerName }}</div>
                     </td>
                     <td>
@@ -148,7 +157,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="12" class="text-center p-4">
+                    <td colspan="13" class="text-center p-4">
                         <div class="py-4">
                             <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
                             <span class="text-muted">No selling bills found.</span>
