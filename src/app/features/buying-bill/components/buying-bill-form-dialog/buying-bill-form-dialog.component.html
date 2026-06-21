@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1100px' }" [draggable]="false" [resizable]="false"
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1100px' }" [draggable]="true" [resizable]="true"
     [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
@@ -314,10 +314,4 @@
 
 </p-dialog>
 
-<app-product-form-dialog 
-    [visible]="showProductDialog" 
-    mode="create" 
-    (onSave)="onProductSave()" 
-    (onClose)="showProductDialog = false">
-</app-product-form-dialog>
 

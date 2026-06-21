@@ -128,7 +128,7 @@
 
 <!-- All Detail Dialog -->
 <p-dialog [(visible)]="showDetailDialog" [modal]="true" [style]="{ width: '1100px', maxHeight: '90vh' }"
-    [draggable]="false" [resizable]="false" [closable]="false" [closeOnEscape]="false">
+    [draggable]="true" [resizable]="true" [closable]="false" [closeOnEscape]="false">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
@@ -371,6 +371,3 @@
         </div>
     </ng-template>
 </p-dialog>
-
-<app-agency-payment-form-dialog [visible]="showPaymentDialog" [mode]="'create'" [agencyId]="selectedAgencyId"
-    (onSave)="onPaymentSaved()" (onClose)="onPaymentDialogClosed()" />

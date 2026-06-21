@@ -77,13 +77,4 @@
             </p-table>
         </div>
     </div>
-
-    <!-- Form Dialog -->
-    <app-payment-account-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [account]="selectedAccount"
-        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
-
-    <!-- View Dialog -->
-    <app-payment-account-view-dialog [visible]="showViewDialog" [account]="selectedAccount"
-        (closed)="showViewDialog = false" />
-
 </div>

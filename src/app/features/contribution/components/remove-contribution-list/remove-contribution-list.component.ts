@@ -6,6 +6,8 @@ import { RemoveContributionListDto } from '../../models/remove-contribution.mode
 import { ContributionConstants } from '../../constants/contribution.constants';
 import { ExcelService } from '../../../../shared/services/excel.service';
 
+import { ContributionDialogService } from '../../services/contribution-dialog.service';
+
 @Component({
     selector: 'app-remove-contribution-list',
     standalone: false,
@@ -17,17 +19,14 @@ export class RemoveContributionListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
-        private excelService: ExcelService
+        private excelService: ExcelService,
+        private contributionDialogService: ContributionDialogService
     ) {}
 
     title = ContributionConstants.REMOVE_CONTRIBUTION_TITLE;
     contributions: RemoveContributionListDto[] = [];
     selectedContributions: RemoveContributionListDto[] = [];
     exportMenuItems: MenuItem[] = [];
-    
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
 
     ngOnInit(): void {
         this.loadData();
@@ -71,34 +70,28 @@ export class RemoveContributionListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.contributionDialogService.openRemoveForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(item: RemoveContributionListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.contributionDialogService.openRemoveForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(item: RemoveContributionListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.contributionDialogService.openRemoveForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? ContributionConstants.MESSAGES.CREATE_SUCCESS(this.title)
-            : ContributionConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? ContributionConstants.MESSAGES.CREATE_SUCCESS(this.title)
+                : ContributionConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(item: RemoveContributionListDto): void {

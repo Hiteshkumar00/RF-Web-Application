@@ -167,10 +167,4 @@
             </ng-template>
         </p-table>
     </div>
-</div>
-
-<app-selling-bill-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
-    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
-
-<app-selling-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
-    (saved)="onPaymentSaved()" (closed)="showPaymentDialog = false" />
+</div>

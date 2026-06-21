@@ -9,6 +9,8 @@ import { AgencyPersonMessages } from '../../constants/agency-person-messages.con
 import { AgencyPersonTableColumns } from '../../constants/agency-person-table.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
+import { AgencyDialogService } from '../../services/agency-dialog.service';
+
 @Component({
     selector: 'app-agency-person-list',
     standalone: false,
@@ -20,16 +22,13 @@ export class AgencyPersonListComponent implements OnInit {
         private agencyApiService: AgencyApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private agencyDialogService: AgencyDialogService
     ) {}
 
     labels = AgencyPersonLabels;
     columns = AgencyPersonTableColumns.COLUMNS;
     agencyPersons: AgencyPersonDto[] = [];
-
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedPerson: AgencyPersonDto | null = null;
 
     ngOnInit(): void {
         this.loadAgencyPersons();
@@ -50,34 +49,28 @@ export class AgencyPersonListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedPerson = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.agencyDialogService.openPersonForm('create', null, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(person: AgencyPersonDto): void {
-        this.selectedPerson = person;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.agencyDialogService.openPersonForm('update', person, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(person: AgencyPersonDto): void {
-        this.selectedPerson = person;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.agencyDialogService.openPersonForm('view', person, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadAgencyPersons();
-        const msg = this.formDialogMode === 'create'
-            ? AgencyPersonMessages.CREATED
-            : AgencyPersonMessages.UPDATED;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? AgencyPersonMessages.CREATED
+                : AgencyPersonMessages.UPDATED;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(person: AgencyPersonDto): void {

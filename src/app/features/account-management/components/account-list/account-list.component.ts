@@ -11,6 +11,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { SystemConfigurationService } from '../../../system-configuration/services/system-configuration.service';
 import { Router } from '@angular/router';
 
+import { AccountDialogService } from '../../services/account-dialog.service';
+
 @Component({
     selector: 'app-account-list',
     standalone: false,
@@ -24,18 +26,14 @@ export class AccountListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private authApiService: AuthApiService,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private accountDialogService: AccountDialogService
     ) {}
 
     labels = AccountLabels;
     columns = AccountTableColumns.COLUMNS;
     accounts: AccountDto[] = [];
     isDeleteEnabled = false;
-
-    // Dialog control
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedAccount: AccountDto | null = null;
 
     ngOnInit(): void {
         this.loadAccounts();
@@ -48,34 +46,21 @@ export class AccountListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedAccount = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.accountDialogService.openForm('create', null, () => {
+            this.loadAccounts();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: AccountMessages.CREATED });
+        }, () => {});
     }
 
     openEditDialog(account: AccountDto): void {
-        this.selectedAccount = account;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.accountDialogService.openForm('update', account, () => {
+            this.loadAccounts();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: AccountMessages.UPDATED });
+        }, () => {});
     }
 
     openViewDialog(account: AccountDto): void {
-        this.selectedAccount = account;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
-    }
-
-    onFormSaved(): void {
-        this.showFormDialog = false;
-        this.loadAccounts();
-        const msg = this.formDialogMode === 'create'
-            ? AccountMessages.CREATED
-            : AccountMessages.UPDATED;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
-    }
-
-    onFormDialogClosed(): void {
-        this.showFormDialog = false;
+        this.accountDialogService.openForm('view', account, () => {}, () => {});
     }
 
     confirmDelete(account: AccountDto): void {

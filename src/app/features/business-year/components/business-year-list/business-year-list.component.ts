@@ -5,6 +5,8 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { BusinessYearConstants } from '../../constants/business-year.constant';
 import { BusinessYearListDto } from '../../models/business-year-list-dto.model';
 
+import { BusinessYearDialogService } from '../../services/business-year-dialog.service';
+
 @Component({
   selector: 'app-business-year-list',
   standalone: false,
@@ -14,10 +16,6 @@ import { BusinessYearListDto } from '../../models/business-year-list-dto.model';
 export class BusinessYearListComponent implements OnInit {
   years: BusinessYearListDto[] = [];
   labels = BusinessYearConstants;
-
-  showFormDialog = false;
-  formDialogMode: 'create' | 'edit' = 'create';
-  selectedYear: BusinessYearListDto | null = null;
   
   columns = [
     { field: 'yearName', header: this.labels.YEAR_NAME },
@@ -30,7 +28,8 @@ export class BusinessYearListComponent implements OnInit {
   constructor(
     private apiService: BusinessYearApiService,
     private confirmationService: ConfirmationService,
-    public globalConfig: GlobalConfigService
+    public globalConfig: GlobalConfigService,
+    private businessYearDialogService: BusinessYearDialogService
   ) {}
 
   ngOnInit(): void {
@@ -46,15 +45,19 @@ export class BusinessYearListComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    this.selectedYear = null;
-    this.formDialogMode = 'create';
-    this.showFormDialog = true;
+    this.businessYearDialogService.openForm('create', null, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
   openEditDialog(year: BusinessYearListDto): void {
-    this.selectedYear = year;
-    this.formDialogMode = 'edit';
-    this.showFormDialog = true;
+    this.businessYearDialogService.openForm('edit', year, () => this.onFormSaved(), () => this.onFormDialogClosed());
+  }
+
+  onFormSaved(): void {
+    this.loadYears();
+    this.apiService.notifyBusinessYearChanged();
+  }
+
+  onFormDialogClosed(): void {
   }
 
   confirmDelete(year: BusinessYearListDto): void {
@@ -101,15 +104,5 @@ export class BusinessYearListComponent implements OnInit {
         });
       }
     });
-  }
-
-  onFormSaved(): void {
-    this.showFormDialog = false;
-    this.loadYears();
-    this.apiService.notifyBusinessYearChanged();
-  }
-
-  onFormDialogClosed(): void {
-    this.showFormDialog = false;
   }
 }

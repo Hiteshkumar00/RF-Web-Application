@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { ProductApiService } from '../../../product/services/product-api.service';
+import { ProductDialogService } from '../../../product/services/product-dialog.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
@@ -35,8 +36,8 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
     private productApiService = inject(ProductApiService);
-
     private customerApiService = inject(CustomerApiService);
+    private productDialogService = inject(ProductDialogService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -55,7 +56,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
     customerOptions: any[] = [];
     allCustomers: CustomerListDto[] = [];
     isNewCustomer = true;
-    showProductDialog = false;
 
     get items(): FormArray {
         return this.form.get('items') as FormArray;
@@ -165,12 +165,11 @@ export class SellingBillFormDialogComponent implements OnChanges {
     }
 
     openAddProductDialog(): void {
-        this.showProductDialog = true;
+        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
     }
 
     onProductSave(): void {
         this.loadAllProducts();
-        this.showProductDialog = false;
     }
 
 

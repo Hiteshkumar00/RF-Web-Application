@@ -70,13 +70,4 @@
             </p-table>
         </div>
     </div>
-
-    <!-- Form Dialog -->
-    <app-account-person-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [person]="selectedPerson"
-        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
-
-    <!-- View Dialog -->
-    <app-account-person-view-dialog [visible]="showViewDialog" [person]="selectedPerson"
-        (closed)="showViewDialog = false" />
-
 </div>

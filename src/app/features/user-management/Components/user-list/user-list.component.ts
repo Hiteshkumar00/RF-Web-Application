@@ -6,6 +6,7 @@ import { UserDto } from '../../models/user.model';
 import { UserLabels } from '../../constants/user-labels.constants';
 import { UserMessages } from '../../constants/user-messages.constants';
 import { UserTableColumns } from '../../constants/user-table.constants';
+import { UserDialogService } from '../../Services/user-dialog.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
@@ -19,7 +20,8 @@ export class UserListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private fb: FormBuilder,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private userDialogService: UserDialogService
     ) {}
 
     labels = UserLabels;
@@ -27,10 +29,7 @@ export class UserListComponent implements OnInit {
     users: UserDto[] = [];
 
     // Dialog control
-    showFormDialog = false;
-    showViewDialog = false;
     showResetPasswordDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
     selectedUser: UserDto | null = null;
 
     resetPasswordForm!: FormGroup;
@@ -46,33 +45,26 @@ export class UserListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedUser = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.userDialogService.openForm('create', null, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.userDialogService.openForm('update', user, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.showViewDialog = true;
+        this.userDialogService.openView(user, () => {});
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update'): void {
         this.loadUsers();
-        const msg = this.formDialogMode === 'create'
+        const msg = mode === 'create'
             ? UserMessages.CREATED
             : UserMessages.UPDATED;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(user: UserDto): void {

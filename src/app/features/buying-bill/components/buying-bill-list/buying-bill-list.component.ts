@@ -10,6 +10,8 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
+import { BuyingBillDialogService } from '../../services/buying-bill-dialog.service';
+
 @Component({
     selector: 'app-buying-bill-list',
     standalone: false,
@@ -24,7 +26,8 @@ export class BuyingBillListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        public accountDetailsService: AccountDetailsService
+        public accountDetailsService: AccountDetailsService,
+        private buyingBillDialogService: BuyingBillDialogService
     ) {}
 
     title = BuyingBillConstants.BUYING_BILL_TITLE;
@@ -32,10 +35,6 @@ export class BuyingBillListComponent implements OnInit {
     bills: BuyingBillListDto[] = [];
     selectedBills: BuyingBillListDto[] = [];
     exportMenuItems: MenuItem[] = [];
-
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
 
     // Summary totals
     get totalBuyingAmount(): number {
@@ -77,34 +76,28 @@ export class BuyingBillListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.buyingBillDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(item: BuyingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.buyingBillDialogService.openForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(item: BuyingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.buyingBillDialogService.openForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? BuyingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
-            : BuyingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? BuyingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
+                : BuyingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
 

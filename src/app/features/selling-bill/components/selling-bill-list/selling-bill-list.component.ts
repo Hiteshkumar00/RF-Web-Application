@@ -12,6 +12,8 @@ import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
+import { SellingBillDialogService } from '../../services/selling-bill-dialog.service';
+
 @Component({
     selector: 'app-selling-bill-list',
     standalone: false,
@@ -28,7 +30,8 @@ export class SellingBillListComponent implements OnInit {
         private helperService: HelperService,
         public accountDetailsService: AccountDetailsService,
         private whatsAppService: WhatsAppService,
-        private emailService: EmailService
+        private emailService: EmailService,
+        private sellingBillDialogService: SellingBillDialogService
     ) {}
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
@@ -37,19 +40,11 @@ export class SellingBillListComponent implements OnInit {
     selectedBills: SellingBillListDto[] = [];
     exportMenuItems: MenuItem[] = [];
 
-    showFormDialog = false;
-    showPaymentDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
-    selectedBill?: SellingBillListDto;
-
     openPaymentDialog(item: SellingBillListDto): void {
-        this.selectedBill = item;
-        this.showPaymentDialog = true;
+        this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => {});
     }
 
     onPaymentSaved(): void {
-        this.showPaymentDialog = false;
         this.loadData();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
     }
@@ -112,34 +107,28 @@ export class SellingBillListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(item: SellingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(item: SellingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
-            : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
+                : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(item: SellingBillListDto): void {

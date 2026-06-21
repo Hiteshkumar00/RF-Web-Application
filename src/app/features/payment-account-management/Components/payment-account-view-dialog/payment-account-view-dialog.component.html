@@ -3,8 +3,8 @@
     [modal]="true" 
     [header]="labels.VIEW_PAYMENT_ACCOUNT" 
     [style]="{ width: '400px' }" 
-    [draggable]="false"
-    [resizable]="false" 
+    [draggable]="true"
+    [resizable]="true" 
     (onHide)="closed.emit()">
 
     @if (account) {

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ProductApiService } from '../../../product/services/product-api.service';
+import { ProductDialogService } from '../../../product/services/product-dialog.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService } from 'primeng/api';
 import { BuyingBillApiService } from '../../services/buying-bill-api.service';
@@ -28,6 +29,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private productApiService = inject(ProductApiService);
+    private productDialogService = inject(ProductDialogService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -46,7 +48,6 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private isClosing = false;
 
     productOptions: any[] = [];
-    showProductDialog = false;
 
     expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
@@ -167,12 +168,11 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     }
 
     openAddProductDialog(): void {
-        this.showProductDialog = true;
+        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
     }
 
     onProductSave(): void {
         this.loadAllProducts();
-        this.showProductDialog = false;
     }
 
     onProductChange(event: any, index: number): void {

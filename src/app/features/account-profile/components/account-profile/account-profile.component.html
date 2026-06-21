@@ -18,11 +18,11 @@
                         </div>
                         <div class="d-flex align-items-center gap-3" *ngIf="!account">
                             <i class="pi pi-briefcase fs-3"></i>
-                            <h4 class="m-0 fw-bold">{{ isEditMode ? 'Edit Account' : 'Account Profile' }}</h4>
+                            <h4 class="m-0 fw-bold">Account Profile</h4>
                         </div>
-                        <p-button [icon]="isEditMode ? 'pi pi-times' : 'pi pi-pencil'" [rounded]="true" [text]="true"
-                            severity="contrast" (onClick)="toggleEdit()"
-                            [pTooltip]="isEditMode ? 'Cancel' : 'Edit Profile'" tooltipPosition="left" />
+                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true"
+                            severity="contrast" (onClick)="editProfile()"
+                            pTooltip="Edit Profile" tooltipPosition="left" />
                     </div>
                 </ng-template>
 
@@ -276,10 +276,7 @@
                     </div>
                 </div>
 
-                <!-- Reusable Edit Dialog -->
-                <app-account-form-dialog *ngIf="account" [visible]="isEditMode" mode="update" [account]="account"
-                    (saved)="onSaved()" (closed)="toggleEdit()">
-                </app-account-form-dialog>
+
             </p-card>
         </div>
     </div>

@@ -9,6 +9,8 @@ import { AccountPersonApiService } from '../../../account-person-management/Serv
 import { forkJoin } from 'rxjs';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
+import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
+
 @Component({
     selector: 'app-payment-account-list',
     templateUrl: './payment-account-list.component.html',
@@ -20,18 +22,13 @@ export class PaymentAccountListComponent implements OnInit {
         private accountPersonApiService: AccountPersonApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private paymentAccountDialogService: PaymentAccountDialogService
     ) {}
 
     labels = PaymentAccountLabels;
     columns = PaymentAccountTableColumns.COLUMNS;
     paymentAccounts: PaymentAccountDto[] = [];
-
-    // Dialog control
-    showFormDialog = false;
-    showViewDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
-    selectedAccount: PaymentAccountDto | null = null;
 
     ngOnInit(): void {
         this.loadPaymentAccounts();
@@ -53,33 +50,21 @@ export class PaymentAccountListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedAccount = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.paymentAccountDialogService.openForm('create', null, () => {
+            this.loadPaymentAccounts();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: PaymentAccountMessages.CREATED });
+        }, () => {});
     }
 
     openEditDialog(account: PaymentAccountDto): void {
-        this.selectedAccount = account;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.paymentAccountDialogService.openForm('update', account, () => {
+            this.loadPaymentAccounts();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: PaymentAccountMessages.UPDATED });
+        }, () => {});
     }
 
     openViewDialog(account: PaymentAccountDto): void {
-        this.selectedAccount = account;
-        this.showViewDialog = true;
-    }
-
-    onFormSaved(): void {
-        this.showFormDialog = false;
-        this.loadPaymentAccounts();
-        const msg = this.formDialogMode === 'create' 
-            ? PaymentAccountMessages.CREATED 
-            : PaymentAccountMessages.UPDATED;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
-    }
-
-    onFormDialogClosed(): void {
-        this.showFormDialog = false;
+        this.paymentAccountDialogService.openView(account, () => {});
     }
 
     confirmDelete(account: PaymentAccountDto): void {

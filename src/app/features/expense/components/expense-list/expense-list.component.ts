@@ -11,6 +11,8 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
+import { ExpenseDialogService } from '../../services/expense-dialog.service';
+
 @Component({
     selector: 'app-expense-list',
     standalone: false,
@@ -24,7 +26,8 @@ export class ExpenseListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        public accountDetailsService: AccountDetailsService
+        public accountDetailsService: AccountDetailsService,
+        private expenseDialogService: ExpenseDialogService
     ) {}
 
     labels = ExpenseLabels;
@@ -47,10 +50,6 @@ export class ExpenseListComponent implements OnInit {
             { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
         ];
     }
-
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedExpenseId?: number;
 
     // Summary totals
     get totalExpenseAmount(): number {
@@ -88,34 +87,28 @@ export class ExpenseListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedExpenseId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.expenseDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(expense: ExpenseListDto): void {
-        this.selectedExpenseId = expense.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.expenseDialogService.openForm('update', expense.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(expense: ExpenseListDto): void {
-        this.selectedExpenseId = expense.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.expenseDialogService.openForm('view', expense.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadExpenses();
-        const msg = this.formDialogMode === 'create'
-            ? ExpenseMessages.CREATED
-            : ExpenseMessages.UPDATED;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? ExpenseMessages.CREATED
+                : ExpenseMessages.UPDATED;
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(expense: ExpenseListDto): void {

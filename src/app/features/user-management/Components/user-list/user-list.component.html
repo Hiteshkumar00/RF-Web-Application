@@ -84,16 +84,11 @@
         </div>
     </div>
 
-    <!-- Form Dialog -->
-    <app-user-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [user]="selectedUser"
-        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
 
-    <!-- View Dialog -->
-    <app-user-view-dialog [visible]="showViewDialog" [user]="selectedUser" (closed)="showViewDialog = false" />
 
     <!-- Reset Password Dialog -->
-    <p-dialog [visible]="showResetPasswordDialog" [modal]="true" [style]="{ width: '400px' }" [draggable]="false"
-        [resizable]="false" [closable]="false" [closeOnEscape]="false">
+    <p-dialog [visible]="showResetPasswordDialog" [modal]="true" [style]="{ width: '400px' }" [draggable]="true"
+        [resizable]="true" [closable]="false" [closeOnEscape]="false">
 
         <ng-template pTemplate="header">
             <div class="d-flex align-items-center justify-content-between w-100 pe-3">
