@@ -8,8 +8,7 @@ import { DropdownOption } from '../../../../shared/models/dropdown-option.model'
 import { CreateExpenseDto } from '../../models/expense-create.dto';
 import { UpdateExpenseDto } from '../../models/expense-update.dto';
 import { HelperService } from '../../../../core/services/helper.service';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
-import { AccountDetailsService } from '../../../../core/services/account-details.service';
+
 
 @Component({
     selector: 'app-expense-form-dialog',
@@ -19,10 +18,8 @@ import { AccountDetailsService } from '../../../../core/services/account-details
 export class ExpenseFormDialogComponent implements OnChanges {
     private expenseApiService = inject(ExpenseApiService);
     private expenseFormService = inject(ExpenseFormService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
-    private accountDetailsService = inject(AccountDetailsService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -33,10 +30,11 @@ export class ExpenseFormDialogComponent implements OnChanges {
 
     labels = ExpenseLabels;
     form!: FormGroup;
-    accountOptions: DropdownOption[] = [];
-    private isClosing = false;
+    @Input() accountOptions: DropdownOption[] = [];
+    @Input() expenseData?: any;
+    @Input() expenseTypeSuggestions: string[] = [];
 
-    expenseTypeSuggestions: string[] = [];
+    private isClosing = false;
     filteredExpenseTypeSuggestions: string[] = [];
 
     // Buying-bill linkage (display only in view mode)
@@ -72,35 +70,22 @@ export class ExpenseFormDialogComponent implements OnChanges {
             this.buyingBillId = undefined;
             this.buyingBillNo = undefined;
             this.agencyName = undefined;
-            this.loadAccountOptions();
             this.form = this.expenseFormService.createForm();
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.expenseId) {
-                this.expenseApiService.getById(this.expenseId).subscribe({
-                    next: (data) => {
-                        this.expenseFormService.patchForm(this.form, data);
-                        // Capture bill-linkage for the view badge
-                        this.buyingBillId = data.buyingBillId;
-                        this.buyingBillNo = data.buyingBillNo;
-                        this.agencyName = data.agencyName;
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        } else if (this.buyingBillId) {
-                            // If linked to a Buying Bill, date must be strictly synced to the bill, so disable it here
-                            this.form.get('date')?.disable();
-                        }
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.expenseData) {
+                this.expenseFormService.patchForm(this.form, this.expenseData);
+                // Capture bill-linkage for the view badge
+                this.buyingBillId = this.expenseData.buyingBillId;
+                this.buyingBillNo = this.expenseData.buyingBillNo;
+                this.agencyName = this.expenseData.agencyName;
+                if (this.mode === 'view') {
+                    this.form.disable();
+                } else if (this.buyingBillId) {
+                    // If linked to a Buying Bill, date must be strictly synced to the bill, so disable it here
+                    this.form.get('date')?.disable();
+                }
             }
-            this.loadSuggestions();
         }
-    }
-
-    private loadSuggestions(): void {
-        if (!this.accountDetailsService.enableSuggestions) return;
-        this.expenseApiService.getExpenceTypeSuggestions().subscribe({
-            next: (data) => this.expenseTypeSuggestions = data
-        });
     }
 
     searchExpenseTypes(event: any): void {
@@ -113,14 +98,6 @@ export class ExpenseFormDialogComponent implements OnChanges {
     onSelectExpenseType(event: any): void {
         const value = event.value || event;
         this.form.get('expenceType')?.patchValue(value);
-    }
-
-    private loadAccountOptions(): void {
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => {
-                this.accountOptions = options;
-            }
-        });
     }
 
     addPayment(): void {

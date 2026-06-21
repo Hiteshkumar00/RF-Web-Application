@@ -17,6 +17,7 @@ export class ProductFormDialogComponent implements OnChanges {
   @Input() visible = false;
   @Input() mode: 'create' | 'update' | 'view' = 'create';
   @Input() id?: number;
+  @Input() productData?: any;
 
   @Output() onSave = new EventEmitter<void>();
   @Output() onClose = new EventEmitter<void>();
@@ -32,10 +33,20 @@ export class ProductFormDialogComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['visible']?.currentValue) {
       this.updateTitle();
-      if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-        this.loadProduct();
-      } else {
-        this.initForm();
+      this.initForm();
+      if ((this.mode === 'update' || this.mode === 'view') && this.productData) {
+          this.form.patchValue({
+            productName: this.productData.productName,
+            imageLink: this.productData.imageLink,
+            warrantyYear: this.productData.warrantyYear || 0,
+            warrantyMonth: this.productData.warrantyMonth || 0,
+            warrantyDay: this.productData.warrantyDay || 0
+          });
+          if (this.mode === 'view') {
+            this.form.disable();
+          } else {
+            this.form.enable();
+          }
       }
     }
   }
@@ -56,27 +67,6 @@ export class ProductFormDialogComponent implements OnChanges {
     });
   }
 
-  private loadProduct(): void {
-    if (!this.id) return;
-    this.apiService.getById(this.id).subscribe({
-      next: (data) => {
-        if (data) {
-          this.form.patchValue({
-            productName: data.productName,
-            imageLink: data.imageLink,
-            warrantyYear: data.warrantyYear || 0,
-            warrantyMonth: data.warrantyMonth || 0,
-            warrantyDay: data.warrantyDay || 0
-          });
-          if (this.mode === 'view') {
-            this.form.disable();
-          } else {
-            this.form.enable();
-          }
-        }
-      }
-    });
-  }
 
   onSubmit(): void {
     if (this.form.invalid) {

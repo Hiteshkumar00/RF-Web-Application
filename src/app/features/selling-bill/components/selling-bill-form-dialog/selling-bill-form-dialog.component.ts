@@ -11,13 +11,11 @@ import { DropdownOption } from '../../../../shared/models/dropdown-option.model'
 import { CreateSellingBillDto } from '../../models/create-selling-bill.dto';
 import { UpdateSellingBillDto } from '../../models/update-selling-bill.dto';
 import { HelperService } from '../../../../core/services/helper.service';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
+import { CustomerListDto } from '../../../customer/models/customer.model';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
-import { CustomerApiService } from '../../../customer/services/customer-api.service';
-import { CustomerListDto } from '../../../customer/models/customer.model';
 
 @Component({
     selector: 'app-selling-bill-form-dialog',
@@ -27,7 +25,6 @@ import { CustomerListDto } from '../../../customer/models/customer.model';
 export class SellingBillFormDialogComponent implements OnChanges {
     private apiService = inject(SellingBillApiService);
     private formService = inject(SellingBillFormService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private helperService = inject(HelperService);
@@ -35,8 +32,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private downloadService = inject(BillDownloadService);
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
-    private productApiService = inject(ProductApiService);
-    private customerApiService = inject(CustomerApiService);
     private productDialogService = inject(ProductDialogService);
 
     @Input() visible = false;
@@ -49,12 +44,14 @@ export class SellingBillFormDialogComponent implements OnChanges {
     title = SellingBillConstants.SELLING_BILL_TITLE;
     labels = SellingBillConstants.LABELS;
     form!: FormGroup;
-    accountOptions: DropdownOption[] = [];
+    @Input() accountOptions: DropdownOption[] = [];
+    @Input() products: any[] = [];
+    @Input() allCustomers: CustomerListDto[] = [];
+    @Input() billDetails?: any;
     private isClosing = false;
 
     productOptions: any[] = [];
     customerOptions: any[] = [];
-    allCustomers: CustomerListDto[] = [];
     isNewCustomer = true;
 
     get items(): FormArray {
@@ -121,46 +118,42 @@ export class SellingBillFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadOptions();
             this.form = this.formService.createForm();
+            
+            this.customerOptions = this.allCustomers.map(c => ({
+                label: c.customerName + (c.phoneNo ? ` (${c.phoneNo})` : ''),
+                value: c.id
+            }));
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                this.apiService.getById(this.id).subscribe({
-                    next: (data) => {
-                        this.isNewCustomer = !data.customerId;
-                        this.formService.patchForm(this.form, data);
-                        this.onToggleCustomerMode(this.isNewCustomer);
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        }
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.billDetails) {
+                this.isNewCustomer = !this.billDetails.customerId;
+                this.formService.patchForm(this.form, this.billDetails);
+                this.onToggleCustomerMode(this.isNewCustomer);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
             } else {
                 this.isNewCustomer = true;
                 this.onToggleCustomerMode(true);
                 this.addItem();
             }
-            this.loadAllProducts();
+            this.initProductOptions();
         }
     }
 
-    private loadAllProducts(): void {
-        this.productApiService.getAll().subscribe({
-            next: (data) => {
-                this.productOptions = (data || []).map(p => {
-                    const warrantyParts = [];
-                    if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
-                    if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
-                    if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
-                    const warrantyStr = warrantyParts.join(' ');
-                    const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
-                    return {
-                        label: label,
-                        value: p.id,
-                        data: p
-                    };
-                });
-            }
+    private initProductOptions(): void {
+        this.productOptions = (this.products || []).map(p => {
+            const warrantyParts = [];
+            if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
+            if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
+            if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
+            const warrantyStr = warrantyParts.join(' ');
+            const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
+            return {
+                label: label,
+                value: p.id,
+                data: p
+            };
         });
     }
 
@@ -169,7 +162,9 @@ export class SellingBillFormDialogComponent implements OnChanges {
     }
 
     onProductSave(): void {
-        this.loadAllProducts();
+        // Product reload will be handled by the parent component or the next open instance,
+        // since the component should be re-instantiated. For now, we do nothing as the parent 
+        // doesn't refresh the inputs dynamically.
     }
 
 
@@ -199,21 +194,6 @@ export class SellingBillFormDialogComponent implements OnChanges {
         return parts.length > 0 ? parts.join(' ') : null;
     }
 
-
-    private loadOptions(): void {
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.accountOptions = options
-        });
-        this.customerApiService.getAll().subscribe({
-            next: (data) => {
-                this.allCustomers = data ?? [];
-                this.customerOptions = this.allCustomers.map(c => ({
-                    label: c.customerName + (c.phoneNo ? ` (${c.phoneNo})` : ''),
-                    value: c.id
-                }));
-            }
-        });
-    }
 
     onCustomerChange(event: any): void {
         const customerId = event.value;

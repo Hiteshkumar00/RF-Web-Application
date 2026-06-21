@@ -1,4 +1,11 @@
 import { Injectable, ApplicationRef, EnvironmentInjector, createComponent, ComponentRef, Type } from '@angular/core';
+import { firstValueFrom, isObservable, Observable } from 'rxjs';
+
+export interface DialogConfig<T> {
+  inputs?: Partial<T>;
+  outputs?: Partial<Record<keyof T, (val: any) => void>>;
+  resolve?: { [K in keyof Partial<T>]?: Observable<any> | Promise<any> | any };
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +15,30 @@ export class DialogManagerService {
     private appRef: ApplicationRef,
     private injector: EnvironmentInjector
   ) {}
+
+  async openAsync<T>(
+    componentType: Type<T>,
+    config: DialogConfig<T>
+  ): Promise<ComponentRef<T>> {
+    const resolvedInputs: Partial<T> = { ...(config.inputs || {}) } as Partial<T>;
+
+    if (config.resolve) {
+      const keys = Object.keys(config.resolve) as (keyof T)[];
+      const promises = keys.map(async (key) => {
+        const value: any = config.resolve![key];
+        if (isObservable(value)) {
+          resolvedInputs[key] = (await firstValueFrom(value)) as any;
+        } else if (value instanceof Promise) {
+          resolvedInputs[key] = (await value) as any;
+        } else {
+          resolvedInputs[key] = value as any;
+        }
+      });
+      await Promise.all(promises);
+    }
+
+    return this.open(componentType, resolvedInputs, config.outputs);
+  }
 
   open<T>(
     componentType: Type<T>,

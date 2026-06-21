@@ -3,30 +3,40 @@ import { DialogManagerService } from '../../../core/services/dialog-manager.serv
 import { UserFormDialogComponent } from '../Components/user-form-dialog/user-form-dialog.component';
 import { UserViewDialogComponent } from '../Components/user-view-dialog/user-view-dialog.component';
 import { UserDto } from '../models/user.model';
+import { AuthApiService } from '../../auth/services/auth-api.service';
+import { DropdownService } from '../../../shared/services/dropdown.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserDialogService {
   private dialogManager = inject(DialogManagerService);
+  private authApiService = inject(AuthApiService);
+  private dropdownService = inject(DropdownService);
 
-  openForm(
+  async openForm(
     mode: 'create' | 'update',
     user: UserDto | null,
     onSaved: () => void,
     onClosed: () => void
-  ): void {
-    const ref = this.dialogManager.open(
+  ): Promise<void> {
+    const ref = await this.dialogManager.openAsync(
       UserFormDialogComponent,
-      { visible: true, mode, user },
       {
-        saved: () => {
-          onSaved();
-          this.dialogManager.destroy(ref);
+        inputs: { visible: true, mode, user },
+        resolve: {
+          roleOptions: this.authApiService.getUserRoleOptions(),
+          accountOptions: this.dropdownService.getAccountOptions()
         },
-        closed: () => {
-          onClosed();
-          this.dialogManager.destroy(ref);
+        outputs: {
+          saved: () => {
+            onSaved();
+            this.dialogManager.destroy(ref);
+          },
+          closed: () => {
+            onClosed();
+            this.dialogManager.destroy(ref);
+          }
         }
       }
     );

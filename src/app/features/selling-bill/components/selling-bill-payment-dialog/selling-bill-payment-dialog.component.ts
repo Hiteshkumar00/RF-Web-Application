@@ -13,7 +13,6 @@ import { HelperService } from '../../../../core/services/helper.service';
 })
 export class SellingBillPaymentDialogComponent implements OnChanges {
     private apiService = inject(SellingBillApiService);
-    private dropdownService = inject(DropdownService);
     private fb = inject(FormBuilder);
     private helperService = inject(HelperService);
 
@@ -24,9 +23,9 @@ export class SellingBillPaymentDialogComponent implements OnChanges {
     @Output() closed = new EventEmitter<void>();
 
     form!: FormGroup;
-    accountOptions: DropdownOption[] = [];
+    @Input() accountOptions: DropdownOption[] = [];
+    @Input() billDetails?: SellingBillDetailsDto;
     loading = false;
-    billDetails?: SellingBillDetailsDto;
 
     get payments(): FormArray {
         return this.form.get('payments') as FormArray;
@@ -43,9 +42,10 @@ export class SellingBillPaymentDialogComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true && this.bill) {
-            this.loadBillDetails();
-            this.loadOptions();
             this.initForm();
+            if (this.billDetails) {
+                this.patchPayments(this.billDetails.payments);
+            }
         }
     }
 
@@ -55,24 +55,6 @@ export class SellingBillPaymentDialogComponent implements OnChanges {
         });
     }
 
-    private loadBillDetails(): void {
-        if (!this.bill) return;
-        this.loading = true;
-        this.apiService.getById(this.bill.id).subscribe({
-            next: (data) => {
-                this.billDetails = data;
-                this.patchPayments(data.payments);
-                this.loading = false;
-            },
-            error: () => this.loading = false
-        });
-    }
-
-    private loadOptions(): void {
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.accountOptions = options
-        });
-    }
 
     private patchPayments(payments: any[]): void {
         const paymentFGs = payments.map(p => this.fb.group({

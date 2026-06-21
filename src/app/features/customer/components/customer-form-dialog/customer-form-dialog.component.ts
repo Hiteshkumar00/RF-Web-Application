@@ -14,6 +14,7 @@ export class CustomerFormDialogComponent implements OnInit {
 
   @Input() mode: 'create' | 'update' | 'view' = 'create';
   @Input() id?: number;
+  @Input() customerData?: any;
 
   @Output() onSave = new EventEmitter<void>();
   @Output() onClose = new EventEmitter<void>();
@@ -29,10 +30,19 @@ export class CustomerFormDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateTitle();
-    if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-      this.loadCustomer();
-    } else {
-      this.initForm();
+    this.initForm();
+    if ((this.mode === 'update' || this.mode === 'view') && this.customerData) {
+      this.form.patchValue({
+        customerName: this.customerData.customerName,
+        phoneNo: this.customerData.phoneNo || '',
+        email: this.customerData.email || '',
+        address: this.customerData.address || ''
+      });
+      if (this.mode === 'view') {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
     }
   }
 
@@ -51,26 +61,6 @@ export class CustomerFormDialogComponent implements OnInit {
     });
   }
 
-  private loadCustomer(): void {
-    if (!this.id) return;
-    this.apiService.getById(this.id).subscribe({
-      next: (data) => {
-        if (data) {
-          this.form.patchValue({
-            customerName: data.customerName,
-            phoneNo: data.phoneNo || '',
-            email: data.email || '',
-            address: data.address || ''
-          });
-          if (this.mode === 'view') {
-            this.form.disable();
-          } else {
-            this.form.enable();
-          }
-        }
-      }
-    });
-  }
 
   onSubmit(): void {
     if (this.form.invalid) {

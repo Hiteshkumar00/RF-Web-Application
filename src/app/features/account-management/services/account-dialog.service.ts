@@ -2,30 +2,37 @@ import { Injectable, inject } from '@angular/core';
 import { DialogManagerService } from '../../../core/services/dialog-manager.service';
 import { AccountFormDialogComponent } from '../components/account-form-dialog/account-form-dialog.component';
 import { AccountDto } from '../models/account.model';
+import { DropdownService } from '../../../shared/services/dropdown.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountDialogService {
   private dialogManager = inject(DialogManagerService);
+  private dropdownService = inject(DropdownService);
 
-  openForm(
+  async openForm(
     mode: 'create' | 'update' | 'view',
     account: AccountDto | null,
     onSave: () => void,
     onClose: () => void
-  ): void {
-    const ref = this.dialogManager.open(
+  ): Promise<void> {
+    const ref = await this.dialogManager.openAsync(
       AccountFormDialogComponent,
-      { visible: true, mode, account },
       {
-        saved: () => {
-          onSave();
-          this.dialogManager.destroy(ref);
+        inputs: { visible: true, mode, account },
+        resolve: {
+          currencyOptions: this.dropdownService.getOptionsByEntityName('Currency')
         },
-        closed: () => {
-          onClose();
-          this.dialogManager.destroy(ref);
+        outputs: {
+          saved: () => {
+            onSave();
+            this.dialogManager.destroy(ref);
+          },
+          closed: () => {
+            onClose();
+            this.dialogManager.destroy(ref);
+          }
         }
       }
     );

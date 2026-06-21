@@ -1,30 +1,37 @@
 import { Injectable, inject } from '@angular/core';
 import { DialogManagerService } from '../../../core/services/dialog-manager.service';
 import { CustomerFormDialogComponent } from '../components/customer-form-dialog/customer-form-dialog.component';
+import { CustomerApiService } from './customer-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerDialogService {
   private dialogManager = inject(DialogManagerService);
+  private apiService = inject(CustomerApiService);
 
-  openForm(
+  async openForm(
     mode: 'create' | 'update' | 'view',
     id: number | undefined,
     onSave: () => void,
     onClose: () => void
-  ): void {
-    const ref = this.dialogManager.open(
+  ): Promise<void> {
+    const ref = await this.dialogManager.openAsync(
       CustomerFormDialogComponent,
-      { visible: true, mode, id },
       {
-        onSave: () => {
-          onSave();
-          this.dialogManager.destroy(ref);
+        inputs: { visible: true, mode, id },
+        resolve: {
+          customerData: (mode === 'update' || mode === 'view') && id ? this.apiService.getById(id) : Promise.resolve(null)
         },
-        onClose: () => {
-          onClose();
-          this.dialogManager.destroy(ref);
+        outputs: {
+          onSave: () => {
+            onSave();
+            this.dialogManager.destroy(ref);
+          },
+          onClose: () => {
+            onClose();
+            this.dialogManager.destroy(ref);
+          }
         }
       }
     );

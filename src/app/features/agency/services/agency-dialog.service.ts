@@ -5,12 +5,16 @@ import { AgencyPersonFormDialogComponent } from '../components/agency-person-for
 import { AgencyPaymentFormDialogComponent } from '../components/agency-payment-form-dialog/agency-payment-form-dialog.component';
 import { AgencyDto } from '../models/agency.model';
 import { AgencyPersonDto } from '../models/agency-person.model';
+import { DropdownService } from '../../../shared/services/dropdown.service';
+import { AgencyPaymentApiService } from './agency-payment-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AgencyDialogService {
   private dialogManager = inject(DialogManagerService);
+  private dropdownService = inject(DropdownService);
+  private agencyPaymentApiService = inject(AgencyPaymentApiService);
 
   openForm(
     mode: 'create' | 'update',
@@ -56,24 +60,31 @@ export class AgencyDialogService {
     );
   }
 
-  openPaymentForm(
+  async openPaymentForm(
     mode: 'create' | 'update' | 'view',
     id: number | undefined,
     agencyId: number | undefined,
     onSave: () => void,
     onClose: () => void
-  ): void {
-    const ref = this.dialogManager.open(
+  ): Promise<void> {
+    const ref = await this.dialogManager.openAsync(
       AgencyPaymentFormDialogComponent,
-      { visible: true, mode, id, agencyId },
       {
-        onSave: () => {
-          onSave();
-          this.dialogManager.destroy(ref);
+        inputs: { visible: true, mode, id, agencyId },
+        resolve: {
+          agencyOptions: this.dropdownService.getAgencyOptions(),
+          paymentAccountOptions: this.dropdownService.getPaymentAccountOptions(),
+          paymentData: (mode === 'update' || mode === 'view') && id ? this.agencyPaymentApiService.getById(id) : Promise.resolve(null)
         },
-        onClose: () => {
-          onClose();
-          this.dialogManager.destroy(ref);
+        outputs: {
+          onSave: () => {
+            onSave();
+            this.dialogManager.destroy(ref);
+          },
+          onClose: () => {
+            onClose();
+            this.dialogManager.destroy(ref);
+          }
         }
       }
     );

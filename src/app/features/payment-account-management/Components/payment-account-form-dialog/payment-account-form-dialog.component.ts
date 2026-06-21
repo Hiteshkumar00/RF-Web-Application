@@ -7,7 +7,6 @@ import { PaymentAccountDto } from '../../models/payment-account.model';
 import { PaymentAccountLabels } from '../../constants/payment-account-labels.constants';
 import { CreatePaymentAccountDto } from '../../models/create-payment-account.dto';
 import { UpdatePaymentAccountDto } from '../../models/update-payment-account.dto';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 
 @Component({
@@ -19,7 +18,6 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
     private paymentAccountApiService = inject(PaymentAccountApiService);
     private paymentAccountFormService = inject(PaymentAccountFormService);
     private confirmationService = inject(ConfirmationService);
-    private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' = 'create';
@@ -31,7 +29,7 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
 
     labels = PaymentAccountLabels;
     form!: FormGroup;
-    personOptions: DropdownOption[] = [];
+    @Input() personOptions: DropdownOption[] = [];
     private isClosing = false;
 
     get dialogTitle(): string {
@@ -41,20 +39,11 @@ export class PaymentAccountFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadPersonOptions();
             this.form = this.paymentAccountFormService.createForm();
             if (this.mode === 'update' && this.account) {
                 this.paymentAccountFormService.patchForm(this.form, this.account);
             }
         }
-    }
-
-    private loadPersonOptions(): void {
-        this.dropdownService.getAccountPersonOptions().subscribe({
-            next: (options) => {
-                this.personOptions = options;
-            }
-        });
     }
 
     onSubmit(): void {
