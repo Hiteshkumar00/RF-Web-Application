@@ -4,6 +4,8 @@ import { ProductDto, ProductFilterDto } from '../../models/product.dto';
 import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { ActivatedRoute } from '@angular/router';
+import { ProductDialogService } from '../../services/product-dialog.service';
 
 @Component({
   selector: 'app-product-list',
@@ -16,6 +18,8 @@ export class ProductListComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   public globalConfig = inject(GlobalConfigService);
   private excelService = inject(ExcelService);
+  private route = inject(ActivatedRoute);
+  private productDialogService = inject(ProductDialogService);
 
   products: ProductDto[] = [];
   selectedProducts: ProductDto[] = [];
@@ -29,7 +33,13 @@ export class ProductListComponent implements OnInit {
   selectedId?: number;
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.products = data['data'];
+      } else {
+        this.loadProducts();
+      }
+    });
     this.updateExportMenu();
   }
 

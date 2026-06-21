@@ -13,6 +13,7 @@ import { EmailService } from '../../../../shared/services/email.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 import { SellingBillDialogService } from '../../services/selling-bill-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -31,6 +32,7 @@ export class SellingBillListComponent implements OnInit {
         public accountDetailsService: AccountDetailsService,
         private whatsAppService: WhatsAppService,
         private emailService: EmailService,
+        private route: ActivatedRoute,
         private sellingBillDialogService: SellingBillDialogService
     ) {}
 
@@ -79,7 +81,13 @@ export class SellingBillListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.bills = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 

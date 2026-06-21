@@ -8,8 +8,8 @@ import { AgencyPersonLabels } from '../../constants/agency-person-labels.constan
 import { AgencyPersonMessages } from '../../constants/agency-person-messages.constants';
 import { AgencyPersonTableColumns } from '../../constants/agency-person-table.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
-
 import { AgencyDialogService } from '../../services/agency-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-agency-person-list',
@@ -23,6 +23,7 @@ export class AgencyPersonListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
         private agencyDialogService: AgencyDialogService
     ) {}
 
@@ -31,7 +32,13 @@ export class AgencyPersonListComponent implements OnInit {
     agencyPersons: AgencyPersonDto[] = [];
 
     ngOnInit(): void {
-        this.loadAgencyPersons();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.agencyPersons = data['data'];
+            } else {
+                this.loadAgencyPersons();
+            }
+        });
     }
 
     loadAgencyPersons(): void {

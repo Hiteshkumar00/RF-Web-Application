@@ -9,7 +9,7 @@ import { AccountTableColumns } from '../../constants/account-table.constants';
 import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { SystemConfigurationService } from '../../../system-configuration/services/system-configuration.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AccountDialogService } from '../../services/account-dialog.service';
 
@@ -27,6 +27,7 @@ export class AccountListComponent implements OnInit {
         private authApiService: AuthApiService,
         private authService: AuthService,
         private router: Router,
+        private route: ActivatedRoute,
         private accountDialogService: AccountDialogService
     ) {}
 
@@ -36,7 +37,13 @@ export class AccountListComponent implements OnInit {
     isDeleteEnabled = false;
 
     ngOnInit(): void {
-        this.loadAccounts();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.accounts = data['data'];
+            } else {
+                this.loadAccounts();
+            }
+        });
     }
 
     loadAccounts(): void {

@@ -7,6 +7,7 @@ import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 import { ExcelService } from '../../../../shared/services/excel.service';
 
 import { CustomerDialogService } from '../../services/customer-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-customer-list',
@@ -24,12 +25,19 @@ export class CustomerListComponent implements OnInit {
     private messageService: MessageService,
     public globalConfig: GlobalConfigService,
     private excelService: ExcelService,
+    private route: ActivatedRoute,
     private customerDialogService: CustomerDialogService
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
-    this.updateExportMenu();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.customers = data['data'];
+        this.updateExportMenu();
+      } else {
+        this.loadData();
+      }
+    });
   }
 
   public updateExportMenu(): void {

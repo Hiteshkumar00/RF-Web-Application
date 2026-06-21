@@ -7,6 +7,7 @@ import { UserLabels } from '../../constants/user-labels.constants';
 import { UserMessages } from '../../constants/user-messages.constants';
 import { UserTableColumns } from '../../constants/user-table.constants';
 import { UserDialogService } from '../../Services/user-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class UserListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private fb: FormBuilder,
+        private route: ActivatedRoute,
         public globalConfig: GlobalConfigService,
         private userDialogService: UserDialogService
     ) {}
@@ -35,7 +37,13 @@ export class UserListComponent implements OnInit {
     resetPasswordForm!: FormGroup;
 
     ngOnInit(): void {
-        this.loadUsers();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.users = data['data'];
+            } else {
+                this.loadUsers();
+            }
+        });
     }
 
     loadUsers(): void {

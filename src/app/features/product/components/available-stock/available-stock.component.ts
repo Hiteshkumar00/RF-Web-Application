@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardApiService } from '../../../dashboard/services/dashboard-api.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-available-stock',
@@ -19,9 +20,10 @@ export class AvailableStockComponent implements OnInit {
   selectedId?: number;
 
 
-  constructor(
+    constructor(
     private dashboardApiService: DashboardApiService,
     public globalConfig: GlobalConfigService,
+    private route: ActivatedRoute,
     private excelService: ExcelService
   ) { }
 
@@ -38,7 +40,13 @@ export class AvailableStockComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.productProfits = data['data'].productProfits;
+      } else {
+        this.loadData();
+      }
+    });
   }
 
   loadData(): void {

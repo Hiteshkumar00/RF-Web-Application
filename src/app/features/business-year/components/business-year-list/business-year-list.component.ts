@@ -6,6 +6,7 @@ import { BusinessYearConstants } from '../../constants/business-year.constant';
 import { BusinessYearListDto } from '../../models/business-year-list-dto.model';
 
 import { BusinessYearDialogService } from '../../services/business-year-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-business-year-list',
@@ -29,11 +30,18 @@ export class BusinessYearListComponent implements OnInit {
     private apiService: BusinessYearApiService,
     private confirmationService: ConfirmationService,
     public globalConfig: GlobalConfigService,
+    private route: ActivatedRoute,
     private businessYearDialogService: BusinessYearDialogService
   ) {}
 
   ngOnInit(): void {
-    this.loadYears();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.years = data['data'];
+      } else {
+        this.loadYears();
+      }
+    });
   }
 
   loadYears(): void {

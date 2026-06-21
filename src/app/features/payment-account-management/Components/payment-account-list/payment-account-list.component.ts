@@ -10,6 +10,7 @@ import { forkJoin } from 'rxjs';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-payment-account-list',
@@ -23,6 +24,7 @@ export class PaymentAccountListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
         private paymentAccountDialogService: PaymentAccountDialogService
     ) {}
 
@@ -31,7 +33,13 @@ export class PaymentAccountListComponent implements OnInit {
     paymentAccounts: PaymentAccountDto[] = [];
 
     ngOnInit(): void {
-        this.loadPaymentAccounts();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.paymentAccounts = data['data'];
+            } else {
+                this.loadPaymentAccounts();
+            }
+        });
     }
 
     loadPaymentAccounts(): void {

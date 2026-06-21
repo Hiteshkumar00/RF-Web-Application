@@ -6,6 +6,7 @@ import { AccountPersonLabels } from '../../constants/account-person-labels.const
 import { AccountPersonMessages } from '../../constants/account-person-messages.constants';
 import { AccountPersonTable } from '../../constants/account-person-table.constants';
 import { AccountPersonDialogService } from '../../Services/account-person-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-account-person-list',
@@ -17,6 +18,7 @@ export class AccountPersonListComponent implements OnInit {
         private apiService: AccountPersonApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
+        private route: ActivatedRoute,
         private accountPersonDialogService: AccountPersonDialogService
     ) {}
 
@@ -25,7 +27,13 @@ export class AccountPersonListComponent implements OnInit {
     accountPersons: AccountPersonDto[] = [];
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.accountPersons = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
     }
 
     loadData(): void {

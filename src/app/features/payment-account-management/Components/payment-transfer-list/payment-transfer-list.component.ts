@@ -6,6 +6,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-payment-transfer-list',
@@ -19,6 +20,7 @@ export class PaymentTransferListComponent implements OnInit {
     private helperService = inject(HelperService);
     public globalConfig = inject(GlobalConfigService);
     private excelService = inject(ExcelService);
+    private route = inject(ActivatedRoute);
 
     private paymentAccountDialogService = inject(PaymentAccountDialogService);
 
@@ -29,7 +31,13 @@ export class PaymentTransferListComponent implements OnInit {
     filter: PaymentTransferFilter = {};
 
     ngOnInit(): void {
-        this.loadTransfers();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.transfers = data['data'];
+            } else {
+                this.loadTransfers();
+            }
+        });
         this.updateExportMenu();
     }
 

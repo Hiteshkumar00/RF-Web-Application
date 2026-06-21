@@ -11,6 +11,7 @@ import { AccountDetailsService } from '../../../../core/services/account-details
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 import { BuyingBillDialogService } from '../../services/buying-bill-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-buying-bill-list',
@@ -27,6 +28,7 @@ export class BuyingBillListComponent implements OnInit {
         private excelService: ExcelService,
         private helperService: HelperService,
         public accountDetailsService: AccountDetailsService,
+        private route: ActivatedRoute,
         private buyingBillDialogService: BuyingBillDialogService
     ) {}
 
@@ -48,7 +50,13 @@ export class BuyingBillListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.bills = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 

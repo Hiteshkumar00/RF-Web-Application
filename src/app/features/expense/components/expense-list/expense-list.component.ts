@@ -12,6 +12,7 @@ import { AccountDetailsService } from '../../../../core/services/account-details
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 import { ExpenseDialogService } from '../../services/expense-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-expense-list',
@@ -27,6 +28,7 @@ export class ExpenseListComponent implements OnInit {
         private excelService: ExcelService,
         private helperService: HelperService,
         public accountDetailsService: AccountDetailsService,
+        private route: ActivatedRoute,
         private expenseDialogService: ExpenseDialogService
     ) {}
 
@@ -73,7 +75,13 @@ export class ExpenseListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadExpenses();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.expenses = data['data'];
+            } else {
+                this.loadExpenses();
+            }
+        });
         this.updateExportMenu();
     }
 

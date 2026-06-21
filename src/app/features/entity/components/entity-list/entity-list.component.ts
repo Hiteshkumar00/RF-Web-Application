@@ -8,6 +8,7 @@ import { EntityTableColumns } from '../../constants/entity-table.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 import { EntityDialogService } from '../../services/entity-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-entity-list',
@@ -20,6 +21,7 @@ export class EntityListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
         private entityDialogService: EntityDialogService
     ) {}
 
@@ -28,18 +30,26 @@ export class EntityListComponent implements OnInit {
     entities: EntityDto[] = [];
 
     ngOnInit(): void {
-        this.loadEntities();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.processEntities(data['data']);
+            } else {
+                this.loadEntities();
+            }
+        });
     }
 
     loadEntities(): void {
         this.entityApiService.getAll().subscribe({
-            next: (data) => {
-                this.entities = (data ?? []).map(entity => ({
-                    ...entity,
-                    relatedEntitiesCount: entity.relatedEntities?.length ?? 0
-                })) as any; // relatedEntitiesCount is a virtual field for the table
-            }
+            next: (data) => this.processEntities(data)
         });
+    }
+
+    private processEntities(data: EntityDto[] | null): void {
+        this.entities = (data ?? []).map(entity => ({
+            ...entity,
+            relatedEntitiesCount: entity.relatedEntities?.length ?? 0
+        })) as any;
     }
 
     openCreateDialog(): void {

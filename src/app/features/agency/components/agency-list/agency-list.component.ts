@@ -8,6 +8,7 @@ import { AgencyMessages } from '../../constants/agency-messages.constants';
 import { AgencyTableColumns } from '../../constants/agency-table.constants';
 
 import { AgencyDialogService } from '../../services/agency-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-agency-list',
@@ -20,6 +21,7 @@ export class AgencyListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
         private agencyDialogService: AgencyDialogService
     ) {}
 
@@ -28,7 +30,13 @@ export class AgencyListComponent implements OnInit {
     agencies: AgencyDto[] = [];
 
     ngOnInit(): void {
-        this.loadAgencies();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.agencies = data['data'];
+            } else {
+                this.loadAgencies();
+            }
+        });
     }
 
     loadAgencies(): void {

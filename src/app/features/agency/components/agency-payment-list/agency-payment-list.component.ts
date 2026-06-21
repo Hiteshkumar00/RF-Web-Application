@@ -1,14 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { AgencyPaymentApiService } from '../../services/agency-payment-api.service';
+import { AgencyDialogService } from '../../services/agency-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 import { AgencyPaymentListDto } from '../../models/agency-payment.model';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
-
-
-import { AgencyDialogService } from '../../services/agency-dialog.service';
-
 
 @Component({
     selector: 'app-agency-payment-list',
@@ -23,6 +21,7 @@ export class AgencyPaymentListComponent implements OnInit {
     private excelService = inject(ExcelService);
     private helperService = inject(HelperService);
     private agencyDialogService = inject(AgencyDialogService);
+    private route = inject(ActivatedRoute);
 
     payments: AgencyPaymentListDto[] = [];
     selectedPayments: AgencyPaymentListDto[] = [];
@@ -31,7 +30,13 @@ export class AgencyPaymentListComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.payments = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 
@@ -62,12 +67,12 @@ export class AgencyPaymentListComponent implements OnInit {
         this.agencyDialogService.openPaymentForm('create', undefined, undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
-    openEditDialog(item: AgencyPaymentListDto): void {
-        this.agencyDialogService.openPaymentForm('update', item.id, undefined, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
+    openEditDialog(payment: AgencyPaymentListDto): void {
+        this.agencyDialogService.openPaymentForm('update', payment.id, undefined, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
-    openViewDialog(item: AgencyPaymentListDto): void {
-        this.agencyDialogService.openPaymentForm('view', item.id, undefined, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
+    openViewDialog(payment: AgencyPaymentListDto): void {
+        this.agencyDialogService.openPaymentForm('view', payment.id, undefined, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
     onFormSaved(mode: 'create' | 'update' | 'view'): void {

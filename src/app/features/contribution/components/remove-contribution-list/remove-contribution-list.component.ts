@@ -5,6 +5,7 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { RemoveContributionListDto } from '../../models/remove-contribution.model';
 import { ContributionConstants } from '../../constants/contribution.constants';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { ActivatedRoute } from '@angular/router';
 
 import { ContributionDialogService } from '../../services/contribution-dialog.service';
 
@@ -19,6 +20,7 @@ export class RemoveContributionListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
         private excelService: ExcelService,
         private contributionDialogService: ContributionDialogService
     ) {}
@@ -29,7 +31,13 @@ export class RemoveContributionListComponent implements OnInit {
     exportMenuItems: MenuItem[] = [];
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.contributions = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 

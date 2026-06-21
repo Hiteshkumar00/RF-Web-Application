@@ -4,9 +4,10 @@ import { PaymentHistoryDto, PaymentHistoryFilterDto } from '../../models/payment
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { HelperService } from '../../../../core/services/helper.service';
+import { ActivatedRoute } from '@angular/router';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-payment-history-list',
@@ -17,8 +18,11 @@ export class PaymentHistoryListComponent implements OnInit {
     constructor(
         private apiService: PaymentAccountApiService,
         private dropdownService: DropdownService,
-        private helperService: HelperService,
+        private confirmationService: ConfirmationService,
+        private messageService: MessageService,
         public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
+        private helperService: HelperService,
         private excelService: ExcelService
     ) {}
 
@@ -73,9 +77,15 @@ export class PaymentHistoryListComponent implements OnInit {
     selectedMonth: number | null = null;
 
     ngOnInit(): void {
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.history = data['data'];
+            } else {
+                this.loadHistory();
+            }
+        });
         this.initYearOptions();
         this.loadOptions();
-        this.loadHistory();
         this.updateExportMenu();
     }
 
