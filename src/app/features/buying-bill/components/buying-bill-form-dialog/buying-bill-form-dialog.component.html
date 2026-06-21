@@ -303,6 +303,8 @@
             </div>
 
             <div class="ms-auto d-flex gap-2">
+                <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                    (onClick)="enableEditMode()" size="small" />
                 <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
                     (onClick)="requestClose()" size="small" />
                 <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Bill' : 'Update Bill'"

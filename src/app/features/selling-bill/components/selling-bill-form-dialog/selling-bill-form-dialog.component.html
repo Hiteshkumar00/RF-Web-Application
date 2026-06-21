@@ -313,6 +313,8 @@
                     </div>
                 </div>
 
+                <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                    (onClick)="enableEditMode()" size="small" />
                 <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
                     (onClick)="requestClose()" size="small" />
                 <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"

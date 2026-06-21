@@ -126,6 +126,11 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
         });
     }
 
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
+    }
+
     addTransaction(): void {
         this.transactions.push(this.fb.group({
             id: [0],

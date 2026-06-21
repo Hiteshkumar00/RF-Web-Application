@@ -108,6 +108,11 @@ export class ExpenseFormDialogComponent implements OnChanges {
         this.expenseFormService.removePayment(this.form, index);
     }
 
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
+    }
+
     onSubmit(): void {
         if (this.form.invalid) {
             this.form.markAllAsTouched();

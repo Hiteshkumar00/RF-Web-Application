@@ -68,6 +68,12 @@ export class ProductFormDialogComponent implements OnChanges {
   }
 
 
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.updateTitle();
+        this.form.enable();
+    }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
