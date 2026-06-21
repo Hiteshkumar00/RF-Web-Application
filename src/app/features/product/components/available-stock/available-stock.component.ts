@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardApiService } from '../../../dashboard/services/dashboard-api.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
 
 @Component({
   selector: 'app-available-stock',
@@ -20,8 +21,21 @@ export class AvailableStockComponent implements OnInit {
 
   constructor(
     private dashboardApiService: DashboardApiService,
-    public globalConfig: GlobalConfigService
+    public globalConfig: GlobalConfigService,
+    private excelService: ExcelService
   ) { }
+
+  exportToExcel(): void {
+    const data = this.productProfits.map(item => ({
+      'Product Name': item.productName,
+      'Sold Qty': item.totalSoldCount || 0,
+      'Purchase Qty': item.totalPurchaseCount || 0,
+      'Selling Amount': item.totalSellingAmount || 0,
+      'Profit': item.totalProfit || 0,
+      'Available Stock': item.availableStock || 0
+    }));
+    this.excelService.exportAsExcelFile(data, 'Available_Stock_And_Profit');
+  }
 
   ngOnInit(): void {
     this.loadData();

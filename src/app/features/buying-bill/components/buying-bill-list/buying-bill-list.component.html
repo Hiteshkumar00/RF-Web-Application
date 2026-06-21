@@ -87,18 +87,6 @@
                             <p-columnFilter type="numeric" field="finalAmount" display="menu" />
                         </div>
                     </th>
-                    <th pResizableColumn pSortableColumn="paidAmount" style="min-width: 200px">
-                        <div class="d-flex align-items-center justify-content-end gap-1">
-                            {{ labels.PAID_AMOUNT }} <p-sortIcon field="paidAmount" />
-                            <p-columnFilter type="numeric" field="paidAmount" display="menu" />
-                        </div>
-                    </th>
-                    <th pResizableColumn pSortableColumn="remainingAmount" style="min-width: 200px">
-                        <div class="d-flex align-items-center justify-content-end gap-1">
-                            {{ labels.REMAINING_AMOUNT }} <p-sortIcon field="remainingAmount" />
-                            <p-columnFilter type="numeric" field="remainingAmount" display="menu" />
-                        </div>
-                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-bill>
@@ -115,9 +103,6 @@
                                 (onClick)="downloadPdf(bill)" pTooltip="Download PDF" tooltipPosition="top" />
                             <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
                                 (onClick)="openEditDialog(bill)" pTooltip="Edit" tooltipPosition="top" />
-                            <p-button icon="pi pi-wallet" [text]="true" [rounded]="true" severity="success"
-                                *ngIf="bill.remainingAmount > 0" (onClick)="openPaymentDialog(bill)"
-                                pTooltip="Add Payment" tooltipPosition="top" />
                             <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
                                 (onClick)="confirmDelete(bill)" pTooltip="Delete" tooltipPosition="top" />
                         </div>
@@ -132,16 +117,11 @@
                     <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
                     <td class="text-end fw-semibold text-secondary">{{ bill.totalExpence | currency:'INR' }}</td>
                     <td class="text-end fw-bold text-info">{{ bill.finalAmount | currency:'INR' }}</td>
-                    <td class="text-end text-success fw-semibold">{{ bill.paidAmount | currency:'INR' }}</td>
-                    <td class="text-end fw-bold"
-                        [ngClass]="{'text-danger': bill.remainingAmount > 0, 'text-success': bill.remainingAmount === 0}">
-                        {{ bill.remainingAmount | currency:'INR' }}
-                    </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="13" class="text-center p-4">
+                    <td colspan="11" class="text-center p-4">
                         <div class="py-4">
                             <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
                             <span class="text-muted">No buying bills found.</span>
@@ -154,7 +134,4 @@
 </div>
 
 <app-buying-bill-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
-    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
-
-<app-buying-bill-payment-dialog [visible]="showPaymentDialog" [bill]="selectedBill"
-    (saved)="onPaymentSaved()" (closed)="onPaymentDialogClosed()" />
+    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />

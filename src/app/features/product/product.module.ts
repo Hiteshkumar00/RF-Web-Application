@@ -19,6 +19,9 @@ import { AvailableStockComponent } from './components/available-stock/available-
       { path: 'manage', component: ProductListComponent },
       { path: 'available-stock', component: AvailableStockComponent }
     ])
+  ],
+  exports: [
+    ProductFormDialogComponent
   ]
 })
 export class ProductModule { }

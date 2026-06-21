@@ -44,7 +44,7 @@ export class PaymentHistoryListComponent implements OnInit {
     typeOptions: DropdownOption[] = [
         { label: 'All Type', value: null },
         { label: 'Selling Bill', value: 'Selling Bill' },
-        { label: 'Buying Bill', value: 'Buying Bill' },
+        { label: 'Agency Payment', value: 'Agency Payment' },
         { label: 'Expense', value: 'Expense' },
         { label: 'Buying Bill Expense', value: 'Buying Bill Expense' },
         { label: 'Add Contribution', value: 'Add Contribution' },

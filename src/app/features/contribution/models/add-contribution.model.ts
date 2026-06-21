@@ -18,6 +18,7 @@ export interface AddContributionDto {
 export interface AddContributionListDto {
     id: number;
     accountPersonName: string;
+    description?: string;
     date: string;
     totalAmount: number;
 }

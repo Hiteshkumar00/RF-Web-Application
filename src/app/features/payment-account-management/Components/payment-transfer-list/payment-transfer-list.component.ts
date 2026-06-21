@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { PaymentAccountApiService } from '../../Services/payment-account-api.service';
 import { PaymentTransfer, PaymentTransferFilter } from '../../models/payment-transfer.model';
 import { HelperService } from '../../../../core/services/helper.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
 
 @Component({
     selector: 'app-payment-transfer-list',
@@ -16,8 +17,11 @@ export class PaymentTransferListComponent implements OnInit {
     private messageService = inject(MessageService);
     private helperService = inject(HelperService);
     public globalConfig = inject(GlobalConfigService);
+    private excelService = inject(ExcelService);
 
     transfers: PaymentTransfer[] = [];
+    selectedTransfers: PaymentTransfer[] = [];
+    exportMenuItems: MenuItem[] = [];
     loading = false;
     filter: PaymentTransferFilter = {};
 
@@ -27,6 +31,21 @@ export class PaymentTransferListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadTransfers();
+        this.updateExportMenu();
+    }
+
+    public updateExportMenu(): void {
+        this.exportMenuItems = [
+            {
+                label: 'Export Selected',
+                icon: 'pi pi-check-square',
+                badge: this.selectedTransfers.length > 0 ? this.selectedTransfers.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.exportToExcel(true),
+                disabled: this.selectedTransfers.length === 0
+            },
+            { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+        ];
     }
 
     loadTransfers(): void {
@@ -35,9 +54,24 @@ export class PaymentTransferListComponent implements OnInit {
             next: (data) => {
                 this.transfers = data;
                 this.loading = false;
+                this.updateExportMenu();
             },
             error: () => this.loading = false
         });
+    }
+
+    exportToExcel(onlySelected: boolean = false): void {
+        const source = onlySelected ? this.selectedTransfers : this.transfers;
+
+        const data = source.map(item => ({
+            'ID': item.id,
+            'Date': this.helperService.formatDate(item.date),
+            'From Account': item.fromPaymentAccountName || '-',
+            'To Account': item.toPaymentAccountName || '-',
+            'Amount': item.amount || 0,
+            'Description': item.description || '-'
+        }));
+        this.excelService.exportAsExcelFile(data, onlySelected ? 'Payment_Transfers_Selected' : 'Payment_Transfers');
     }
 
     openCreate(): void {

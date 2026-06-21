@@ -1,0 +1,142 @@
+<!-- Summary Cards -->
+<app-statistics-cards [cards]="statisticCards"></app-statistics-cards>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Customers</h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search customer, phone..."
+                        (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" />
+                </p-iconField>
+                <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
+                <p-button icon="pi pi-plus" label="New Customer" (onClick)="openCreateDialog()"
+                    styleClass="p-button-sm shadow-sm" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table [resizableColumns]="true" #dt [value]="customers" [rows]="10" [paginator]="true" [scrollable]="true"
+            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            [(selection)]="selectedCustomers" (selectionChange)="updateExportMenu()"
+            styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [globalFilterFields]="['id', 'customerName', 'phoneNo', 'email']" columnResizeMode="expand">
+            <ng-template pTemplate="header">
+                <tr class="text-uppercase small">
+                    <th pResizableColumn style="width: 4rem">
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th pResizableColumn pSortableColumn="id" style="min-width: 90px">
+                        <div class="d-flex align-items-center gap-1">
+                            Cust ID <p-sortIcon field="id" />
+                            <p-columnFilter type="numeric" field="id" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn style="min-width: 140px" class="text-center">Action</th>
+                    <th pResizableColumn pSortableColumn="customerName" style="min-width: 200px">
+                        <div class="d-flex align-items-center gap-1">
+                            Customer Name <p-sortIcon field="customerName" />
+                            <p-columnFilter type="text" field="customerName" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="phoneNo" style="min-width: 150px">
+                        <div class="d-flex align-items-center gap-1">
+                            Phone No <p-sortIcon field="phoneNo" />
+                            <p-columnFilter type="text" field="phoneNo" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="email" style="min-width: 200px">
+                        <div class="d-flex align-items-center gap-1">
+                            Email <p-sortIcon field="email" />
+                            <p-columnFilter type="text" field="email" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="address" style="min-width: 250px">
+                        <div class="d-flex align-items-center gap-1">
+                            Address <p-sortIcon field="address" />
+                            <p-columnFilter type="text" field="address" display="menu" class="ms-auto" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalPurchases" style="min-width: 150px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            Bills Count <p-sortIcon field="totalPurchases" />
+                            <p-columnFilter type="numeric" field="totalPurchases" display="menu" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalNetAmount" style="min-width: 170px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            Total Purchasing <p-sortIcon field="totalNetAmount" />
+                            <p-columnFilter type="numeric" field="totalNetAmount" display="menu" />
+                        </div>
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalRemainingAmount" style="min-width: 170px">
+                        <div class="d-flex align-items-center justify-content-end gap-1">
+                            Total Remaining <p-sortIcon field="totalRemainingAmount" />
+                            <p-columnFilter type="numeric" field="totalRemainingAmount" display="menu" />
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="customer" />
+                    </td>
+                    <td>
+                        <div class="fw-semibold text-muted">#{{ customer.id }}</div>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-1">
+                            <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-secondary"
+                                (click)="openViewDialog(customer)" pTooltip="View Details" tooltipPosition="top"></button>
+                            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-primary"
+                                (click)="openEditDialog(customer)" pTooltip="Edit Customer" tooltipPosition="top"></button>
+                            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                                (click)="confirmDelete(customer)" pTooltip="Delete Customer" tooltipPosition="top"></button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-semibold text-primary">{{ customer.customerName }}</div>
+                    </td>
+                    <td>
+                        @if (customer.phoneNo) {
+                        <i class="pi pi-phone small text-muted me-1"></i>{{ customer.phoneNo }}
+                        } @else {
+                        <span class="text-muted small">—</span>
+                        }
+                    </td>
+                    <td>
+                        @if (customer.email) {
+                        <i class="pi pi-envelope small text-muted me-1"></i>{{ customer.email }}
+                        } @else {
+                        <span class="text-muted small">—</span>
+                        }
+                    </td>
+                    <td class="small text-truncate" style="max-width: 220px;" [pTooltip]="customer.address" tooltipPosition="top">
+                        {{ customer.address || '—' }}
+                    </td>
+                    <td class="text-end fw-semibold text-muted">{{ customer.totalPurchases }}</td>
+                    <td class="text-end fw-semibold text-success">{{ customer.totalNetAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-danger">{{ customer.totalRemainingAmount | currency:'INR' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="9" class="text-center p-4 text-muted">
+                        No customers found.
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<app-customer-form-dialog *ngIf="showFormDialog" [mode]="formDialogMode" [id]="selectedId"
+    (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()">
+</app-customer-form-dialog>

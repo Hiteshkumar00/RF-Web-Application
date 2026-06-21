@@ -8,6 +8,8 @@ import { AgencyFormDialogComponent } from './components/agency-form-dialog/agenc
 import { AgencyAdvancedComponent } from './components/agency-advanced/agency-advanced.component';
 import { AgencyPersonListComponent } from './components/agency-person-list/agency-person-list.component';
 import { AgencyPersonFormDialogComponent } from './components/agency-person-form-dialog/agency-person-form-dialog.component';
+import { AgencyPaymentListComponent } from './components/agency-payment-list/agency-payment-list.component';
+import { AgencyPaymentFormDialogComponent } from './components/agency-payment-form-dialog/agency-payment-form-dialog.component';
 import { BuyingBillModule } from '../buying-bill/buying-bill-module';
 
 import { SharedModule } from '../../shared/shared-module';
@@ -18,7 +20,9 @@ import { SharedModule } from '../../shared/shared-module';
         AgencyFormDialogComponent,
         AgencyAdvancedComponent,
         AgencyPersonListComponent,
-        AgencyPersonFormDialogComponent
+        AgencyPersonFormDialogComponent,
+        AgencyPaymentListComponent,
+        AgencyPaymentFormDialogComponent
     ],
     imports: [
         CommonModule,

@@ -1,8 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ProductApiService } from '../../services/product-api.service';
 import { ProductDto, ProductFilterDto } from '../../models/product.dto';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
 
 @Component({
   selector: 'app-product-list',
@@ -14,8 +15,11 @@ export class ProductListComponent implements OnInit {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   public globalConfig = inject(GlobalConfigService);
+  private excelService = inject(ExcelService);
 
   products: ProductDto[] = [];
+  selectedProducts: ProductDto[] = [];
+  exportMenuItems: MenuItem[] = [];
   filter: ProductFilterDto = { searchTerm: '' };
   loading: boolean = false;
   
@@ -24,9 +28,9 @@ export class ProductListComponent implements OnInit {
   formDialogMode: 'create' | 'update' | 'view' = 'create';
   selectedId?: number;
 
-
   ngOnInit(): void {
     this.loadProducts();
+    this.updateExportMenu();
   }
 
   loadProducts(): void {
@@ -35,11 +39,40 @@ export class ProductListComponent implements OnInit {
       next: (data) => {
         this.products = data;
         this.loading = false;
+        this.updateExportMenu();
       },
       error: () => {
         this.loading = false;
       }
     });
+  }
+
+  updateExportMenu(): void {
+    this.exportMenuItems = [
+      {
+        label: 'Export Selected',
+        icon: 'pi pi-check-square',
+        badge: this.selectedProducts.length > 0 ? this.selectedProducts.length.toString() : undefined,
+        badgeStyleClass: 'p-badge-success',
+        command: () => this.exportToExcel(true),
+        disabled: this.selectedProducts.length === 0
+      },
+      { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+    ];
+  }
+
+  exportToExcel(onlySelected: boolean = false): void {
+    const source = onlySelected ? this.selectedProducts : this.products;
+
+    const data = source.map(item => ({
+      'Product ID': item.id,
+      'Product Name': item.productName,
+      'Warranty (Years)': item.warrantyYear || 0,
+      'Warranty (Months)': item.warrantyMonth || 0,
+      'Warranty (Days)': item.warrantyDay || 0,
+      'Image URL': item.imageLink || '-'
+    }));
+    this.excelService.exportAsExcelFile(data, onlySelected ? 'Products_Selected' : 'Products');
   }
 
   onSearch(): void {

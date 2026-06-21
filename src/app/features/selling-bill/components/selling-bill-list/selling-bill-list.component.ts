@@ -199,6 +199,7 @@ export class SellingBillListComponent implements OnInit {
         const data = source.map(item => ({
             'ID': item.id,
             [this.labels.BILL_NO]: item.billNo || '-',
+            'Cust ID': item.customerId || '-',
             [this.labels.CUSTOMER_NAME]: item.customerName,
             [this.labels.PHONE_NO]: item.phoneNo,
             [this.labels.DATE]: this.helperService.formatDate(item.date),

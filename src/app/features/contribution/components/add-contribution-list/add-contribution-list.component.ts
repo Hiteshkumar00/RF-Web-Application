@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { AddContributionApiService } from '../../services/add-contribution-api.service';
 import { AddContributionListDto } from '../../models/add-contribution.model';
 import { ContributionConstants } from '../../constants/contribution.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
+import { ExcelService } from '../../../../shared/services/excel.service';
 
 @Component({
     selector: 'app-add-contribution-list',
@@ -15,11 +16,14 @@ export class AddContributionListComponent implements OnInit {
         private apiService: AddContributionApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private excelService: ExcelService
     ) {}
 
     title = ContributionConstants.ADD_CONTRIBUTION_TITLE;
     contributions: AddContributionListDto[] = [];
+    selectedContributions: AddContributionListDto[] = [];
+    exportMenuItems: MenuItem[] = [];
     
     showFormDialog = false;
     formDialogMode: 'create' | 'update' | 'view' = 'create';
@@ -27,14 +31,43 @@ export class AddContributionListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadData();
+        this.updateExportMenu();
+    }
+
+    public updateExportMenu(): void {
+        this.exportMenuItems = [
+            {
+                label: 'Export Selected',
+                icon: 'pi pi-check-square',
+                badge: this.selectedContributions.length > 0 ? this.selectedContributions.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.exportToExcel(true),
+                disabled: this.selectedContributions.length === 0
+            },
+            { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+        ];
     }
 
     loadData(): void {
         this.apiService.getAll().subscribe({
             next: (data) => {
                 this.contributions = data ?? [];
+                this.updateExportMenu();
             }
         });
+    }
+
+    exportToExcel(onlySelected: boolean = false): void {
+        const source = onlySelected ? this.selectedContributions : this.contributions;
+
+        const data = source.map(item => ({
+            'ID': item.id,
+            'Person Name': item.accountPersonName || '-',
+            'Description': item.description || '-',
+            'Date': item.date,
+            'Total Amount': item.totalAmount || 0
+        }));
+        this.excelService.exportAsExcelFile(data, onlySelected ? 'Add_Contributions_Selected' : 'Add_Contributions');
     }
 
     openCreateDialog(): void {

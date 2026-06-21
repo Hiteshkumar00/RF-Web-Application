@@ -1,0 +1,164 @@
+<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '900px' }" [draggable]="false" [resizable]="false"
+    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">{{ dialogTitle }}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="requestClose()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="pt-2" *ngIf="form">
+        <div class="row g-4">
+            <!-- Agency Selection -->
+            <div class="col-md-6">
+                <div class="field">
+                    <label for="agencyId" class="block mb-2 font-semibold">Agency</label>
+                    <p-select [options]="agencyOptions" formControlName="agencyId" optionLabel="label"
+                        optionValue="value" placeholder="Select Agency" styleClass="w-100 text-start" appendTo="body"
+                        size="small" [filter]="true" />
+                    <p-message severity="error" text="Agency is required" variant="simple" size="small"
+                        *ngIf="form.get('agencyId')?.invalid && form.get('agencyId')?.touched" />
+                </div>
+            </div>
+
+            <!-- Payment Date -->
+            <div class="col-md-6">
+                <div class="field">
+                    <label for="date" class="block mb-2 font-semibold">Payment Date</label>
+                    <p-datepicker id="date" formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                        appendTo="body" styleClass="w-100" size="small" />
+                    <p-message severity="error" text="Payment Date is required" variant="simple" size="small"
+                        *ngIf="form.get('date')?.invalid && form.get('date')?.touched" />
+                </div>
+            </div>
+
+            <!-- Agency Billing Summary (shown when agency is selected) -->
+            <div class="col-12" *ngIf="agencySummary">
+                <div class="row g-2">
+                    <div class="col-4">
+                        <div class="card border-0 shadow-sm border-start border-3 border-info h-100">
+                            <div class="card-body p-2 text-center">
+                                <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Buying</div>
+                                <div class="fw-bold text-info" style="font-size: 0.95rem;">{{ agencySummary.totalBillsAmount | currency:'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card border-0 shadow-sm border-start border-3 border-success h-100">
+                            <div class="card-body p-2 text-center">
+                                <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Paid</div>
+                                <div class="fw-bold text-success" style="font-size: 0.95rem;">{{ agencySummary.totalPaidAmount | currency:'INR' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="card border-0 shadow-sm border-start border-3 h-100"
+                            [ngClass]="agencySummary.totalPendingAmount > 0 ? 'border-danger' : 'border-success'">
+                            <div class="card-body p-2 text-center">
+                                <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Remaining</div>
+                                <div class="fw-bold" style="font-size: 0.95rem;"
+                                    [ngClass]="agencySummary.totalPendingAmount > 0 ? 'text-danger' : 'text-success'">
+                                    {{ agencySummary.totalPendingAmount | currency:'INR' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+                <div class="field">
+                    <label for="description" class="block mb-2 font-semibold">Description / Remarks</label>
+                    <textarea id="description" pInputTextarea formControlName="description" rows="2"
+                        class="w-100 p-inputtext-sm" placeholder="Add optional notes..."></textarea>
+                    <p-message severity="error" text="Description is too long (max 1000 characters)" variant="simple"
+                        size="small" *ngIf="form.get('description')?.invalid && form.get('description')?.touched" />
+                </div>
+            </div>
+
+            <!-- Transactions Section (Installments) -->
+            <div class="col-12 mt-4">
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                    <h6 class="mb-0 fw-bold text-success"><i class="pi pi-wallet me-2"></i>Payment Details
+                        (Installments)</h6>
+                    <p-button *ngIf="mode !== 'view'" icon="pi pi-plus" label="Add Installment"
+                        severity="success" [outlined]="true" size="small" (onClick)="addTransaction()" />
+                </div>
+
+                <p-table [resizableColumns]="true" [value]="transactions.controls" [scrollable]="true"
+                    styleClass="p-datatable-sm p-datatable-gridlines border rounded overflow-hidden shadow-sm"
+                    columnResizeMode="expand">
+                    <ng-template pTemplate="header">
+                        <tr class="text-uppercase small bg-opacity-10">
+                            <th pResizableColumn style="min-width: 250px">Payment Account</th>
+                            <th pResizableColumn style="min-width: 180px">Installment Date (Optional)</th>
+                            <th pResizableColumn style="min-width: 160px" class="text-end">Amount</th>
+                            <th pResizableColumn style="min-width: 40px" class="text-center" *ngIf="mode !== 'view'">
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-control let-i="rowIndex">
+                        <tr [formGroup]="$any(control)" class="align-middle">
+                            <td>
+                                <p-select [options]="paymentAccountOptions" formControlName="paymentAccountId"
+                                    optionLabel="label" optionValue="value" placeholder="Select Account"
+                                    styleClass="w-100 text-start" appendTo="body" size="small" [filter]="true" />
+                                <p-message severity="error" text="Required" variant="simple" size="small"
+                                    *ngIf="control.get('paymentAccountId')?.invalid && control.get('paymentAccountId')?.touched" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="date" [showIcon]="true" dateFormat="dd-mm-yy"
+                                    appendTo="body" styleClass="w-100" size="small"
+                                    placeholder="Defaults to payment date" />
+                            </td>
+                            <td>
+                                <p-inputNumber formControlName="amount" mode="currency" currency="INR" locale="en-IN"
+                                    styleClass="w-100" inputStyleClass="w-100 text-end" class="p-inputtext-sm"
+                                    placeholder="0.00" />
+                                <p-message severity="error" text="Req (>0)" variant="simple" size="small"
+                                    *ngIf="control.get('amount')?.invalid && control.get('amount')?.touched" />
+                            </td>
+                            <td class="text-center" *ngIf="mode !== 'view'">
+                                <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                                    (onClick)="removeTransaction(i)" [disabled]="transactions.length <= 1" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="mode !== 'view' ? 4 : 3"
+                                class="text-center p-3 text-muted small italic">
+                                Please add at least one installment.
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="col-12 mt-3">
+                <div
+                    class="card border-1 p-3 shadow-sm rounded-3 d-flex justify-content-between align-items-center flex-row">
+                    <span class="fw-bold text-success text-uppercase small">Total Payment Amount:</span>
+                    <span class="fw-bold text-success h5 mb-0">{{ totalPaymentAmount | currency:'INR' }}</span>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form">
+            <div class="ms-auto d-flex gap-2">
+                <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
+                    (onClick)="requestClose()" size="small" />
+                <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Payment' : 'Update Payment'"
+                    icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary"
+                    size="small" />
+            </div>
+        </div>
+    </ng-template>
+
+</p-dialog>

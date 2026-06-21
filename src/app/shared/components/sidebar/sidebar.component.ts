@@ -50,6 +50,12 @@ export class SidebarComponent implements OnInit {
                 routerLinkActiveOptions: { exact: true }
             },
             {
+                label: 'Customers',
+                icon: 'pi pi-fw pi-users',
+                routerLink: ['/customer'],
+                routerLinkActiveOptions: { exact: true }
+            },
+            {
                 label: 'Buying Bill',
                 icon: 'pi pi-fw pi-shopping-cart',
                 routerLink: ['/buying-bill'],
@@ -105,6 +111,12 @@ export class SidebarComponent implements OnInit {
                         label: 'Dashboard',
                         icon: 'pi pi-fw pi-chart-bar',
                         routerLink: ['/agency/advanced'],
+                        routerLinkActiveOptions: { exact: true }
+                    },
+                    {
+                        label: 'Payments',
+                        icon: 'pi pi-fw pi-money-bill',
+                        routerLink: ['/agency/payments'],
                         routerLinkActiveOptions: { exact: true }
                     },
                     {

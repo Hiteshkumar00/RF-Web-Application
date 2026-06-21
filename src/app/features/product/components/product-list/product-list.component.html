@@ -9,6 +9,8 @@
                         (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                         class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
                 </p-iconField>
+                <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                 <p-button icon="pi pi-plus" label="New Product" (onClick)="openCreateDialog()"
                     styleClass="p-button-sm shadow-sm" />
             </div>
@@ -18,11 +20,15 @@
     <div class="card-body p-0">
         <p-table [resizableColumns]="true" #dt [value]="products" [rows]="10" [paginator]="true" [scrollable]="true"
             [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            [(selection)]="selectedProducts" (selectionChange)="updateExportMenu()"
             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [globalFilterFields]="['productName']" [loading]="loading" columnResizeMode="expand">
             <ng-template pTemplate="header">
                 <tr class="text-uppercase small">
+                    <th pResizableColumn style="width: 4rem">
+                        <p-tableHeaderCheckbox />
+                    </th>
                     <th pResizableColumn pSortableColumn="id" style="width: 80px">ID <p-sortIcon field="id" /></th>
                     <th pResizableColumn style="min-width: 120px" class="text-center">Action</th>
                     <th pResizableColumn pSortableColumn="productName" style="min-width: 200px">
@@ -36,6 +42,9 @@
             </ng-template>
             <ng-template pTemplate="body" let-product>
                 <tr>
+                    <td>
+                        <p-tableCheckbox [value]="product" />
+                    </td>
                     <td class="fw-bold text-muted small">#{{ product.id }}</td>
                     <td>
                         <div class="d-flex justify-content-center">
@@ -65,7 +74,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="4" class="text-center p-4">
+                    <td colspan="5" class="text-center p-4">
                         <div class="py-4">
                             <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
                             <span class="text-muted">No products found.</span>

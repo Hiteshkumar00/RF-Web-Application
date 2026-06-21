@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AgencyListComponent } from './components/agency-list/agency-list.component';
 import { AgencyAdvancedComponent } from './components/agency-advanced/agency-advanced.component';
 import { AgencyPersonListComponent } from './components/agency-person-list/agency-person-list.component';
+import { AgencyPaymentListComponent } from './components/agency-payment-list/agency-payment-list.component';
 import { adminGuard } from '../../core/guards/admin.guard';
 
 const routes: Routes = [
@@ -22,11 +23,17 @@ const routes: Routes = [
         canActivate: [adminGuard]
     },
     {
+        path: 'payments',
+        component: AgencyPaymentListComponent,
+        canActivate: [adminGuard]
+    },
+    {
         path: '',
         redirectTo: 'manage',
         pathMatch: 'full'
     }
 ];
+
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],

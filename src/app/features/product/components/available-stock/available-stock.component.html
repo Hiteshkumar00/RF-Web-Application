@@ -2,7 +2,10 @@
     <div class="card-header py-3 border-0">
         <div class="d-flex align-items-center justify-content-between">
             <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">Available Stock & Profit Summary</h5>
-            <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="loadData()" [loading]="loading" />
+            <div class="d-flex align-items-center gap-2">
+                <p-button icon="pi pi-file-excel" label="Export" severity="success" size="small" [outlined]="true" (onClick)="exportToExcel()" />
+                <p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="loadData()" [loading]="loading" />
+            </div>
         </div>
     </div>
 
@@ -116,7 +119,7 @@
                     <td class="text-center">{{history.quantity}}</td>
                     <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
                     <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
-                    <td class="text-end fw-bold text-success">{{(history.purchasePrice - history.discount) | currency:'INR'}}</td>
+                    <td class="text-end fw-bold text-success">{{(history.purchasePrice - (history.quantity > 0 ? history.discount / history.quantity : 0)) | currency:'INR'}}</td>
                     <td class="text-end fw-semibold">{{history.totalAmount | currency:'INR'}}</td>
                     <td class="text-center fw-bold" [ngClass]="history.remainingQty > 0 ? 'text-primary' : ''">
                         {{history.remainingQty}}
