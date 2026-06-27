@@ -199,6 +199,7 @@
                                     columnResizeMode="expand">
                                     <ng-template #header>
                     <tr class="fs-xs text-uppercase opacity-75 bg-light">
+                        <th pResizableColumn class="text-center py-2 px-3">Action</th>
                         <th pResizableColumn class="py-2 px-3">Bill No</th>
                         <th pResizableColumn class="py-2 px-3">Date</th>
                         <th pResizableColumn class="text-end py-2 px-3">Bill Total</th>
@@ -209,6 +210,10 @@
                 </ng-template>
                 <ng-template #body let-bill>
                     <tr class="fs-xs">
+                        <td class="text-center py-2 px-3">
+                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary" size="small"
+                                (onClick)="openViewBuyingBill(bill.id)" pTooltip="View Bill" tooltipPosition="top" />
+                        </td>
                         <td class="fw-semibold text-muted py-2 px-3">{{ bill.billNo }}</td>
                         <td class="small opacity-75 py-2 px-3">{{ bill.date | rfShortDate }}</td>
                         <td class="text-end fw-semibold text-info py-2 px-3">{{ bill.netAmount | currency:'INR' }}</td>
