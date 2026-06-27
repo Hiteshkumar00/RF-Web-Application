@@ -36,4 +36,20 @@ export class CustomerDialogService {
       }
     );
   }
+
+  async openSellingBills(customerId: number, customerName: string): Promise<void> {
+    const { SellingBillListComponent } = await import('../../selling-bill/components/selling-bill-list/selling-bill-list.component');
+    
+    const ref = await this.dialogManager.openAsync(
+      SellingBillListComponent,
+      {
+        inputs: { isDialog: true, visible: true, customerId: customerId },
+        outputs: {
+          closeDialog: () => {
+            this.dialogManager.destroy(ref);
+          }
+        }
+      }
+    );
+  }
 }

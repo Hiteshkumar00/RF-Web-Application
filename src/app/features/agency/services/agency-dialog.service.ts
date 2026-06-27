@@ -7,6 +7,8 @@ import { AgencyDto } from '../models/agency.model';
 import { AgencyPersonDto } from '../models/agency-person.model';
 import { DropdownService } from '../../../shared/services/dropdown.service';
 import { AgencyPaymentApiService } from './agency-payment-api.service';
+import { ViewAgencyAllDetailDto } from '../models/agency-all-detail.model';
+import { AgencyAdvancedDetailDialogComponent } from '../components/agency-advanced-detail-dialog/agency-advanced-detail-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +87,19 @@ export class AgencyDialogService {
             onClose();
             this.dialogManager.destroy(ref);
           }
+        }
+      }
+    );
+  }
+
+  openAdvancedDetailView(selectedDetail: ViewAgencyAllDetailDto, onClose: () => void): void {
+    const ref = this.dialogManager.open(
+      AgencyAdvancedDetailDialogComponent,
+      { visible: true, selectedDetail },
+      {
+        onClose: () => {
+          onClose();
+          this.dialogManager.destroy(ref);
         }
       }
     );

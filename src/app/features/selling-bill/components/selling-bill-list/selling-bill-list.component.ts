@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillListDto } from '../../models/selling-bill.model';
@@ -41,6 +41,11 @@ export class SellingBillListComponent implements OnInit {
     bills: SellingBillListDto[] = [];
     selectedBills: SellingBillListDto[] = [];
     exportMenuItems: MenuItem[] = [];
+
+    @Input() isDialog: boolean = false;
+    @Input() visible: boolean = false;
+    @Input() customerId?: number;
+    @Output() closeDialog = new EventEmitter<void>();
 
     openPaymentDialog(item: SellingBillListDto): void {
         this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => {});
@@ -106,12 +111,21 @@ export class SellingBillListComponent implements OnInit {
     }
 
     loadData(): void {
-        this.apiService.getAll().subscribe({
-            next: (data) => {
-                this.bills = data ?? [];
-                this.updateExportMenu();
-            }
-        });
+        if (this.customerId) {
+            this.apiService.getByCustomerId(this.customerId).subscribe({
+                next: (data) => {
+                    this.bills = data ?? [];
+                    this.updateExportMenu();
+                }
+            });
+        } else {
+            this.apiService.getAll().subscribe({
+                next: (data) => {
+                    this.bills = data ?? [];
+                    this.updateExportMenu();
+                }
+            });
+        }
     }
 
     openCreateDialog(): void {
@@ -137,6 +151,10 @@ export class SellingBillListComponent implements OnInit {
     }
 
     onFormDialogClosed(): void {
+    }
+
+    onHideDialog(): void {
+        this.closeDialog.emit();
     }
 
     confirmDelete(item: SellingBillListDto): void {

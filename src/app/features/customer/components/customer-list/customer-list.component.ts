@@ -112,6 +112,10 @@ export class CustomerListComponent implements OnInit {
     this.customerDialogService.openForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
   }
 
+  openSellingBills(item: CustomerListDto): void {
+    this.customerDialogService.openSellingBills(item.id, item.customerName);
+  }
+
   confirmDelete(item: CustomerListDto): void {
     this.confirmationService.confirm({
       header: 'Delete Confirmation',

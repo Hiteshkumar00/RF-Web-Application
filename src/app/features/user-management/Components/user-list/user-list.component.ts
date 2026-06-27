@@ -30,11 +30,6 @@ export class UserListComponent implements OnInit {
     columns = UserTableColumns.COLUMNS;
     users: UserDto[] = [];
 
-    // Dialog control
-    showResetPasswordDialog = false;
-    selectedUser: UserDto | null = null;
-
-    resetPasswordForm!: FormGroup;
 
     ngOnInit(): void {
         this.route.data.subscribe(data => {
@@ -102,28 +97,7 @@ export class UserListComponent implements OnInit {
     }
 
     openResetPasswordDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.resetPasswordForm = this.fb.group({
-            newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]]
-        });
-        this.showResetPasswordDialog = true;
-    }
-
-    submitResetPassword(): void {
-        if (this.resetPasswordForm.invalid) {
-            this.resetPasswordForm.markAllAsTouched();
-            return;
-        }
-        const dto = {
-            userId: this.selectedUser!.id,
-            newPassword: this.resetPasswordForm.value.newPassword
-        };
-        this.userApiService.resetPassword(dto).subscribe({
-            next: () => {
-                this.showResetPasswordDialog = false;
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: UserMessages.PASSWORD_RESET });
-            }
-        });
+        this.userDialogService.openResetPassword(user, () => {});
     }
 
     private deleteUser(id: number): void {

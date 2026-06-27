@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { DialogManagerService } from '../../../core/services/dialog-manager.service';
 import { UserFormDialogComponent } from '../Components/user-form-dialog/user-form-dialog.component';
 import { UserViewDialogComponent } from '../Components/user-view-dialog/user-view-dialog.component';
+import { UserResetPasswordDialogComponent } from '../Components/user-reset-password-dialog/user-reset-password-dialog.component';
 import { UserDto } from '../models/user.model';
 import { AuthApiService } from '../../auth/services/auth-api.service';
 import { DropdownService } from '../../../shared/services/dropdown.service';
@@ -48,6 +49,19 @@ export class UserDialogService {
       { visible: true, user },
       {
         closed: () => {
+          onClosed();
+          this.dialogManager.destroy(ref);
+        }
+      }
+    );
+  }
+
+  openResetPassword(user: UserDto, onClosed: () => void): void {
+    const ref = this.dialogManager.open(
+      UserResetPasswordDialogComponent,
+      { visible: true, user },
+      {
+        onClose: () => {
           onClosed();
           this.dialogManager.destroy(ref);
         }

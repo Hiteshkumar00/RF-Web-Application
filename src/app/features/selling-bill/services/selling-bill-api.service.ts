@@ -22,6 +22,10 @@ export class SellingBillApiService {
         return this.http.get<SellingBillDetailsDto>(`${this.basePath}/GetById/${id}`);
     }
 
+    getByCustomerId(customerId: number): Observable<SellingBillListDto[]> {
+        return this.http.get<SellingBillListDto[]>(`${this.basePath}/GetByCustomerId/${customerId}`);
+    }
+
     create(dto: CreateSellingBillDto): Observable<number> {
         return this.http.post<number>(`${this.basePath}/Create`, dto);
     }

@@ -6,6 +6,7 @@ import { UserManagementRoutingModule } from './user-management-routing-module';
 import { UserListComponent } from './Components/user-list/user-list.component';
 import { UserFormDialogComponent } from './Components/user-form-dialog/user-form-dialog.component';
 import { UserViewDialogComponent } from './Components/user-view-dialog/user-view-dialog.component';
+import { UserResetPasswordDialogComponent } from './Components/user-reset-password-dialog/user-reset-password-dialog.component';
 
 import { SharedModule } from '../../shared/shared-module';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -15,7 +16,8 @@ import { TagModule } from 'primeng/tag';
     declarations: [
         UserListComponent,
         UserFormDialogComponent,
-        UserViewDialogComponent
+        UserViewDialogComponent,
+        UserResetPasswordDialogComponent
     ],
     imports: [
         CommonModule,

@@ -3,6 +3,8 @@ import { DashboardApiService } from '../../../dashboard/services/dashboard-api.s
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
+import { ProductDialogService } from '../../services/product-dialog.service';
+import { inject } from '@angular/core';
 
 @Component({
   selector: 'app-available-stock',
@@ -15,10 +17,7 @@ export class AvailableStockComponent implements OnInit {
   expandedRows: any = {};
   
   // Dialog controls
-  showFormDialog = false;
-  formDialogMode: 'create' | 'update' | 'view' = 'create';
-  selectedId?: number;
-
+  private productDialogService = inject(ProductDialogService);
 
     constructor(
     private dashboardApiService: DashboardApiService,
@@ -80,23 +79,14 @@ export class AvailableStockComponent implements OnInit {
   }
 
   openEditDialog(productId: number): void {
-    this.formDialogMode = 'update';
-    this.selectedId = productId;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('update', productId, () => this.onFormSaved(), () => {});
   }
 
   openViewDialog(productId: number): void {
-    this.formDialogMode = 'view';
-    this.selectedId = productId;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('view', productId, () => this.onFormSaved(), () => {});
   }
-
 
   onFormSaved(): void {
     this.loadData();
-  }
-
-  onFormDialogClosed(): void {
-    this.showFormDialog = false;
   }
 }

@@ -35,10 +35,6 @@ export class AgencyAdvancedComponent implements OnInit {
     selectedAgencies: AgencyAdvancedListDto[] = [];
     exportMenuItems: MenuItem[] = [];
 
-    showDetailDialog = false;
-    selectedDetail: ViewAgencyAllDetailDto | null = null;
-    expandedYearRows: any = {};
-
 
     // Summary totals
     get totalAllBills(): number {
@@ -93,15 +89,9 @@ export class AgencyAdvancedComponent implements OnInit {
     openDetailDialog(agency: AgencyAdvancedListDto): void {
         this.agencyApiService.viewAllDetail(agency.id).subscribe({
             next: (data: ViewAgencyAllDetailDto) => {
-                this.selectedDetail = data;
-                this.showDetailDialog = true;
+                this.agencyDialogService.openAdvancedDetailView(data, () => {});
             }
         });
-    }
-
-    closeDetailDialog(): void {
-        this.showDetailDialog = false;
-        this.selectedDetail = null;
     }
 
     exportToExcel(onlySelected: boolean = false): void {

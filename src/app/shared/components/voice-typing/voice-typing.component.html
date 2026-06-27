@@ -1,4 +1,4 @@
-<p-dialog [(visible)]="isOpen" [modal]="true" [style]="{width: '450px'}" 
+<p-dialog [maximizable]="true" [(visible)]="isOpen" [modal]="true" [style]="{width: '450px'}" 
           (onHide)="closePopup()" [draggable]="true" [resizable]="true" 
           [closable]="false" appendTo="body"
           styleClass="border-round-2xl overflow-hidden shadow-6">
@@ -68,3 +68,4 @@
         </div>
     </ng-template>
 </p-dialog>
+

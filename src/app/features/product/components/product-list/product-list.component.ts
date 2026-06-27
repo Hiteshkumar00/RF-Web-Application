@@ -26,11 +26,6 @@ export class ProductListComponent implements OnInit {
   exportMenuItems: MenuItem[] = [];
   filter: ProductFilterDto = { searchTerm: '' };
   loading: boolean = false;
-  
-  // Dialog controls
-  showFormDialog = false;
-  formDialogMode: 'create' | 'update' | 'view' = 'create';
-  selectedId?: number;
 
   ngOnInit(): void {
     this.route.data.subscribe(data => {
@@ -90,21 +85,15 @@ export class ProductListComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    this.formDialogMode = 'create';
-    this.selectedId = undefined;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('create', undefined, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
   openEditDialog(product: ProductDto): void {
-    this.formDialogMode = 'update';
-    this.selectedId = product.id;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('update', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
   openViewDialog(product: ProductDto): void {
-    this.formDialogMode = 'view';
-    this.selectedId = product.id;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('view', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
 
@@ -113,7 +102,6 @@ export class ProductListComponent implements OnInit {
   }
 
   onFormDialogClosed(): void {
-    this.showFormDialog = false;
   }
 
   deleteProduct(product: ProductDto): void {
@@ -128,12 +116,12 @@ export class ProductListComponent implements OnInit {
         this.productApiService.delete(product.id).subscribe({
           next: (res: any) => {
             if (res !== null) {
-                this.loadProducts();
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product deleted' });
+              this.loadProducts();
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product deleted' });
             }
           },
           error: () => {
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete product' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete product' });
           }
         });
       }
