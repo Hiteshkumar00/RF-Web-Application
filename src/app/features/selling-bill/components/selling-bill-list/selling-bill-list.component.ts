@@ -145,7 +145,9 @@ export class SellingBillListComponent implements OnInit {
         this.confirmationService.confirm({
             message: `Are you sure you want to send ${actionName} for ${billIds.length} selected bills?`,
             header: 'Confirm Sending',
-            icon: 'pi pi-exclamation-triangle',
+            icon: type === 'whatsapp' ? 'pi pi-whatsapp' : 'pi pi-envelope',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 if (type === 'whatsapp') {
                     this.apiService.bulkSendWhatsAppMessages(billIds).subscribe({
@@ -156,9 +158,7 @@ export class SellingBillListComponent implements OnInit {
                                 detail: `Successfully sent WhatsApp messages for ${billIds.length} bills.`
                             });
                         },
-                        error: (err) => {
-                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send some WhatsApp messages.' });
-                        }
+                        error: () => {}
                     });
                 } else if (type === 'email') {
                     this.apiService.bulkSendEmailMessages(billIds).subscribe({
@@ -169,9 +169,7 @@ export class SellingBillListComponent implements OnInit {
                                 detail: `Successfully sent Emails for ${billIds.length} bills.`
                             });
                         },
-                        error: (err) => {
-                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send some Emails.' });
-                        }
+                        error: () => {}
                     });
                 }
             }
@@ -265,6 +263,8 @@ export class SellingBillListComponent implements OnInit {
             header: 'Confirm Sending',
             message: `Are you sure you want to send a WhatsApp message to ${item.customerName}?`,
             icon: 'pi pi-whatsapp',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this.apiService.downloadInvoice(item.id).subscribe({
                     next: (blob) => {
@@ -284,6 +284,8 @@ export class SellingBillListComponent implements OnInit {
             header: 'Confirm Sending',
             message: `Are you sure you want to send an Email to ${bill.customerName}?`,
             icon: 'pi pi-envelope',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this.emailService.sendBillOnEmail(bill);
             }
