@@ -20,7 +20,7 @@
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records"
                 [rowsPerPageOptions]="[10, 25, 50]"
                 [globalFilterFields]="['fromPaymentAccountName', 'toPaymentAccountName', 'description']"
-                [scrollable]="true" [scrollHeight]="globalConfig.tableScrollHeight"
+                [scrollable]="true" scrollHeight="calc(100vh - 235px)"
                 [(selection)]="selectedTransfers" (selectionChange)="updateExportMenu()"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 

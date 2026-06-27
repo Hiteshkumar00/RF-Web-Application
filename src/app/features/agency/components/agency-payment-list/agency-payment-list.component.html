@@ -19,7 +19,7 @@
 
     <div class="card-body p-0">
         <p-table [resizableColumns]="true" #dt [value]="payments" [rows]="10" [paginator]="true" [scrollable]="true"
-            [scrollHeight]="globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+            scrollHeight="calc(100vh - 235px)" [rowsPerPageOptions]="[10, 25, 50]"
             [(selection)]="selectedPayments" (selectionChange)="updateExportMenu()"
             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"

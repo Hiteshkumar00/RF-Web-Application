@@ -13,7 +13,7 @@
             <p-table [resizableColumns]="true" [value]="years" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
                 [rowsPerPageOptions]="[10, 25, 50]" [scrollable]="true"
-                [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
+                scrollHeight="calc(100vh - 235px)" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
                     <tr>

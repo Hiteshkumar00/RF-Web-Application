@@ -13,7 +13,7 @@
 
         <div class="card-body p-0">
             <p-table [resizableColumns]="true" [value]="configurations" [loading]="loading" [scrollable]="true"
-                [scrollHeight]="globalConfig.tableScrollHeight"
+                scrollHeight="calc(100vh - 235px)"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
                 <ng-template pTemplate="header">
                     <tr>

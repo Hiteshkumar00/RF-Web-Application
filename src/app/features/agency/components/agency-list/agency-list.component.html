@@ -21,7 +21,7 @@
         [rowsPerPageOptions]="[10, 25, 50]"
         [sortMode]="'multiple'"
         [scrollable]="true"
-        [scrollHeight]="globalConfig.tableScrollHeight"
+        scrollHeight="calc(100vh - 235px)"
         styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
         <ng-template pTemplate="header">

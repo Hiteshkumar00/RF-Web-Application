@@ -35,7 +35,7 @@
 
         <div class="card-body p-0" [ngClass]="{'d-flex flex-column h-100': isDialog}">
             <p-table [resizableColumns]="true" #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
-                [scrollHeight]="isDialog ? 'flex' : globalConfig.tableScrollHeight" [rowsPerPageOptions]="[10, 25, 50]"
+                [scrollHeight]="isDialog ? 'flex' : 'calc(100vh - 235px)'" [rowsPerPageOptions]="[10, 25, 50]"
                 [(selection)]="selectedBills" (selectionChange)="updateExportMenu()"
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"

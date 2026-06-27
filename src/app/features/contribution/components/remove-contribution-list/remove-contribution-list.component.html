@@ -17,7 +17,7 @@
             <p-table [resizableColumns]="true" [value]="contributions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} contributions"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
-                [scrollHeight]="globalConfig.tableScrollHeight"
+                scrollHeight="calc(100vh - 235px)"
                 [(selection)]="selectedContributions" (selectionChange)="updateExportMenu()"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
