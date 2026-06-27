@@ -17,9 +17,14 @@ import { BillDownloadService } from '../../../../shared/services/bill-download.s
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
 
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../../shared/shared-module';
+
 @Component({
     selector: 'app-selling-bill-form-dialog',
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, SharedModule],
     templateUrl: './selling-bill-form-dialog.component.html'
 })
 export class SellingBillFormDialogComponent implements OnChanges {

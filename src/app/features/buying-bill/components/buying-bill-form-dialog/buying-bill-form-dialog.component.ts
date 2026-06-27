@@ -15,9 +15,14 @@ import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../../shared/shared-module';
+
 @Component({
     selector: 'app-buying-bill-form-dialog',
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, SharedModule],
     templateUrl: './buying-bill-form-dialog.component.html'
 })
 export class BuyingBillFormDialogComponent implements OnChanges {

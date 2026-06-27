@@ -7,12 +7,16 @@ import { ProductFormDialogComponent } from './components/product-dialog/product-
 import { AvailableStockComponent } from './components/available-stock/available-stock.component';
 import { ProductListResolver } from './resolvers/product-list.resolver';
 import { AvailableStockResolver } from './resolvers/available-stock.resolver';
+import { ProductStockHistoryDialogComponent } from './components/product-stock-history-dialog/product-stock-history-dialog.component';
+
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
     ProductListComponent,
     ProductFormDialogComponent,
-    AvailableStockComponent
+    AvailableStockComponent,
+    ProductStockHistoryDialogComponent
   ],
   imports: [
     CommonModule,
@@ -24,6 +28,9 @@ import { AvailableStockResolver } from './resolvers/available-stock.resolver';
   ],
   exports: [
     ProductFormDialogComponent
+  ],
+  providers: [
+    DialogService
   ]
 })
 export class ProductModule { }

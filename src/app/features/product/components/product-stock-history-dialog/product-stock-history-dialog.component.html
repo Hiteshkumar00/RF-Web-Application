@@ -1,0 +1,79 @@
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '90vw', height: '90vh' }" [draggable]="true"
+    [resizable]="true" [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+
+    <ng-template pTemplate="header">
+        <div class="d-flex align-items-center justify-content-between w-100 pe-3">
+            <span class="p-dialog-title m-0">Stock History: {{productName}}</span>
+            <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="close()"
+                styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
+        </div>
+    </ng-template>
+
+    <div class="card-header py-3 border-0 bg-transparent px-0">
+        <div class="d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">
+                Stock History
+                <i class="pi pi-info-circle text-primary ms-2 fs-6 cursor-pointer"
+                    pTooltip="This table shows the remaining stock from previous purchases. Stock is depleted from the oldest bills first."
+                    tooltipPosition="bottom"></i>
+            </h5>
+            <div class="d-flex align-items-center gap-2">
+                <p-button icon="pi pi-file-excel" label="Export" severity="success" size="small" [outlined]="true"
+                    (onClick)="exportToExcel()" />
+            </div>
+        </div>
+    </div>
+
+    <p-table [resizableColumns]="true" columnResizeMode="expand" [value]="productHistory" [scrollable]="true" scrollHeight="400px"
+        [loading]="loading" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
+        <ng-template pTemplate="header">
+            <tr class="small text-uppercase">
+                <th pResizableColumn style="width: 100px">Stock ID</th>
+                <th pResizableColumn style="width: 100px">Bill ID</th>
+                <th pResizableColumn style="width: 80px" class="text-center">Action</th>
+                <th pResizableColumn style="width: 120px">Bill No</th>
+                <th pResizableColumn>Agency Name</th>
+                <th pResizableColumn style="width: 110px">Buying Date</th>
+                <th pResizableColumn class="text-center">Total purchased quantity</th>
+                <th pResizableColumn class="text-end">Puchised price per item</th>
+                <th pResizableColumn class="text-end">Discount per item</th>
+                <th pResizableColumn class="text-end">Net percised price</th>
+                <th pResizableColumn class="text-end">Total discount</th>
+                <th pResizableColumn class="text-end">Total net perchised amount</th>
+                <th pResizableColumn class="text-center">Total selled</th>
+                <th pResizableColumn class="text-center fw-bold text-primary">Total remaining</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-history>
+            <tr [ngClass]="{'opacity-50 text-muted': history.remainingQty === 0}">
+                <td class="fw-bold">{{history.stockId}}</td>
+                <td class="fw-bold">{{history.billId}}</td>
+                <td class="text-center">
+                    <p-button *ngIf="history.billId > 0" icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary" size="small"
+                        pTooltip="View Bill" tooltipPosition="right" (onClick)="viewBill(history.billId)" />
+                </td>
+                <td class="fw-bold">{{history.billNo}}</td>
+                <td>{{history.agencyName}}</td>
+                <td>{{history.date | rfDate}}</td>
+                <td class="text-center">{{history.quantity}}</td>
+                <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
+                <td class="text-end text-danger">{{history.discountPerItem | currency:'INR'}}</td>
+                <td class="text-end fw-bold text-success">{{history.netPurchasePrice | currency:'INR'}}</td>
+                <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
+                <td class="text-end fw-semibold">{{history.totalNetPurchasedAmount | currency:'INR'}}</td>
+                <td class="text-center">{{history.totalSold}}</td>
+                <td class="text-center fw-bold"
+                    [ngClass]="history.remainingQty > 0 ? 'text-primary bg-primary-subtle' : ''">
+                    {{history.remainingQty}}
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="14" class="text-center py-4 text-muted italic">No stock entries recorded for this product.
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</p-dialog>
