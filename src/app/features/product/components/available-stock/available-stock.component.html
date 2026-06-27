@@ -28,8 +28,8 @@
                         <p-sortIcon field="totalPurchaseCount" /></th>
                     <th pResizableColumn pSortableColumn="totalSoldCount" class="text-end">Selled quantity <p-sortIcon
                             field="totalSoldCount" /></th>
-                    <th pResizableColumn pSortableColumn="totalPurchaseCost" class="text-end">Totol buying amout total
-                        <p-sortIcon field="totalPurchaseCost" /></th>
+                    <th pResizableColumn pSortableColumn="totalBuyingAmount" class="text-end">Total buying amount <p-sortIcon field="totalBuyingAmount" /></th>
+                    <th pResizableColumn pSortableColumn="totalPurchaseCost" class="text-end">Total buying amount for sold product <p-sortIcon field="totalPurchaseCost" /></th>
                     <th pResizableColumn pSortableColumn="totalSellingAmount" class="text-end">Total selling amount
                         <p-sortIcon field="totalSellingAmount" /></th>
                     <th pResizableColumn pSortableColumn="totalProfit" class="text-end">Total profit by product
@@ -61,6 +61,7 @@
                     </td>
                     <td class="text-end fw-semibold text-secondary">{{item.totalPurchaseCount}}</td>
                     <td class="text-end fw-semibold">{{item.totalSoldCount}}</td>
+                    <td class="text-end">{{item.totalBuyingAmount | currency:'INR'}}</td>
                     <td class="text-end">{{item.totalPurchaseCost | currency:'INR'}}</td>
                     <td class="text-end fw-semibold">{{item.totalSellingAmount | currency:'INR'}}</td>
                     <td class="text-end">

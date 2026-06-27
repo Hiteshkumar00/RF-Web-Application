@@ -39,7 +39,8 @@ export class AvailableStockComponent implements OnInit {
       'Product Name': item.productName,
       'Buyed Quantity': item.totalPurchaseCount || 0,
       'Selled Quantity': item.totalSoldCount || 0,
-      'Total Buying Amount': item.totalPurchaseCost || 0,
+      'Total Buying Amount': item.totalBuyingAmount || 0,
+      'Total Buying Amount for Sold Product': item.totalPurchaseCost || 0,
       'Total Selling Amount': item.totalSellingAmount || 0,
       'Total Profit': item.totalProfit || 0,
       'Current Stock': item.availableStock || 0
