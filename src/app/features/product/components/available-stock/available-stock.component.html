@@ -28,7 +28,7 @@
                 <tr class="text-uppercase small">
                     <th pResizableColumn style="width: 3rem"></th>
                     <th pResizableColumn style="width: 80px">Image</th>
-                    <th pResizableColumn style="width: 100px" class="text-center">Action</th>
+
                     <th pResizableColumn pSortableColumn="productName">Product Name <p-sortIcon field="productName" /></th>
                     <th pResizableColumn pSortableColumn="totalSoldCount" class="text-end">Sold Qty <p-sortIcon field="totalSoldCount" />
                     </th>
@@ -58,16 +58,7 @@
                             <i class="pi pi-image text-muted"></i>
                         </div>
                     </td>
-                    <td class="text-center">
-                        <div class="d-flex justify-content-center">
-                            <p-button icon="pi pi-eye" [text]="true" [rounded]="true" severity="secondary"
-                                (onClick)="openViewDialog(item.productId)" pTooltip="View Details"
-                                tooltipPosition="left" />
-                            <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="primary"
-                                (onClick)="openEditDialog(item.productId)" pTooltip="Edit Product"
-                                tooltipPosition="left" />
-                        </div>
-                    </td>
+
                     <td>
                         <div class="fw-semibold">{{item.productName}}</div>
                     </td>
@@ -89,7 +80,7 @@
 
             <ng-template #expandedrow let-item>
                 <tr>
-                    <td colspan="9">
+                    <td colspan="8">
                         <div class="p-3 border-start border-4 border-primary rounded-end">
                             <div class="d-flex align-items-center mb-3">
                                 <i class="pi pi-history me-2 text-primary"></i>
@@ -146,7 +137,7 @@
 
     <ng-template #emptymessage>
         <tr>
-            <td colspan="9" class="text-center p-5">
+            <td colspan="8" class="text-center p-5">
                 <div class="py-4">
                     <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
                     <span class="text-muted">No product profit data available for the selected period.</span>
