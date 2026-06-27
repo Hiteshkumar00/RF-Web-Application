@@ -1,4 +1,5 @@
 <p-dialog *ngIf="isDialog" [(visible)]="visible" [modal]="true" [style]="{width: '90vw', height: '90vh'}"
+    [contentStyle]="{'display': 'flex', 'flex-direction': 'column'}"
     [maximizable]="true" [draggable]="false" [resizable]="false" (visibleChange)="!$event && onHideDialog()"
     header="Customer Buying Bills">
     <ng-container *ngTemplateOutlet="content"></ng-container>
@@ -12,7 +13,7 @@
     <!-- Summary Cards -->
     <app-statistics-cards [cards]="statisticCards"></app-statistics-cards>
 
-    <div class="card border-0 shadow-sm" [ngClass]="{'h-100': isDialog}">
+    <div class="card border-0 shadow-sm" [ngClass]="{'d-flex flex-column flex-grow-1 overflow-hidden': isDialog}">
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
                 <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0" *ngIf="!isDialog">{{ title }}
@@ -33,7 +34,7 @@
             </div>
         </div>
 
-        <div class="card-body p-0" [ngClass]="{'d-flex flex-column h-100': isDialog}">
+        <div class="card-body p-0" [ngClass]="{'d-flex flex-column flex-grow-1 overflow-hidden': isDialog}">
             <p-table [resizableColumns]="true" #dt [value]="bills" [rows]="10" [paginator]="true" [scrollable]="true"
                 [scrollHeight]="isDialog ? 'flex' : 'calc(100vh - 235px)'" [rowsPerPageOptions]="[10, 25, 50]"
                 [(selection)]="selectedBills" (selectionChange)="updateExportMenu()"
