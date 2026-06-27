@@ -18,6 +18,56 @@ export class AgencyAdvancedDetailDialogComponent {
   labels = AgencyLabels;
   expandedYearRows: any = {};
 
+  get billStatisticCards() {
+    if (!this.selectedDetail) return [];
+    return [
+      {
+        title: this.labels.TOTAL_BILLS,
+        amount: this.selectedDetail.totalBillsAmount,
+        colorClass: 'info',
+        icon: 'pi-file'
+      },
+      {
+        title: this.labels.TOTAL_PAID,
+        amount: this.selectedDetail.totalPaidAmount,
+        colorClass: 'success',
+        icon: 'pi-check-circle'
+      },
+      {
+        title: this.labels.TOTAL_REMAINING,
+        amount: this.selectedDetail.totalPendingAmount,
+        colorClass: 'danger',
+        icon: 'pi-clock',
+        isRemaining: true
+      }
+    ];
+  }
+
+  get expenseStatisticCards() {
+    if (!this.selectedDetail) return [];
+    return [
+      {
+        title: 'TOTAL EXPENSES',
+        amount: this.selectedDetail.totalExpenceAmount,
+        colorClass: 'warning',
+        icon: 'pi-truck'
+      },
+      {
+        title: 'EXPENSES PAID',
+        amount: this.selectedDetail.totalExpencePaidAmount,
+        colorClass: 'success',
+        icon: 'pi-check-circle'
+      },
+      {
+        title: 'EXPENSES REMAINING',
+        amount: this.selectedDetail.totalExpencePendingAmount,
+        colorClass: 'danger',
+        icon: 'pi-clock',
+        isRemaining: true
+      }
+    ];
+  }
+
   closeDetailDialog(): void {
     this.onClose.emit();
   }
@@ -26,8 +76,8 @@ export class AgencyAdvancedDetailDialogComponent {
     this.buyingBillDialogService.openForm(
       'view',
       billId,
-      () => {},
-      () => {}
+      () => { },
+      () => { }
     );
   }
 }
