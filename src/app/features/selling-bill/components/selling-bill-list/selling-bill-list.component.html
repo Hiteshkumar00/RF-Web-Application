@@ -26,6 +26,9 @@
                             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             class="p-inputtext-sm shadow-sm" style="width: 250px;" />
                     </p-iconField>
+                    <p-splitButton icon="pi pi-send" label="Send Message" 
+                        [model]="sendMessageMenuItems" severity="info" size="small" [outlined]="true"
+                        *ngIf="canSendWhatsApp || canSendEmail" />
                     <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                     <p-button *ngIf="!isDialog" icon="pi pi-plus" label="New Selling Bill"

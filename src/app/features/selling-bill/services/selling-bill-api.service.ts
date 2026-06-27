@@ -52,6 +52,14 @@ export class SellingBillApiService {
         return this.http.post<boolean>(`${this.basePath}/SendEmailMessage/${id}`, {});
     }
 
+    bulkSendWhatsAppMessages(ids: number[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/BulkSendWhatsAppMessages`, ids);
+    }
+
+    bulkSendEmailMessages(ids: number[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/BulkSendEmailMessages`, ids);
+    }
+
     updatePayments(billId: number, payments: SellingBillPaymentDto[]): Observable<boolean> {
         return this.http.post<boolean>(`${this.basePath}/UpdatePayments/${billId}`, payments);
     }

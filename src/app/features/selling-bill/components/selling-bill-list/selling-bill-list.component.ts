@@ -41,6 +41,7 @@ export class SellingBillListComponent implements OnInit {
     bills: SellingBillListDto[] = [];
     selectedBills: SellingBillListDto[] = [];
     exportMenuItems: MenuItem[] = [];
+    sendMessageMenuItems: MenuItem[] = [];
 
     @Input() isDialog: boolean = false;
     @Input() visible: boolean = false;
@@ -94,6 +95,7 @@ export class SellingBillListComponent implements OnInit {
             }
         });
         this.updateExportMenu();
+        this.updateSendMessageMenu();
     }
 
     public updateExportMenu(): void {
@@ -108,6 +110,72 @@ export class SellingBillListComponent implements OnInit {
             },
             { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
         ];
+        this.updateSendMessageMenu();
+    }
+
+    public updateSendMessageMenu(): void {
+        this.sendMessageMenuItems = [
+            {
+                label: 'Send WhatsApp',
+                icon: 'pi pi-whatsapp',
+                badge: this.selectedBills.length > 0 ? this.selectedBills.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.sendMessagesToSelected('whatsapp'),
+                disabled: this.selectedBills.length === 0,
+                visible: this.canSendWhatsApp
+            },
+            {
+                label: 'Send Email',
+                icon: 'pi pi-envelope',
+                badge: this.selectedBills.length > 0 ? this.selectedBills.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.sendMessagesToSelected('email'),
+                disabled: this.selectedBills.length === 0,
+                visible: this.canSendEmail
+            }
+        ];
+    }
+
+    public sendMessagesToSelected(type: 'whatsapp' | 'email'): void {
+        if (this.selectedBills.length === 0) return;
+
+        const billIds = this.selectedBills.map(b => b.id);
+        const actionName = type === 'whatsapp' ? 'WhatsApp messages' : 'Emails';
+
+        this.confirmationService.confirm({
+            message: `Are you sure you want to send ${actionName} for ${billIds.length} selected bills?`,
+            header: 'Confirm Sending',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                if (type === 'whatsapp') {
+                    this.apiService.bulkSendWhatsAppMessages(billIds).subscribe({
+                        next: () => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: `Successfully sent WhatsApp messages for ${billIds.length} bills.`
+                            });
+                        },
+                        error: (err) => {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send some WhatsApp messages.' });
+                        }
+                    });
+                } else if (type === 'email') {
+                    this.apiService.bulkSendEmailMessages(billIds).subscribe({
+                        next: () => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: `Successfully sent Emails for ${billIds.length} bills.`
+                            });
+                        },
+                        error: (err) => {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send some Emails.' });
+                        }
+                    });
+                }
+            }
+        });
     }
 
     loadData(): void {
@@ -193,19 +261,33 @@ export class SellingBillListComponent implements OnInit {
     }
 
     sendWhatsApp(item: SellingBillListDto): void {
-        this.apiService.downloadInvoice(item.id).subscribe({
-            next: (blob) => {
-                const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
-                this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
-            },
-            error: () => {
-                this.whatsAppService.sendBillOnWhatsApp(item);
+        this.confirmationService.confirm({
+            header: 'Confirm Sending',
+            message: `Are you sure you want to send a WhatsApp message to ${item.customerName}?`,
+            icon: 'pi pi-whatsapp',
+            accept: () => {
+                this.apiService.downloadInvoice(item.id).subscribe({
+                    next: (blob) => {
+                        const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
+                        this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
+                    },
+                    error: () => {
+                        this.whatsAppService.sendBillOnWhatsApp(item);
+                    }
+                });
             }
         });
     }
 
     sendEmail(bill: SellingBillListDto): void {
-        this.emailService.sendBillOnEmail(bill);
+        this.confirmationService.confirm({
+            header: 'Confirm Sending',
+            message: `Are you sure you want to send an Email to ${bill.customerName}?`,
+            icon: 'pi pi-envelope',
+            accept: () => {
+                this.emailService.sendBillOnEmail(bill);
+            }
+        });
     }
 
     exportToExcel(onlySelected: boolean = false): void {
