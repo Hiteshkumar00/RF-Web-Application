@@ -67,6 +67,11 @@ export class AgencyPersonFormDialogComponent implements OnChanges, OnDestroy {
         });
     }
 
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
+    }
+
     onSubmit(): void {
         if (this.form.invalid) {
             this.form.markAllAsTouched();

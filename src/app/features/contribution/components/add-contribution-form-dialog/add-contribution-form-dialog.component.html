@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '800px' }" [draggable]="false" [resizable]="false"
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '800px' }" [draggable]="true" [resizable]="true"
     [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
@@ -107,6 +107,8 @@
 
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end pt-3 mt-3" *ngIf="form">
+            <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                (onClick)="enableEditMode()" />
             <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true" (onClick)="requestClose()" />
             <p-button *ngIf="mode !== 'view'" label="Save" icon="pi pi-check" (onClick)="onSubmit()"
                 [disabled]="form.invalid" severity="primary" class="shadow-sm" />

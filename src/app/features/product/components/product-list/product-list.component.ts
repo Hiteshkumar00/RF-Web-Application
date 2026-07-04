@@ -4,6 +4,8 @@ import { ProductDto, ProductFilterDto } from '../../models/product.dto';
 import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { ActivatedRoute } from '@angular/router';
+import { ProductDialogService } from '../../services/product-dialog.service';
 
 @Component({
   selector: 'app-product-list',
@@ -16,20 +18,23 @@ export class ProductListComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   public globalConfig = inject(GlobalConfigService);
   private excelService = inject(ExcelService);
+  private route = inject(ActivatedRoute);
+  private productDialogService = inject(ProductDialogService);
 
   products: ProductDto[] = [];
   selectedProducts: ProductDto[] = [];
   exportMenuItems: MenuItem[] = [];
   filter: ProductFilterDto = { searchTerm: '' };
   loading: boolean = false;
-  
-  // Dialog controls
-  showFormDialog = false;
-  formDialogMode: 'create' | 'update' | 'view' = 'create';
-  selectedId?: number;
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.products = data['data'];
+      } else {
+        this.loadProducts();
+      }
+    });
     this.updateExportMenu();
   }
 
@@ -80,21 +85,15 @@ export class ProductListComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    this.formDialogMode = 'create';
-    this.selectedId = undefined;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('create', undefined, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
   openEditDialog(product: ProductDto): void {
-    this.formDialogMode = 'update';
-    this.selectedId = product.id;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('update', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
   openViewDialog(product: ProductDto): void {
-    this.formDialogMode = 'view';
-    this.selectedId = product.id;
-    this.showFormDialog = true;
+    this.productDialogService.openForm('view', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
   }
 
 
@@ -103,7 +102,6 @@ export class ProductListComponent implements OnInit {
   }
 
   onFormDialogClosed(): void {
-    this.showFormDialog = false;
   }
 
   deleteProduct(product: ProductDto): void {
@@ -118,12 +116,12 @@ export class ProductListComponent implements OnInit {
         this.productApiService.delete(product.id).subscribe({
           next: (res: any) => {
             if (res !== null) {
-                this.loadProducts();
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product deleted' });
+              this.loadProducts();
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product deleted' });
             }
           },
           error: () => {
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete product' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete product' });
           }
         });
       }

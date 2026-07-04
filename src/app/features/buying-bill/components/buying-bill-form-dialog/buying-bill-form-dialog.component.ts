@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
 import { ProductApiService } from '../../../product/services/product-api.service';
+import { ProductDialogService } from '../../../product/services/product-dialog.service';
 import { ProductDto } from '../../../product/models/product.dto';
 import { ConfirmationService } from 'primeng/api';
 import { BuyingBillApiService } from '../../services/buying-bill-api.service';
@@ -14,20 +15,24 @@ import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { BillDownloadService } from '../../../../shared/services/bill-download.service';
 
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../../shared/shared-module';
+
 @Component({
     selector: 'app-buying-bill-form-dialog',
-    standalone: false,
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule, SharedModule],
     templateUrl: './buying-bill-form-dialog.component.html'
 })
 export class BuyingBillFormDialogComponent implements OnChanges {
     private apiService = inject(BuyingBillApiService);
     private formService = inject(BuyingBillFormService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
-    private productApiService = inject(ProductApiService);
+    private productDialogService = inject(ProductDialogService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -40,15 +45,14 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     labels = BuyingBillConstants.LABELS;
     form!: FormGroup;
 
-    agencyOptions: DropdownOption[] = [];
-    paymentAccountOptions: DropdownOption[] = [];
+    @Input() agencyOptions: DropdownOption[] = [];
+    @Input() paymentAccountOptions: DropdownOption[] = [];
+    @Input() products: any[] = [];
+    @Input() expenseTypeSuggestions: string[] = [];
+    @Input() billDetails?: any;
 
     private isClosing = false;
-
     productOptions: any[] = [];
-    showProductDialog = false;
-
-    expenseTypeSuggestions: string[] = [];
     filteredExpenseTypeSuggestions: string[] = [];
     expandedExpences: { [key: string]: boolean } = {};
 
@@ -119,60 +123,43 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadOptions();
             this.form = this.formService.createForm();
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                this.apiService.getById(this.id).subscribe({
-                    next: (data) => {
-                        this.formService.patchForm(this.form, data);
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        } else {
-                            this.loadSuggestions(data.agencyId);
-                        }
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.billDetails) {
+                this.formService.patchForm(this.form, this.billDetails);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
             } else {
                 this.addItem();
-                this.loadSuggestions();
             }
 
-            this.form.get('agencyId')?.valueChanges.subscribe(val => {
-                this.loadSuggestions(val);
-            });
-
-            this.loadAllProducts();
+            this.initProductOptions();
         }
     }
 
-    private loadAllProducts(): void {
-        this.productApiService.getAll().subscribe({
-            next: (data) => {
-                this.productOptions = (data || []).map(p => {
-                    const warrantyParts = [];
-                    if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
-                    if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
-                    if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
-                    const warrantyStr = warrantyParts.join(' ');
-                    const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
-                    return {
-                        label: label,
-                        value: p.id,
-                        data: p
-                    };
-                });
-            }
+    private initProductOptions(): void {
+        this.productOptions = (this.products || []).map(p => {
+            const warrantyParts = [];
+            if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
+            if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
+            if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
+            const warrantyStr = warrantyParts.join(' ');
+            const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
+            return {
+                label: label,
+                value: p.id,
+                data: p
+            };
         });
     }
 
     openAddProductDialog(): void {
-        this.showProductDialog = true;
+        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
     }
 
     onProductSave(): void {
-        this.loadAllProducts();
-        this.showProductDialog = false;
+        // Handled by parent
     }
 
     onProductChange(event: any, index: number): void {
@@ -199,13 +186,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         return parts.length > 0 ? parts.join(' ') : null;
     }
 
-    private loadSuggestions(agencyId?: number): void {
-        if (this.mode != 'view' && this.accountDetailsService.enableSuggestions) {
-            this.apiService.getExpenceTypeSuggestions().subscribe({
-                next: (data) => this.expenseTypeSuggestions = data
-            });
-        }
-    }
+
 
 
     searchExpenseTypes(event: any): void {
@@ -222,14 +203,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         expenseForm.patchValue({ expenceType: value });
     }
 
-    private loadOptions(): void {
-        this.dropdownService.getAgencyOptions().subscribe({
-            next: (options) => this.agencyOptions = options
-        });
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.paymentAccountOptions = options
-        });
-    }
+
 
     addItem(): void {
         this.formService.addItem(this.form);
@@ -259,6 +233,11 @@ export class BuyingBillFormDialogComponent implements OnChanges {
 
     removeExpencePayment(expenceIndex: number, paymentIndex: number): void {
         this.formService.removeExpencePayment(this.expences.at(expenceIndex) as FormGroup, paymentIndex);
+    }
+
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
     }
 
     onSubmit(): void {

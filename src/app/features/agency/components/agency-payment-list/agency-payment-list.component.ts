@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { AgencyPaymentApiService } from '../../services/agency-payment-api.service';
+import { AgencyDialogService } from '../../services/agency-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 import { AgencyPaymentListDto } from '../../models/agency-payment.model';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
-
 
 @Component({
     selector: 'app-agency-payment-list',
@@ -19,19 +20,23 @@ export class AgencyPaymentListComponent implements OnInit {
     public globalConfig = inject(GlobalConfigService);
     private excelService = inject(ExcelService);
     private helperService = inject(HelperService);
+    private agencyDialogService = inject(AgencyDialogService);
+    private route = inject(ActivatedRoute);
 
     payments: AgencyPaymentListDto[] = [];
     selectedPayments: AgencyPaymentListDto[] = [];
     exportMenuItems: MenuItem[] = [];
 
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
-
 
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.payments = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 
@@ -59,34 +64,28 @@ export class AgencyPaymentListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.agencyDialogService.openPaymentForm('create', undefined, undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
-    openEditDialog(item: AgencyPaymentListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+    openEditDialog(payment: AgencyPaymentListDto): void {
+        this.agencyDialogService.openPaymentForm('update', payment.id, undefined, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
-    openViewDialog(item: AgencyPaymentListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+    openViewDialog(payment: AgencyPaymentListDto): void {
+        this.agencyDialogService.openPaymentForm('view', payment.id, undefined, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? 'Agency payment recorded successfully.'
-            : 'Agency payment updated successfully.';
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? 'Agency payment recorded successfully.'
+                : 'Agency payment updated successfully.';
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(item: AgencyPaymentListDto): void {

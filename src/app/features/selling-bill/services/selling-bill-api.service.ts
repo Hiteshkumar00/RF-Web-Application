@@ -22,6 +22,10 @@ export class SellingBillApiService {
         return this.http.get<SellingBillDetailsDto>(`${this.basePath}/GetById/${id}`);
     }
 
+    getByCustomerId(customerId: number): Observable<SellingBillListDto[]> {
+        return this.http.get<SellingBillListDto[]>(`${this.basePath}/GetByCustomerId/${customerId}`);
+    }
+
     create(dto: CreateSellingBillDto): Observable<number> {
         return this.http.post<number>(`${this.basePath}/Create`, dto);
     }
@@ -46,6 +50,14 @@ export class SellingBillApiService {
 
     sendEmailMessage(id: number): Observable<boolean> {
         return this.http.post<boolean>(`${this.basePath}/SendEmailMessage/${id}`, {});
+    }
+
+    bulkSendWhatsAppMessages(ids: number[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/BulkSendWhatsAppMessages`, ids);
+    }
+
+    bulkSendEmailMessages(ids: number[]): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/BulkSendEmailMessages`, ids);
     }
 
     updatePayments(billId: number, payments: SellingBillPaymentDto[]): Observable<boolean> {

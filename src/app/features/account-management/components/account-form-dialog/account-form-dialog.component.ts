@@ -8,7 +8,6 @@ import { AccountLabels } from '../../constants/account-labels.constants';
 import { CreateAccountDto } from '../../models/account-create.dto';
 import { UpdateAccountDto } from '../../models/account-update.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
 
 @Component({
     selector: 'app-account-form-dialog',
@@ -19,7 +18,6 @@ export class AccountFormDialogComponent implements OnChanges {
     private accountApiService = inject(AccountApiService);
     private accountFormService = inject(AccountFormService);
     private confirmationService = inject(ConfirmationService);
-    private dropdownService = inject(DropdownService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -30,7 +28,7 @@ export class AccountFormDialogComponent implements OnChanges {
 
     labels = AccountLabels;
     form!: FormGroup;
-    currencyOptions: DropdownOption[] = [];
+    @Input() currencyOptions: DropdownOption[] = [];
     private isClosing = false;
 
     get dialogTitle(): string {
@@ -45,7 +43,6 @@ export class AccountFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadCurrencyOptions();
             this.form = this.accountFormService.createAccountForm();
             if ((this.mode === 'update' || this.mode === 'view') && this.account) {
                 this.accountFormService.patchForm(this.form, this.account);
@@ -56,12 +53,10 @@ export class AccountFormDialogComponent implements OnChanges {
         }
     }
 
-    private loadCurrencyOptions(): void {
-        this.dropdownService.getOptionsByEntityName('Currency').subscribe({
-            next: (options) => {
-                this.currencyOptions = options;
-            }
-        });
+
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
     }
 
     onSubmit(): void {

@@ -1,5 +1,5 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1000px', height: '75vh' }" [draggable]="false"
-    [resizable]="false" [closable]="false" [closeOnEscape]="false" [contentStyle]="{'flex-grow': '1'}">
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px', height: '75vh' }" [draggable]="true"
+    [resizable]="true" [closable]="false" [closeOnEscape]="false" [contentStyle]="{'flex-grow': '1'}">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
@@ -300,6 +300,8 @@
 
     <ng-template pTemplate="footer">
         <div class="d-flex gap-2 justify-content-end">
+            <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                (onClick)="enableEditMode()" />
             <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
                 (onClick)="requestClose()" />
             <p-button *ngIf="mode !== 'view'" [label]="labels.SAVE" icon="pi pi-check" type="button"

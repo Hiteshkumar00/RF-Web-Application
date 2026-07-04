@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { AgencyPaymentApiService } from '../../services/agency-payment-api.service';
 import { AgencyApiService } from '../../services/agency-api.service';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
+
 import { HelperService } from '../../../../core/services/helper.service';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { CreateAgencyPaymentDto, UpdateAgencyPaymentDto } from '../../models/agency-payment.model';
@@ -18,7 +18,6 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
     private fb = inject(FormBuilder);
     private apiService = inject(AgencyPaymentApiService);
     private agencyApiService = inject(AgencyApiService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
 
@@ -31,10 +30,11 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
     @Output() onClose = new EventEmitter<void>();
 
     form!: FormGroup;
-    agencyOptions: DropdownOption[] = [];
-    paymentAccountOptions: DropdownOption[] = [];
-    agencySummary: AgencySummaryDto | null = null;
+    @Input() agencyOptions: DropdownOption[] = [];
+    @Input() paymentAccountOptions: DropdownOption[] = [];
+    @Input() paymentData?: any;
 
+    agencySummary: AgencySummaryDto | null = null;
     private isClosing = false;
 
     get transactions(): FormArray {
@@ -60,21 +60,15 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadOptions();
             this.initForm();
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                this.apiService.getById(this.id).subscribe({
-                    next: (data) => {
-                        this.patchForm(data);
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        }
-                        // Load summary for the patched agency
-                        const agencyId = this.form.get('agencyId')?.value;
-                        if (agencyId) this.loadAgencySummary(agencyId);
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.paymentData) {
+                this.patchForm(this.paymentData);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
+                const agencyId = this.form.get('agencyId')?.value;
+                if (agencyId) this.loadAgencySummary(agencyId);
             } else {
                 this.addTransaction();
                 if (this.agencyId) {
@@ -94,14 +88,6 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
         }
     }
 
-    private loadOptions(): void {
-        this.dropdownService.getAgencyOptions().subscribe({
-            next: (options) => this.agencyOptions = options
-        });
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.paymentAccountOptions = options
-        });
-    }
 
     private loadAgencySummary(agencyId: number): void {
         this.agencySummary = null;
@@ -138,6 +124,11 @@ export class AgencyPaymentFormDialogComponent implements OnChanges {
                 date: [tx.date ? new Date(tx.date) : null]
             }));
         });
+    }
+
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
     }
 
     addTransaction(): void {

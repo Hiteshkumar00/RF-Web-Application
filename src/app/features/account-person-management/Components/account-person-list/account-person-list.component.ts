@@ -5,6 +5,8 @@ import { AccountPersonDto } from '../../models/account-person.model';
 import { AccountPersonLabels } from '../../constants/account-person-labels.constants';
 import { AccountPersonMessages } from '../../constants/account-person-messages.constants';
 import { AccountPersonTable } from '../../constants/account-person-table.constants';
+import { AccountPersonDialogService } from '../../Services/account-person-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-account-person-list',
@@ -15,20 +17,23 @@ export class AccountPersonListComponent implements OnInit {
     constructor(
         private apiService: AccountPersonApiService,
         private confirmationService: ConfirmationService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private route: ActivatedRoute,
+        private accountPersonDialogService: AccountPersonDialogService
     ) {}
 
     labels = AccountPersonLabels;
     columns = AccountPersonTable.COLUMNS;
     accountPersons: AccountPersonDto[] = [];
 
-    showFormDialog = false;
-    showViewDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
-    selectedPerson: AccountPersonDto | null = null;
-
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.accountPersons = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
     }
 
     loadData(): void {
@@ -38,33 +43,21 @@ export class AccountPersonListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedPerson = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.accountPersonDialogService.openForm('create', null, () => {
+            this.loadData();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: AccountPersonMessages.CREATED_SUCCESSFULLY });
+        }, () => {});
     }
 
     openEditDialog(person: AccountPersonDto): void {
-        this.selectedPerson = person;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.accountPersonDialogService.openForm('update', person, () => {
+            this.loadData();
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: AccountPersonMessages.UPDATED_SUCCESSFULLY });
+        }, () => {});
     }
 
     openViewDialog(person: AccountPersonDto): void {
-        this.selectedPerson = person;
-        this.showViewDialog = true;
-    }
-
-    onFormSaved(): void {
-        this.showFormDialog = false;
-        this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? AccountPersonMessages.CREATED_SUCCESSFULLY
-            : AccountPersonMessages.UPDATED_SUCCESSFULLY;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
-    }
-
-    onFormDialogClosed(): void {
-        this.showFormDialog = false;
+        this.accountPersonDialogService.openView(person, () => {});
     }
 
     confirmDelete(person: AccountPersonDto): void {

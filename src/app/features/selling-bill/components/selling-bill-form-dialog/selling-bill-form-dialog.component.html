@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="false" [resizable]="false"
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="true" [resizable]="true"
     [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
@@ -313,6 +313,8 @@
                     </div>
                 </div>
 
+                <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                    (onClick)="enableEditMode()" size="small" />
                 <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
                     (onClick)="requestClose()" size="small" />
                 <p-button *ngIf="mode !== 'view'" label="Save Bill" icon="pi pi-check" (onClick)="onSubmit()"
@@ -322,10 +324,4 @@
     </ng-template>
 
 </p-dialog>
-
-<app-product-form-dialog 
-    [visible]="showProductDialog" 
-    mode="create" 
-    (onSave)="onProductSave()" 
-    (onClose)="showProductDialog = false">
-</app-product-form-dialog>
+

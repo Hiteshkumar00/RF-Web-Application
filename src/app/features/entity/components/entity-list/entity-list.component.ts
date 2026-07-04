@@ -7,6 +7,9 @@ import { EntityMessages } from '../../constants/entity-messages.constants';
 import { EntityTableColumns } from '../../constants/entity-table.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
+import { EntityDialogService } from '../../services/entity-dialog.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
     selector: 'app-entity-list',
     standalone: false,
@@ -17,62 +20,59 @@ export class EntityListComponent implements OnInit {
         private entityApiService: EntityApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
+        private entityDialogService: EntityDialogService
     ) {}
 
     labels = EntityLabels;
     columns = EntityTableColumns.COLUMNS;
     entities: EntityDto[] = [];
 
-    // Dialog control
-    showFormDialog = false;
-    showViewDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
-    selectedEntity: EntityDto | null = null;
-
     ngOnInit(): void {
-        this.loadEntities();
-    }
-
-    loadEntities(): void {
-        this.entityApiService.getAll().subscribe({
-            next: (data) => {
-                this.entities = (data ?? []).map(entity => ({
-                    ...entity,
-                    relatedEntitiesCount: entity.relatedEntities?.length ?? 0
-                })) as any; // relatedEntitiesCount is a virtual field for the table
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.processEntities(data['data']);
+            } else {
+                this.loadEntities();
             }
         });
     }
 
+    loadEntities(): void {
+        this.entityApiService.getAll().subscribe({
+            next: (data) => this.processEntities(data)
+        });
+    }
+
+    private processEntities(data: EntityDto[] | null): void {
+        this.entities = (data ?? []).map(entity => ({
+            ...entity,
+            relatedEntitiesCount: entity.relatedEntities?.length ?? 0
+        })) as any;
+    }
+
     openCreateDialog(): void {
-        this.selectedEntity = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.entityDialogService.openForm('create', null, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(entity: EntityDto): void {
-        this.selectedEntity = entity;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.entityDialogService.openForm('update', entity, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(entity: EntityDto): void {
-        this.selectedEntity = entity;
-        this.showViewDialog = true;
+        this.entityDialogService.openView(entity, () => {});
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update'): void {
         this.loadEntities();
-        const msg = this.formDialogMode === 'create'
+        const msg = mode === 'create'
             ? EntityMessages.CREATED
             : EntityMessages.UPDATED;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(entity: EntityDto): void {

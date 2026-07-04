@@ -5,6 +5,8 @@ import { PaymentTransfer, PaymentTransferFilter } from '../../models/payment-tra
 import { HelperService } from '../../../../core/services/helper.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-payment-transfer-list',
@@ -18,6 +20,9 @@ export class PaymentTransferListComponent implements OnInit {
     private helperService = inject(HelperService);
     public globalConfig = inject(GlobalConfigService);
     private excelService = inject(ExcelService);
+    private route = inject(ActivatedRoute);
+
+    private paymentAccountDialogService = inject(PaymentAccountDialogService);
 
     transfers: PaymentTransfer[] = [];
     selectedTransfers: PaymentTransfer[] = [];
@@ -25,12 +30,14 @@ export class PaymentTransferListComponent implements OnInit {
     loading = false;
     filter: PaymentTransferFilter = {};
 
-    displayDialog = false;
-    dialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
-
     ngOnInit(): void {
-        this.loadTransfers();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.transfers = data['data'];
+            } else {
+                this.loadTransfers();
+            }
+        });
         this.updateExportMenu();
     }
 
@@ -75,21 +82,21 @@ export class PaymentTransferListComponent implements OnInit {
     }
 
     openCreate(): void {
-        this.dialogMode = 'create';
-        this.selectedId = undefined;
-        this.displayDialog = true;
+        this.paymentAccountDialogService.openTransferForm('create', undefined, () => {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer saved successfully' });
+            this.loadTransfers();
+        }, () => {});
     }
 
     openUpdate(transfer: PaymentTransfer): void {
-        this.dialogMode = 'update';
-        this.selectedId = transfer.id;
-        this.displayDialog = true;
+        this.paymentAccountDialogService.openTransferForm('update', transfer.id, () => {
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer saved successfully' });
+            this.loadTransfers();
+        }, () => {});
     }
 
     openView(transfer: PaymentTransfer): void {
-        this.dialogMode = 'view';
-        this.selectedId = transfer.id;
-        this.displayDialog = true;
+        this.paymentAccountDialogService.openTransferForm('view', transfer.id, () => {}, () => {});
     }
 
     deleteTransfer(id: number): void {
@@ -106,15 +113,5 @@ export class PaymentTransferListComponent implements OnInit {
                 });
             }
         });
-    }
-
-    onDialogSave(): void {
-        this.displayDialog = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer saved successfully' });
-        this.loadTransfers();
-    }
-
-    onDialogClose(): void {
-        this.displayDialog = false;
     }
 }

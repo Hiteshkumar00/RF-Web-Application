@@ -28,4 +28,8 @@ export class DashboardApiService {
     getProductProfitMetrics(): Observable<any> {
         return this.http.get<any>(`${this.basePath}/GetProductProfitMetrics`);
     }
+
+    getProductStockHistory(productId: number): Observable<any[]> {
+        return this.http.get<any[]>(`${this.basePath}/GetProductStockHistory/${productId}`);
+    }
 }

@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { HeaderService } from '../../../../shared/services/header.service';
 import { ActivatedRoute } from '@angular/router';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { AccountDialogService } from '../../../account-management/services/account-dialog.service';
 
 @Component({
   selector: 'app-account-profile',
@@ -22,9 +23,10 @@ export class AccountProfileComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private accountDetailsService = inject(AccountDetailsService);
 
+  private accountDialogService = inject(AccountDialogService);
+
   labels = AccountLabels;
   account: AccountDto | null = null;
-  isEditMode = false;
   isLoading = false;
 
   ngOnInit(): void {
@@ -60,14 +62,13 @@ export class AccountProfileComponent implements OnInit {
     });
   }
 
-  toggleEdit(): void {
-    this.isEditMode = !this.isEditMode;
-  }
-
-  onSaved(): void {
-    this.isEditMode = false;
-    this.loadAccount(); // Re-fetch data for local view
-    this.accountDetailsService.refresh(); // Refresh global state (WhatsApp, Suggestions, etc.)
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Account details updated' });
+  editProfile(): void {
+    if (this.account) {
+      this.accountDialogService.openForm('update', this.account, () => {
+        this.loadAccount(); // Re-fetch data for local view
+        this.accountDetailsService.refresh(); // Refresh global state (WhatsApp, Suggestions, etc.)
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Account details updated' });
+      }, () => {});
+    }
   }
 }

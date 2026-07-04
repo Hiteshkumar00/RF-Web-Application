@@ -54,7 +54,6 @@ import { AvatarModule } from 'primeng/avatar';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-
 @NgModule({
   declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent],
   imports: [

@@ -7,6 +7,9 @@ import { AgencyLabels } from '../../constants/agency-labels.constants';
 import { AgencyMessages } from '../../constants/agency-messages.constants';
 import { AgencyTableColumns } from '../../constants/agency-table.constants';
 
+import { AgencyDialogService } from '../../services/agency-dialog.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
     selector: 'app-agency-list',
     standalone: false,
@@ -17,19 +20,23 @@ export class AgencyListComponent implements OnInit {
         private agencyApiService: AgencyApiService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        public globalConfig: GlobalConfigService
+        public globalConfig: GlobalConfigService,
+        private route: ActivatedRoute,
+        private agencyDialogService: AgencyDialogService
     ) {}
 
     labels = AgencyLabels;
     columns = AgencyTableColumns.COLUMNS;
     agencies: AgencyDto[] = [];
 
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
-    selectedAgency: AgencyDto | null = null;
-
     ngOnInit(): void {
-        this.loadAgencies();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.agencies = data['data'];
+            } else {
+                this.loadAgencies();
+            }
+        });
     }
 
     loadAgencies(): void {
@@ -39,28 +46,22 @@ export class AgencyListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedAgency = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.agencyDialogService.openForm('create', null, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(agency: AgencyDto): void {
-        this.selectedAgency = agency;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.agencyDialogService.openForm('update', agency, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update'): void {
         this.loadAgencies();
-        const msg = this.formDialogMode === 'create'
+        const msg = mode === 'create'
             ? AgencyMessages.CREATED
             : AgencyMessages.UPDATED;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(agency: AgencyDto): void {

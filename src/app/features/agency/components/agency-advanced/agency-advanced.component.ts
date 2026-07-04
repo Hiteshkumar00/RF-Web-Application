@@ -11,6 +11,8 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
 import { AccountDetailsService } from '../../../../core/services/account-details.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
+import { AgencyDialogService } from '../../services/agency-dialog.service';
+
 @Component({
     selector: 'app-agency-advanced',
     standalone: false,
@@ -23,7 +25,8 @@ export class AgencyAdvancedComponent implements OnInit {
         private excelService: ExcelService,
         private helperService: HelperService,
         public accountDetailsService: AccountDetailsService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private agencyDialogService: AgencyDialogService
     ) {}
 
     labels = AgencyLabels;
@@ -31,13 +34,6 @@ export class AgencyAdvancedComponent implements OnInit {
     agencies: AgencyAdvancedListDto[] = [];
     selectedAgencies: AgencyAdvancedListDto[] = [];
     exportMenuItems: MenuItem[] = [];
-
-    showDetailDialog = false;
-    selectedDetail: ViewAgencyAllDetailDto | null = null;
-    expandedYearRows: any = {};
-
-    showPaymentDialog = false;
-    selectedAgencyId?: number;
 
 
     // Summary totals
@@ -93,15 +89,9 @@ export class AgencyAdvancedComponent implements OnInit {
     openDetailDialog(agency: AgencyAdvancedListDto): void {
         this.agencyApiService.viewAllDetail(agency.id).subscribe({
             next: (data: ViewAgencyAllDetailDto) => {
-                this.selectedDetail = data;
-                this.showDetailDialog = true;
+                this.agencyDialogService.openAdvancedDetailView(data, () => {});
             }
         });
-    }
-
-    closeDetailDialog(): void {
-        this.showDetailDialog = false;
-        this.selectedDetail = null;
     }
 
     exportToExcel(onlySelected: boolean = false): void {
@@ -122,12 +112,10 @@ export class AgencyAdvancedComponent implements OnInit {
     }
 
     openMakePaymentDialog(agency: AgencyAdvancedListDto): void {
-        this.selectedAgencyId = agency.id;
-        this.showPaymentDialog = true;
+        this.agencyDialogService.openPaymentForm('create', undefined, agency.id, () => this.onPaymentSaved(), () => this.onPaymentDialogClosed());
     }
 
     onPaymentSaved(): void {
-        this.showPaymentDialog = false;
         this.loadAgencies();
         this.messageService.add({
             severity: 'success',
@@ -137,6 +125,5 @@ export class AgencyAdvancedComponent implements OnInit {
     }
 
     onPaymentDialogClosed(): void {
-        this.showPaymentDialog = false;
     }
 }

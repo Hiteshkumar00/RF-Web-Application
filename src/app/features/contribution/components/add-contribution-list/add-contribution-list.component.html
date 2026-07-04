@@ -2,12 +2,15 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }}</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ title }}</h5>
+                    <p-button icon="pi pi-plus" [rounded]="true" 
+                        pTooltip="Add Contribution" tooltipPosition="top"
+                        (onClick)="openCreateDialog()" size="small" />
+                </div>
                 <div class="d-flex align-items-center gap-2">
                     <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
-                    <p-button icon="pi pi-plus" label="Add Contribution" (onClick)="openCreateDialog()"
-                        styleClass="p-button-sm shadow-sm" />
                 </div>
             </div>
         </div>
@@ -17,7 +20,7 @@
             <p-table [resizableColumns]="true" [value]="contributions" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} contributions"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
-                [scrollHeight]="globalConfig.tableScrollHeight"
+                scrollHeight="calc(100vh - 235px)"
                 [(selection)]="selectedContributions" (selectionChange)="updateExportMenu()"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
@@ -71,8 +74,6 @@
         </div>
     </div>
 
-    <!-- Form Dialog -->
-    <app-add-contribution-form-dialog *ngIf="showFormDialog" [visible]="showFormDialog" [mode]="formDialogMode"
-        [id]="selectedId" (onSave)="onFormSaved()" (onClose)="onFormDialogClosed()" />
+
 
 </div>

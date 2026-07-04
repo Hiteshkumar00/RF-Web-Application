@@ -7,7 +7,7 @@ import { ContributionConstants } from '../../constants/contribution.constants';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { CreateRemoveContributionDto, UpdateRemoveContributionDto } from '../../models/remove-contribution.model';
 import { HelperService } from '../../../../core/services/helper.service';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
+
 
 @Component({
     selector: 'app-remove-contribution-form-dialog',
@@ -17,7 +17,6 @@ import { DropdownService } from '../../../../shared/services/dropdown.service';
 export class RemoveContributionFormDialogComponent implements OnChanges {
     private apiService = inject(RemoveContributionApiService);
     private formService = inject(ContributionFormService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
 
@@ -30,8 +29,9 @@ export class RemoveContributionFormDialogComponent implements OnChanges {
 
     title = ContributionConstants.REMOVE_CONTRIBUTION_TITLE;
     form!: FormGroup;
-    personOptions: DropdownOption[] = [];
-    accountOptions: DropdownOption[] = [];
+    @Input() personOptions: DropdownOption[] = [];
+    @Input() accountOptions: DropdownOption[] = [];
+    @Input() contributionData?: any;
     private isClosing = false;
 
     get payments(): FormArray {
@@ -50,32 +50,19 @@ export class RemoveContributionFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadOptions();
             this.form = this.formService.createForm();
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                this.apiService.getById(this.id).subscribe({
-                    next: (data) => {
-                        this.formService.patchForm(this.form, data);
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        }
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.contributionData) {
+                this.formService.patchForm(this.form, this.contributionData);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
             } else {
                 this.addPayment();
             }
         }
     }
 
-    private loadOptions(): void {
-        this.dropdownService.getAccountPersonOptions().subscribe({
-            next: (options) => this.personOptions = options
-        });
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.accountOptions = options
-        });
-    }
 
     addPayment(): void {
         this.formService.addPayment(this.form);
@@ -83,6 +70,11 @@ export class RemoveContributionFormDialogComponent implements OnChanges {
 
     removePayment(index: number): void {
         this.formService.removePayment(this.form, index);
+    }
+
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
     }
 
     onSubmit(): void {

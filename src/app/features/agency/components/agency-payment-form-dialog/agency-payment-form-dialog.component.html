@@ -1,4 +1,4 @@
-<p-dialog [visible]="visible" [modal]="true" [style]="{ width: '900px' }" [draggable]="false" [resizable]="false"
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '900px' }" [draggable]="true" [resizable]="true"
     [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
@@ -150,14 +150,13 @@
     </form>
 
     <ng-template pTemplate="footer">
-        <div class="d-flex gap-2 align-items-center pt-3 mt-3 border-top w-100" *ngIf="form">
-            <div class="ms-auto d-flex gap-2">
-                <p-button label="Cancel" icon="pi pi-times" severity="secondary" [text]="true"
-                    (onClick)="requestClose()" size="small" />
-                <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Payment' : 'Update Payment'"
-                    icon="pi pi-check" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary"
-                    size="small" />
-            </div>
+        <div class="d-flex gap-2 justify-content-end">
+            <p-button *ngIf="mode === 'view'" label="Edit" icon="pi pi-pencil" severity="info" [text]="true"
+                (onClick)="enableEditMode()" />
+            <p-button [label]="'Cancel'" icon="pi pi-times" severity="secondary" [text]="true"
+                (onClick)="requestClose()" />
+            <p-button *ngIf="mode !== 'view'" [label]="mode === 'create' ? 'Save Payment' : 'Update Payment'" 
+                icon="pi pi-check" type="button" (onClick)="onSubmit()" [disabled]="form.invalid" severity="primary" />
         </div>
     </ng-template>
 

@@ -12,10 +12,10 @@ import { ProductModule } from '../product/product.module';
 @NgModule({
     declarations: [
         SellingBillListComponent,
-        SellingBillFormDialogComponent,
         SellingBillPaymentDialogComponent
     ],
     imports: [
+        SellingBillFormDialogComponent,
         CommonModule,
         ReactiveFormsModule,
         SharedModule,

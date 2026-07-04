@@ -7,7 +7,12 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">{{ labels.PAGE_TITLE }}</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">{{ labels.PAGE_TITLE }}</h5>
+                    <p-button icon="pi pi-plus" [rounded]="true" 
+                        [pTooltip]="labels.ADD_EXPENSE" tooltipPosition="top"
+                        (onClick)="openCreateDialog()" size="small" />
+                </div>
                 <div class="d-flex align-items-center gap-2">
                     <p-iconField iconPosition="left">
                         <p-inputIcon styleClass="pi pi-search" />
@@ -17,8 +22,6 @@
                     </p-iconField>
                     <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
-                    <p-button icon="pi pi-plus" [label]="labels.ADD_EXPENSE" (onClick)="openCreateDialog()"
-                        styleClass="p-button-sm shadow-sm" />
                 </div>
             </div>
         </div>
@@ -28,7 +31,7 @@
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} expenses"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
                 [(selection)]="selectedExpenses" (selectionChange)="updateExportMenu()"
-                [scrollHeight]="globalConfig.tableScrollHeight" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
+                scrollHeight="calc(100vh - 235px)" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
                 [globalFilterFields]="['expenceType', 'agencyName']" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
@@ -134,8 +137,6 @@
         </div>
     </div>
 
-    <!-- Form Dialog -->
-    <app-expense-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [expenseId]="selectedExpenseId"
-        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
+
 
 </div>

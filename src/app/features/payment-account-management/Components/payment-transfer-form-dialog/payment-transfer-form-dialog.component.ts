@@ -5,7 +5,6 @@ import { PaymentAccountApiService } from '../../Services/payment-account-api.ser
 import { PaymentTransferFormService } from '../../Services/payment-transfer-form.service';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
 import { HelperService } from '../../../../core/services/helper.service';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
 import { CreatePaymentTransfer, UpdatePaymentTransfer } from '../../models/payment-transfer.model';
 
 @Component({
@@ -16,20 +15,20 @@ import { CreatePaymentTransfer, UpdatePaymentTransfer } from '../../models/payme
 export class PaymentTransferFormDialogComponent implements OnChanges {
     private apiService = inject(PaymentAccountApiService);
     private formService = inject(PaymentTransferFormService);
-    private dropdownService = inject(DropdownService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
     @Input() id?: number;
+    @Input() accountOptions: DropdownOption[] = [];
+    @Input() transferData: any;
 
     @Output() onSave = new EventEmitter<void>();
     @Output() onClose = new EventEmitter<void>();
 
     title = 'Payment Transfer';
     form!: FormGroup;
-    accountOptions: DropdownOption[] = [];
     private isClosing = false;
 
     get dialogTitle(): string {
@@ -44,26 +43,20 @@ export class PaymentTransferFormDialogComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadOptions();
             this.form = this.formService.createForm();
 
-            if ((this.mode === 'update' || this.mode === 'view') && this.id) {
-                this.apiService.getTransferById(this.id).subscribe({
-                    next: (data) => {
-                        this.formService.patchForm(this.form, data);
-                        if (this.mode === 'view') {
-                            this.form.disable();
-                        }
-                    }
-                });
+            if ((this.mode === 'update' || this.mode === 'view') && this.transferData) {
+                this.formService.patchForm(this.form, this.transferData);
+                if (this.mode === 'view') {
+                    this.form.disable();
+                }
             }
         }
     }
 
-    private loadOptions(): void {
-        this.dropdownService.getPaymentAccountOptions().subscribe({
-            next: (options) => this.accountOptions = options
-        });
+    enableEditMode(): void {
+        this.mode = 'update';
+        this.form.enable();
     }
 
     onSubmit(): void {

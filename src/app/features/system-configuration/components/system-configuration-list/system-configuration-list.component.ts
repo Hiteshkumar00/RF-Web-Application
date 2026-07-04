@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SystemConfigurationService } from '../../services/system-configuration.service';
+import { ActivatedRoute } from '@angular/router';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { SystemConfiguration } from '../../models/system-configuration';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-system-configuration-list',
@@ -15,29 +16,41 @@ export class SystemConfigurationListComponent implements OnInit {
   saving: boolean = false;
 
   constructor(
-    private configService: SystemConfigurationService,
+    private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    private route: ActivatedRoute,
+    private configService: SystemConfigurationService,
     public globalConfig: GlobalConfigService
   ) { }
 
   ngOnInit(): void {
-    this.loadConfigurations();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.processConfigurations(data['data']);
+      } else {
+        this.loadConfigurations();
+      }
+    });
   }
 
   loadConfigurations(): void {
     this.loading = true;
     this.configService.getAll().subscribe({
       next: (data) => {
-        this.configurations = (data ?? []).map(c => ({
-          ...c,
-          propertyValueBool: c.propertyType === 'boolean' ? c.propertyValue === 'true' : false
-        }));
+        this.processConfigurations(data);
         this.loading = false;
       },
       error: () => {
         this.loading = false;
       }
     });
+  }
+
+  private processConfigurations(data: SystemConfiguration[] | null): void {
+    this.configurations = (data ?? []).map(c => ({
+      ...c,
+      propertyValueBool: c.propertyType === 'boolean' ? c.propertyValue === 'true' : false
+    }));
   }
 
   saveAll(): void {

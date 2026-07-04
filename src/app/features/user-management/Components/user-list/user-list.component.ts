@@ -6,6 +6,8 @@ import { UserDto } from '../../models/user.model';
 import { UserLabels } from '../../constants/user-labels.constants';
 import { UserMessages } from '../../constants/user-messages.constants';
 import { UserTableColumns } from '../../constants/user-table.constants';
+import { UserDialogService } from '../../Services/user-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 
 @Component({
@@ -19,24 +21,24 @@ export class UserListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private fb: FormBuilder,
-        public globalConfig: GlobalConfigService
+        private route: ActivatedRoute,
+        public globalConfig: GlobalConfigService,
+        private userDialogService: UserDialogService
     ) {}
 
     labels = UserLabels;
     columns = UserTableColumns.COLUMNS;
     users: UserDto[] = [];
 
-    // Dialog control
-    showFormDialog = false;
-    showViewDialog = false;
-    showResetPasswordDialog = false;
-    formDialogMode: 'create' | 'update' = 'create';
-    selectedUser: UserDto | null = null;
-
-    resetPasswordForm!: FormGroup;
 
     ngOnInit(): void {
-        this.loadUsers();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.users = data['data'];
+            } else {
+                this.loadUsers();
+            }
+        });
     }
 
     loadUsers(): void {
@@ -46,33 +48,26 @@ export class UserListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedUser = null;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.userDialogService.openForm('create', null, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.userDialogService.openForm('update', user, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.showViewDialog = true;
+        this.userDialogService.openView(user, () => {});
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update'): void {
         this.loadUsers();
-        const msg = this.formDialogMode === 'create'
+        const msg = mode === 'create'
             ? UserMessages.CREATED
             : UserMessages.UPDATED;
         this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(user: UserDto): void {
@@ -102,28 +97,7 @@ export class UserListComponent implements OnInit {
     }
 
     openResetPasswordDialog(user: UserDto): void {
-        this.selectedUser = user;
-        this.resetPasswordForm = this.fb.group({
-            newPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]]
-        });
-        this.showResetPasswordDialog = true;
-    }
-
-    submitResetPassword(): void {
-        if (this.resetPasswordForm.invalid) {
-            this.resetPasswordForm.markAllAsTouched();
-            return;
-        }
-        const dto = {
-            userId: this.selectedUser!.id,
-            newPassword: this.resetPasswordForm.value.newPassword
-        };
-        this.userApiService.resetPassword(dto).subscribe({
-            next: () => {
-                this.showResetPasswordDialog = false;
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: UserMessages.PASSWORD_RESET });
-            }
-        });
+        this.userDialogService.openResetPassword(user, () => {});
     }
 
     private deleteUser(id: number): void {

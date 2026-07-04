@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { SellingBillApiService } from '../../services/selling-bill-api.service';
 import { SellingBillListDto } from '../../models/selling-bill.model';
@@ -11,6 +11,9 @@ import { AccountDetailsService } from '../../../../core/services/account-details
 import { WhatsAppService } from '../../../../shared/services/whatsapp.service';
 import { EmailService } from '../../../../shared/services/email.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
+
+import { SellingBillDialogService } from '../../services/selling-bill-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -28,7 +31,9 @@ export class SellingBillListComponent implements OnInit {
         private helperService: HelperService,
         public accountDetailsService: AccountDetailsService,
         private whatsAppService: WhatsAppService,
-        private emailService: EmailService
+        private emailService: EmailService,
+        private route: ActivatedRoute,
+        private sellingBillDialogService: SellingBillDialogService
     ) {}
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
@@ -36,20 +41,18 @@ export class SellingBillListComponent implements OnInit {
     bills: SellingBillListDto[] = [];
     selectedBills: SellingBillListDto[] = [];
     exportMenuItems: MenuItem[] = [];
+    sendMessageMenuItems: MenuItem[] = [];
 
-    showFormDialog = false;
-    showPaymentDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
-    selectedBill?: SellingBillListDto;
+    @Input() isDialog: boolean = false;
+    @Input() visible: boolean = false;
+    @Input() customerId?: number;
+    @Output() closeDialog = new EventEmitter<void>();
 
     openPaymentDialog(item: SellingBillListDto): void {
-        this.selectedBill = item;
-        this.showPaymentDialog = true;
+        this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => {});
     }
 
     onPaymentSaved(): void {
-        this.showPaymentDialog = false;
         this.loadData();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
     }
@@ -84,8 +87,15 @@ export class SellingBillListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.bills = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
+        this.updateSendMessageMenu();
     }
 
     public updateExportMenu(): void {
@@ -100,46 +110,117 @@ export class SellingBillListComponent implements OnInit {
             },
             { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
         ];
+        this.updateSendMessageMenu();
     }
 
-    loadData(): void {
-        this.apiService.getAll().subscribe({
-            next: (data) => {
-                this.bills = data ?? [];
-                this.updateExportMenu();
+    public updateSendMessageMenu(): void {
+        this.sendMessageMenuItems = [
+            {
+                label: 'Send WhatsApp',
+                icon: 'pi pi-whatsapp',
+                badge: this.selectedBills.length > 0 ? this.selectedBills.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.sendMessagesToSelected('whatsapp'),
+                disabled: this.selectedBills.length === 0,
+                visible: this.canSendWhatsApp
+            },
+            {
+                label: 'Send Email',
+                icon: 'pi pi-envelope',
+                badge: this.selectedBills.length > 0 ? this.selectedBills.length.toString() : undefined,
+                badgeStyleClass: 'p-badge-success',
+                command: () => this.sendMessagesToSelected('email'),
+                disabled: this.selectedBills.length === 0,
+                visible: this.canSendEmail
+            }
+        ];
+    }
+
+    public sendMessagesToSelected(type: 'whatsapp' | 'email'): void {
+        if (this.selectedBills.length === 0) return;
+
+        const billIds = this.selectedBills.map(b => b.id);
+        const actionName = type === 'whatsapp' ? 'WhatsApp messages' : 'Emails';
+
+        this.confirmationService.confirm({
+            message: `Are you sure you want to send ${actionName} for ${billIds.length} selected bills?`,
+            header: 'Confirm Sending',
+            icon: type === 'whatsapp' ? 'pi pi-whatsapp' : 'pi pi-envelope',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
+            accept: () => {
+                if (type === 'whatsapp') {
+                    this.apiService.bulkSendWhatsAppMessages(billIds).subscribe({
+                        next: () => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: `Successfully sent WhatsApp messages for ${billIds.length} bills.`
+                            });
+                        },
+                        error: () => {}
+                    });
+                } else if (type === 'email') {
+                    this.apiService.bulkSendEmailMessages(billIds).subscribe({
+                        next: () => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: `Successfully sent Emails for ${billIds.length} bills.`
+                            });
+                        },
+                        error: () => {}
+                    });
+                }
             }
         });
     }
 
+    loadData(): void {
+        if (this.customerId) {
+            this.apiService.getByCustomerId(this.customerId).subscribe({
+                next: (data) => {
+                    this.bills = data ?? [];
+                    this.updateExportMenu();
+                }
+            });
+        } else {
+            this.apiService.getAll().subscribe({
+                next: (data) => {
+                    this.bills = data ?? [];
+                    this.updateExportMenu();
+                }
+            });
+        }
+    }
+
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(item: SellingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(item: SellingBillListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.sellingBillDialogService.openForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
-            : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
+                : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
+    }
+
+    onHideDialog(): void {
+        this.closeDialog.emit();
     }
 
     confirmDelete(item: SellingBillListDto): void {
@@ -178,19 +259,37 @@ export class SellingBillListComponent implements OnInit {
     }
 
     sendWhatsApp(item: SellingBillListDto): void {
-        this.apiService.downloadInvoice(item.id).subscribe({
-            next: (blob) => {
-                const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
-                this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
-            },
-            error: () => {
-                this.whatsAppService.sendBillOnWhatsApp(item);
+        this.confirmationService.confirm({
+            header: 'Confirm Sending',
+            message: `Are you sure you want to send a WhatsApp message to ${item.customerName}?`,
+            icon: 'pi pi-whatsapp',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
+            accept: () => {
+                this.apiService.downloadInvoice(item.id).subscribe({
+                    next: (blob) => {
+                        const fileName = `Bill_${item.billNo}_${item.date}_${item.customerName}.pdf`;
+                        this.whatsAppService.sendBillOnWhatsApp(item, blob, fileName);
+                    },
+                    error: () => {
+                        this.whatsAppService.sendBillOnWhatsApp(item);
+                    }
+                });
             }
         });
     }
 
     sendEmail(bill: SellingBillListDto): void {
-        this.emailService.sendBillOnEmail(bill);
+        this.confirmationService.confirm({
+            header: 'Confirm Sending',
+            message: `Are you sure you want to send an Email to ${bill.customerName}?`,
+            icon: 'pi pi-envelope',
+            acceptButtonStyleClass: 'p-button-primary',
+            rejectButtonStyleClass: 'p-button-text',
+            accept: () => {
+                this.emailService.sendBillOnEmail(bill);
+            }
+        });
     }
 
     exportToExcel(onlySelected: boolean = false): void {

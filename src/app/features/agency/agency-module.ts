@@ -14,6 +14,8 @@ import { BuyingBillModule } from '../buying-bill/buying-bill-module';
 
 import { SharedModule } from '../../shared/shared-module';
 
+import { AgencyAdvancedDetailDialogComponent } from './components/agency-advanced-detail-dialog/agency-advanced-detail-dialog.component';
+
 @NgModule({
     declarations: [
         AgencyListComponent,
@@ -22,7 +24,8 @@ import { SharedModule } from '../../shared/shared-module';
         AgencyPersonListComponent,
         AgencyPersonFormDialogComponent,
         AgencyPaymentListComponent,
-        AgencyPaymentFormDialogComponent
+        AgencyPaymentFormDialogComponent,
+        AgencyAdvancedDetailDialogComponent
     ],
     imports: [
         CommonModule,

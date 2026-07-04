@@ -5,12 +5,16 @@ import { AgencyAdvancedComponent } from './components/agency-advanced/agency-adv
 import { AgencyPersonListComponent } from './components/agency-person-list/agency-person-list.component';
 import { AgencyPaymentListComponent } from './components/agency-payment-list/agency-payment-list.component';
 import { adminGuard } from '../../core/guards/admin.guard';
+import { AgencyListResolver } from './resolvers/agency-list.resolver';
+import { AgencyPersonListResolver } from './resolvers/agency-person-list.resolver';
+import { AgencyPaymentListResolver } from './resolvers/agency-payment-list.resolver';
 
 const routes: Routes = [
     {
         path: 'manage',
         component: AgencyListComponent,
-        canActivate: [adminGuard]
+        canActivate: [adminGuard],
+        resolve: { data: AgencyListResolver }
     },
     {
         path: 'advanced',
@@ -20,12 +24,14 @@ const routes: Routes = [
     {
         path: 'person',
         component: AgencyPersonListComponent,
-        canActivate: [adminGuard]
+        canActivate: [adminGuard],
+        resolve: { data: AgencyPersonListResolver }
     },
     {
         path: 'payments',
         component: AgencyPaymentListComponent,
-        canActivate: [adminGuard]
+        canActivate: [adminGuard],
+        resolve: { data: AgencyPaymentListResolver }
     },
     {
         path: '',

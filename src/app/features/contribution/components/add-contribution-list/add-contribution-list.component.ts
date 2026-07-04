@@ -5,6 +5,9 @@ import { AddContributionListDto } from '../../models/add-contribution.model';
 import { ContributionConstants } from '../../constants/contribution.constants';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
+import { ActivatedRoute } from '@angular/router';
+
+import { ContributionDialogService } from '../../services/contribution-dialog.service';
 
 @Component({
     selector: 'app-add-contribution-list',
@@ -17,20 +20,24 @@ export class AddContributionListComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         public globalConfig: GlobalConfigService,
-        private excelService: ExcelService
+        private route: ActivatedRoute,
+        private excelService: ExcelService,
+        private contributionDialogService: ContributionDialogService
     ) {}
 
     title = ContributionConstants.ADD_CONTRIBUTION_TITLE;
     contributions: AddContributionListDto[] = [];
     selectedContributions: AddContributionListDto[] = [];
     exportMenuItems: MenuItem[] = [];
-    
-    showFormDialog = false;
-    formDialogMode: 'create' | 'update' | 'view' = 'create';
-    selectedId?: number;
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.data.subscribe(data => {
+            if (data['data']) {
+                this.contributions = data['data'];
+            } else {
+                this.loadData();
+            }
+        });
         this.updateExportMenu();
     }
 
@@ -71,34 +78,28 @@ export class AddContributionListComponent implements OnInit {
     }
 
     openCreateDialog(): void {
-        this.selectedId = undefined;
-        this.formDialogMode = 'create';
-        this.showFormDialog = true;
+        this.contributionDialogService.openAddForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
     }
 
     openEditDialog(item: AddContributionListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'update';
-        this.showFormDialog = true;
+        this.contributionDialogService.openAddForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
     }
 
     openViewDialog(item: AddContributionListDto): void {
-        this.selectedId = item.id;
-        this.formDialogMode = 'view';
-        this.showFormDialog = true;
+        this.contributionDialogService.openAddForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
     }
 
-    onFormSaved(): void {
-        this.showFormDialog = false;
+    onFormSaved(mode: 'create' | 'update' | 'view'): void {
         this.loadData();
-        const msg = this.formDialogMode === 'create'
-            ? ContributionConstants.MESSAGES.CREATE_SUCCESS(this.title)
-            : ContributionConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        if (mode !== 'view') {
+            const msg = mode === 'create'
+                ? ContributionConstants.MESSAGES.CREATE_SUCCESS(this.title)
+                : ContributionConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+        }
     }
 
     onFormDialogClosed(): void {
-        this.showFormDialog = false;
     }
 
     confirmDelete(item: AddContributionListDto): void {

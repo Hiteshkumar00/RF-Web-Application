@@ -8,10 +8,7 @@ import { UserLabels } from '../../constants/user-labels.constants';
 import { CreateUserDto } from '../../models/user-create.dto';
 import { UpdateUserDto } from '../../models/user-update.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
-import { AuthService } from '../../../../core/services/auth.service';
-import { AuthApiService } from '../../../auth/services/auth-api.service';
 import { Subscription } from 'rxjs';
-import { DropdownService } from '../../../../shared/services/dropdown.service';
 
 @Component({
     selector: 'app-user-form-dialog',
@@ -22,9 +19,7 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
     private userApiService = inject(UserApiService);
     private userFormService = inject(UserFormService);
     private confirmationService = inject(ConfirmationService);
-    private authApiService = inject(AuthApiService);
-    private authService = inject(AuthService);
-    private dropdownService = inject(DropdownService);
+
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' = 'create';
@@ -35,8 +30,8 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
 
     labels = UserLabels;
     form!: FormGroup;
-    roleOptions: DropdownOption[] = [];
-    accountOptions: DropdownOption[] = [];
+    @Input() roleOptions: DropdownOption[] = [];
+    @Input() accountOptions: DropdownOption[] = [];
     private isClosing = false;
     private formSub?: Subscription;
 
@@ -51,8 +46,6 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
-            this.loadRoleOptions();
-            this.loadAccountOptions();
             if (this.mode === 'create') {
                 this.form = this.userFormService.createUserForm();
             } else {
@@ -78,19 +71,6 @@ export class UserFormDialogComponent implements OnChanges, OnDestroy {
         this.formSub?.unsubscribe();
     }
 
-    private loadRoleOptions(): void {
-        this.authApiService.getUserRoleOptions().subscribe({
-            next: (options) => this.roleOptions = options
-        });
-    }
-
-    private loadAccountOptions(): void {
-        this.dropdownService.getAccountOptions().subscribe({
-            next: (options) => {
-                this.accountOptions = options;
-            }
-        });
-    }
 
     onSubmit(): void {
         if (this.form.invalid) {

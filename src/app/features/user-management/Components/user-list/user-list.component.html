@@ -2,9 +2,12 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header py-3 border-0">
             <div class="d-flex align-items-center justify-content-between">
-                <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }}</h5>
-                <p-button icon="pi pi-plus" [label]="labels.ADD_USER" (onClick)="openCreateDialog()"
-                    styleClass="p-button-sm shadow-sm" />
+                <div class="d-flex align-items-center gap-2">
+                    <h5 class="mb-0 fw-bold border-start border-4 border-primary ps-2">{{ labels.PAGE_TITLE }}</h5>
+                    <p-button icon="pi pi-plus" [rounded]="true" 
+                        [pTooltip]="labels.ADD_USER" tooltipPosition="top"
+                        (onClick)="openCreateDialog()" size="small" />
+                </div>
             </div>
         </div>
 
@@ -13,7 +16,7 @@
             <p-table [resizableColumns]="true" [value]="users" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
                 [rowsPerPageOptions]="[10, 25, 50]" [sortMode]="'multiple'" [scrollable]="true"
-                [scrollHeight]="globalConfig.tableScrollHeight"
+                scrollHeight="calc(100vh - 235px)"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" columnResizeMode="expand">
 
                 <ng-template pTemplate="header">
@@ -84,50 +87,5 @@
         </div>
     </div>
 
-    <!-- Form Dialog -->
-    <app-user-form-dialog [visible]="showFormDialog" [mode]="formDialogMode" [user]="selectedUser"
-        (saved)="onFormSaved()" (closed)="onFormDialogClosed()" />
-
-    <!-- View Dialog -->
-    <app-user-view-dialog [visible]="showViewDialog" [user]="selectedUser" (closed)="showViewDialog = false" />
-
-    <!-- Reset Password Dialog -->
-    <p-dialog [visible]="showResetPasswordDialog" [modal]="true" [style]="{ width: '400px' }" [draggable]="false"
-        [resizable]="false" [closable]="false" [closeOnEscape]="false">
-
-        <ng-template pTemplate="header">
-            <div class="d-flex align-items-center justify-content-between w-100 pe-3">
-                <span class="p-dialog-title m-0">{{ labels.RESET_PASSWORD_HEADER }}</span>
-                <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" styleClass="p-0"
-                    [style]="{ width: '2rem', height: '2rem' }" (onClick)="showResetPasswordDialog = false" />
-            </div>
-        </ng-template>
-
-        <div class="pt-2" *ngIf="resetPasswordForm" [formGroup]="resetPasswordForm">
-            <p-floatlabel variant="on">
-                <p-password inputId="newPassword" formControlName="newPassword" [toggleMask]="true" [feedback]="false"
-                    styleClass="w-100" inputStyleClass="w-100" autocomplete="new-password" />
-                <label for="newPassword">{{ labels.PASSWORD }}</label>
-            </p-floatlabel>
-            @if (resetPasswordForm.get('newPassword')?.invalid && resetPasswordForm.get('newPassword')?.touched) {
-            @if (resetPasswordForm.get('newPassword')?.hasError('required')) {
-            <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_REQUIRED"
-                class="mt-1 d-block" />
-            } @else if (resetPasswordForm.get('newPassword')?.hasError('minlength')) {
-            <p-message severity="error" size="small" variant="simple" [text]="labels.PASSWORD_MIN"
-                class="mt-1 d-block" />
-            }
-            }
-        </div>
-
-        <ng-template pTemplate="footer">
-            <div class="d-flex gap-2 justify-content-end">
-                <p-button [label]="labels.CANCEL" icon="pi pi-times" severity="secondary" [text]="true"
-                    (onClick)="showResetPasswordDialog = false" />
-                <p-button [label]="labels.SAVE" icon="pi pi-check" severity="help" (onClick)="submitResetPassword()" />
-            </div>
-        </ng-template>
-
-    </p-dialog>
-
 </div>
+

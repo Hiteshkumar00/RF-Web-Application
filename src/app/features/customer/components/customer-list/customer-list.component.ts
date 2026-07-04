@@ -6,6 +6,9 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 import { ExcelService } from '../../../../shared/services/excel.service';
 
+import { CustomerDialogService } from '../../services/customer-dialog.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-customer-list',
   standalone: false,
@@ -15,22 +18,26 @@ export class CustomerListComponent implements OnInit {
   customers: CustomerListDto[] = [];
   selectedCustomers: CustomerListDto[] = [];
   exportMenuItems: MenuItem[] = [];
-  
-  showFormDialog = false;
-  formDialogMode: 'create' | 'update' | 'view' = 'create';
-  selectedId?: number;
 
   constructor(
     private apiService: CustomerApiService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     public globalConfig: GlobalConfigService,
-    private excelService: ExcelService
+    private excelService: ExcelService,
+    private route: ActivatedRoute,
+    private customerDialogService: CustomerDialogService
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
-    this.updateExportMenu();
+    this.route.data.subscribe(data => {
+      if (data['data']) {
+        this.customers = data['data'];
+        this.updateExportMenu();
+      } else {
+        this.loadData();
+      }
+    });
   }
 
   public updateExportMenu(): void {
@@ -94,21 +101,19 @@ export class CustomerListComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    this.selectedId = undefined;
-    this.formDialogMode = 'create';
-    this.showFormDialog = true;
+    this.customerDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
   }
 
   openEditDialog(item: CustomerListDto): void {
-    this.selectedId = item.id;
-    this.formDialogMode = 'update';
-    this.showFormDialog = true;
+    this.customerDialogService.openForm('update', item.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
   }
 
   openViewDialog(item: CustomerListDto): void {
-    this.selectedId = item.id;
-    this.formDialogMode = 'view';
-    this.showFormDialog = true;
+    this.customerDialogService.openForm('view', item.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
+  }
+
+  openSellingBills(item: CustomerListDto): void {
+    this.customerDialogService.openSellingBills(item.id, item.customerName);
   }
 
   confirmDelete(item: CustomerListDto): void {
@@ -138,14 +143,14 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  onFormSaved(): void {
-    this.showFormDialog = false;
+  onFormSaved(mode: 'create' | 'update' | 'view'): void {
     this.loadData();
-    const msg = this.formDialogMode === 'create' ? 'Customer created successfully' : 'Customer updated successfully';
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+    if (mode !== 'view') {
+      const msg = mode === 'create' ? 'Customer created successfully' : 'Customer updated successfully';
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
+    }
   }
 
   onFormDialogClosed(): void {
-    this.showFormDialog = false;
   }
 }
