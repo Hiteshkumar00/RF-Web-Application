@@ -276,6 +276,7 @@ export class ImportExcelWizardComponent implements OnDestroy {
           this.dialogService.open(ImportResultDialogComponent, {
             header: 'Import Result',
             width: '50vw',
+            maximizable: true,
             data: { result: importResult }
           });
         }

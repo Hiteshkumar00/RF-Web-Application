@@ -1,13 +1,16 @@
+@if (result.successCount > 0) {
 <div class="mb-3">
     <span class="font-bold text-lg text-green-600">Successfully Imported: {{ result.successCount }} rows</span>
 </div>
+}
 
 <p-tabs value="0">
     <p-tablist>
         <p-tab value="0">Errors <p-badge [value]="result.errors.length.toString()" severity="danger"></p-badge></p-tab>
-        <p-tab value="1">Warnings <p-badge [value]="result.warnings.length.toString()" severity="warn"></p-badge></p-tab>
+        <p-tab value="1">Warnings <p-badge [value]="result.warnings.length.toString()"
+                severity="warn"></p-badge></p-tab>
     </p-tablist>
-    
+
     <p-tabpanels>
         <p-tabpanel value="0">
             <div *ngIf="result.errors.length === 0" class="text-center py-4 text-500">
@@ -29,7 +32,7 @@
                 </ng-template>
             </p-table>
         </p-tabpanel>
-        
+
         <p-tabpanel value="1">
             <div *ngIf="result.warnings.length === 0" class="text-center py-4 text-500">
                 No warnings generated.
