@@ -1,5 +1,6 @@
-<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px', height: '75vh' }" [draggable]="true"
-    [resizable]="true" [closable]="false" [closeOnEscape]="false" [contentStyle]="{'flex-grow': '1'}">
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px', height: '75vh' }"
+    [draggable]="true" [resizable]="true" [closable]="false" [closeOnEscape]="false"
+    [contentStyle]="{'flex-grow': '1'}">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
@@ -68,7 +69,7 @@
                             </div>
                             @if (form.get('signatureLink')?.value) {
                             <div class="text-center border rounded p-1 shadow-sm d-flex align-items-center justify-content-center"
-                                style="min-height: 48px; width: 100px; flex-shrink: 0;">
+                                style="min-height: 48px; width: 200px; flex-shrink: 0;">
                                 <p-image [src]="form.get('signatureLink')?.value" height="38" [preview]="true"
                                     styleClass="border rounded shadow-sm" />
                             </div>
