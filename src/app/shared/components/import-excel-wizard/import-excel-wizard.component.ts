@@ -186,6 +186,14 @@ export class ImportExcelWizardComponent implements OnDestroy {
   }
 
   validateAll() {
+    this.mappedData.forEach(row => {
+      this.columns.forEach(col => {
+        if (typeof row[col.field] === 'string') {
+          row[col.field] = row[col.field].trim();
+        }
+      });
+    });
+
     const uniqueValues: { [field: string]: Map<any, number[]> } = {};
     this.columns.filter(c => c.unique).forEach(c => {
       uniqueValues[c.field] = new Map();
