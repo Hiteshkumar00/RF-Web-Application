@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DashboardApiService } from '../../../dashboard/services/dashboard-api.service';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductDialogService } from '../../services/product-dialog.service';
 import { BuyingBillDialogService } from '../../../buying-bill/services/buying-bill-dialog.service';
-import { inject } from '@angular/core';
 import { DialogManagerService } from '../../../../core/services/dialog-manager.service';
 import { ProductStockHistoryDialogComponent } from '../product-stock-history-dialog/product-stock-history-dialog.component';
 

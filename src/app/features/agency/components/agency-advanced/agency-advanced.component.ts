@@ -24,7 +24,7 @@ export class AgencyAdvancedComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        public accountDetailsService: AccountDetailsService,
+        public accountDetails: AccountDetailsService,
         private messageService: MessageService,
         private agencyDialogService: AgencyDialogService
     ) {}

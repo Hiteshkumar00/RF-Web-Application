@@ -29,7 +29,7 @@ export class SellingBillListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        public accountDetailsService: AccountDetailsService,
+        public accountDetails: AccountDetailsService,
         private whatsAppService: WhatsAppService,
         private emailService: EmailService,
         private route: ActivatedRoute,
@@ -58,11 +58,11 @@ export class SellingBillListComponent implements OnInit {
     }
 
     get canSendWhatsApp(): boolean {
-        return this.accountDetailsService.enableWhatsApp;
+        return this.accountDetails.enableWhatsApp;
     }
 
     get canSendEmail(): boolean {
-        return this.accountDetailsService.enableEmail;
+        return this.accountDetails.enableEmail;
     }
 
     // Summary totals

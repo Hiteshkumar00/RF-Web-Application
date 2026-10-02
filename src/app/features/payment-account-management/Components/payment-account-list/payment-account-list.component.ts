@@ -12,6 +12,7 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
 import { ActivatedRoute } from '@angular/router';
 import { PaymentAccountImportExportService } from '../../Services/payment-account-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-payment-account-list',
@@ -19,6 +20,7 @@ import { PaymentAccountImportExportService } from '../../Services/payment-accoun
     standalone: false
 })
 export class PaymentAccountListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private paymentAccountApiService: PaymentAccountApiService,
         private accountPersonApiService: AccountPersonApiService,

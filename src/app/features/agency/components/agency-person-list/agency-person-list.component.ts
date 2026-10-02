@@ -11,6 +11,7 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { AgencyDialogService } from '../../services/agency-dialog.service';
 import { ActivatedRoute } from '@angular/router';
 import { AgencyPersonImportExportService } from '../../services/agency-person-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-agency-person-list',
@@ -18,6 +19,7 @@ import { AgencyPersonImportExportService } from '../../services/agency-person-im
     templateUrl: './agency-person-list.component.html'
 })
 export class AgencyPersonListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private agencyPersonApiService: AgencyPersonApiService,
         private agencyApiService: AgencyApiService,

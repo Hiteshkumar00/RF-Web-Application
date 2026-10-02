@@ -24,6 +24,7 @@ export class ImportExcelWizardComponent implements OnDestroy {
   @Input() title = 'Import Data';
   @Input() columns: ColumnConfig[] = [];
   @Input() validateRowFn?: (row: any) => string[];
+  @Input() compositeUniqueFields?: string[]; // E.g. ['agencyName', 'name']
 
   /** The API function to call on submit. Receives cleaned row data, returns an Observable<ImportResult>. */
   @Input() importFn?: (data: any[]) => Observable<any>;
@@ -200,6 +201,18 @@ export class ImportExcelWizardComponent implements OnDestroy {
       });
     });
 
+    const compositeUniqueMap = new Map<string, number[]>();
+    if (this.compositeUniqueFields && this.compositeUniqueFields.length > 0) {
+      this.mappedData.forEach(row => {
+        const hasAllFields = this.compositeUniqueFields!.every(f => row[f] !== null && row[f] !== undefined && row[f] !== '');
+        if (hasAllFields) {
+          const valStr = this.compositeUniqueFields!.map(f => row[f]).join('|||');
+          if (!compositeUniqueMap.has(valStr)) compositeUniqueMap.set(valStr, []);
+          compositeUniqueMap.get(valStr)!.push(row['rowNo']);
+        }
+      });
+    }
+
     this.mappedData.forEach((row) => {
       let errors: string[] = this.validateRowFn ? this.validateRowFn(row) : [];
       let errorMap: any = {};
@@ -216,6 +229,23 @@ export class ImportExcelWizardComponent implements OnDestroy {
           }
         }
       });
+
+      if (this.compositeUniqueFields && this.compositeUniqueFields.length > 0) {
+        const hasAllFields = this.compositeUniqueFields!.every(f => row[f] !== null && row[f] !== undefined && row[f] !== '');
+        if (hasAllFields) {
+          const valStr = this.compositeUniqueFields!.map(f => row[f]).join('|||');
+          if (compositeUniqueMap.get(valStr)!.length > 1) {
+            const headers = this.compositeUniqueFields!.map(f => this.columns.find(c => c.field === f)?.header).join(' and ');
+            const errStr = `Duplicate combination of ${headers} found in the sheet.`;
+            if (!errors.includes(errStr)) {
+              errors.push(errStr);
+              this.compositeUniqueFields!.forEach(f => {
+                if (!errorMap[f]) errorMap[f] = errStr;
+              });
+            }
+          }
+        }
+      }
 
       row['_errors'] = errors;
       row['_errorMap'] = errorMap;

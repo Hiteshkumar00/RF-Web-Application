@@ -33,7 +33,7 @@
                     <p-splitButton icon="pi pi-send" label="Send Message" 
                         [model]="sendMessageMenuItems" severity="info" size="small" [outlined]="true"
                         *ngIf="canSendWhatsApp || canSendEmail" />
-                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                 </div>
             </div>

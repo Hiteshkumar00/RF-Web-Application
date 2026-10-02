@@ -14,6 +14,7 @@ export interface AccountDto {
     enableSuggestions: boolean;
     enableVoiceTyping: boolean;
     showStatistics: boolean;
+    enableMigration: boolean;
     whatsAppNumber?: string | null;
     enableWhatsApp: boolean;
     enableAdvancedWhatsApp: boolean;

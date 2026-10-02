@@ -7,6 +7,7 @@ import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDialogService } from '../../services/product-dialog.service';
 import { ProductImportExportService } from '../../services/product-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
   selector: 'app-product-list',
@@ -14,6 +15,7 @@ import { ProductImportExportService } from '../../services/product-import-export
   templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
   private productApiService = inject(ProductApiService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);

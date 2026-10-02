@@ -10,6 +10,7 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
 import { AgencyDialogService } from '../../services/agency-dialog.service';
 import { ActivatedRoute } from '@angular/router';
 import { AgencyImportExportService } from '../../services/agency-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-agency-list',
@@ -17,6 +18,7 @@ import { AgencyImportExportService } from '../../services/agency-import-export.s
     templateUrl: './agency-list.component.html'
 })
 export class AgencyListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private agencyApiService: AgencyApiService,
         private confirmationService: ConfirmationService,

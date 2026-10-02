@@ -10,7 +10,7 @@
                 </div>
                 <div class="d-flex gap-2">
                     <p-button icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel()" severity="success" size="small" styleClass="shadow-sm" [outlined]="true" />
-                    <p-splitButton icon="pi pi-upload" label="Import" (onClick)="openImportWizard()" [model]="importMenuItems" severity="info" size="small" styleClass="shadow-sm" [outlined]="true" />
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-upload" label="Import" (onClick)="openImportWizard()" [model]="importMenuItems" severity="info" size="small" styleClass="shadow-sm" [outlined]="true" />
                     <p-button icon="pi pi-history" label="Payment History" severity="secondary" size="small" styleClass="shadow-sm"
                         [routerLink]="['history']" [outlined]="true" />
                     <p-button icon="pi pi-sync" label="Transfer" severity="info" size="small" styleClass="shadow-sm"

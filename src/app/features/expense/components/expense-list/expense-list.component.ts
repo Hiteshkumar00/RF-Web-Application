@@ -27,7 +27,7 @@ export class ExpenseListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private excelService: ExcelService,
         private helperService: HelperService,
-        public accountDetailsService: AccountDetailsService,
+        public accountDetails: AccountDetailsService,
         private route: ActivatedRoute,
         private expenseDialogService: ExpenseDialogService
     ) {}

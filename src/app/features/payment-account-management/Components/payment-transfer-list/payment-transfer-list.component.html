@@ -11,7 +11,7 @@
                 <div class="d-flex gap-2">
                     <p-button icon="pi pi-arrow-left" label="Back" severity="secondary" [text]="true" size="small"
                         [routerLink]="['..']" />
-                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                 </div>
             </div>

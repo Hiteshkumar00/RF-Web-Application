@@ -32,11 +32,11 @@ export class AgencyPersonImportExportService {
 
   exportForImport(persons: any[]): void {
     const data = persons.map(item => ({
+      'Person Name': item.name || '',
       'Agency Name': item.agencyName || '',
-      'Person Name': item.personName || '',
-      'Mobile No': item.mobileNo || '',
+      'Mobile No': item.phoneNo || '',
       'Email': item.email || '',
-      'Position': item.position || '',
+      'Position': item.personOccupation || '',
       'Address': item.address || ''
     }));
     this.excelService.exportAsExcelFile(data, 'AgencyPersons_Import_Template');
@@ -44,8 +44,8 @@ export class AgencyPersonImportExportService {
 
   async openImportWizard(onSuccess: () => void): Promise<void> {
     const columns: ColumnConfig[] = [
-      { field: 'agencyName', header: 'Agency Name', type: 'text', required: true },
       { field: 'name', header: 'Person Name', type: 'text', required: true },
+      { field: 'agencyName', header: 'Agency Name', type: 'text', required: true },
       { field: 'phoneNo', header: 'Mobile No', type: 'text' },
       { field: 'email', header: 'Email', type: 'text' },
       { field: 'personOccupation', header: 'Position', type: 'text' },

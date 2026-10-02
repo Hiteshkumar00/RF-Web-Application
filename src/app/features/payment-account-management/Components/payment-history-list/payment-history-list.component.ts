@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , inject} from '@angular/core';
 import { PaymentAccountApiService } from '../../Services/payment-account-api.service';
 import { PaymentHistoryDto, PaymentHistoryFilterDto } from '../../models/payment-history.dto';
 import { DropdownOption } from '../../../../shared/models/dropdown-option.model';
@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-payment-history-list',
@@ -15,6 +16,7 @@ import { MenuItem, ConfirmationService, MessageService } from 'primeng/api';
     templateUrl: './payment-history-list.component.html'
 })
 export class PaymentHistoryListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private apiService: PaymentAccountApiService,
         private dropdownService: DropdownService,
