@@ -1,0 +1,112 @@
+<p-dialog [(visible)]="visible" [style]="{width: '80vw'}" [header]="title" [modal]="true" class="p-fluid"
+  (onHide)="hideDialog()">
+  <ng-template pTemplate="content">
+
+    <!-- Step 1: Upload and Map -->
+    <div *ngIf="currentStep === 1">
+      <div class="field d-flex justify-content-between align-items-center mb-0">
+        <div class="d-flex align-items-center gap-3">
+          <label class="mb-0 font-bold" style="white-space: nowrap;">Select Excel File</label>
+          <input type="file" (change)="onFileChange($event)" accept=".xlsx, .xls"
+            class="p-inputtext p-component p-element p-inputtext-sm" style="padding: 0.35rem 0.5rem;" />
+        </div>
+        <p-button icon="pi pi-download" label="Download Template" severity="info" [outlined]="true" size="small"
+          (onClick)="downloadTemplate()"></p-button>
+      </div>
+
+      <div *ngIf="excelHeaders.length > 0" class="mt-4">
+        <h5>Map Columns and Edit Data</h5>
+        <p-table [value]="mappedData" editMode="cell" [tableStyle]="{'min-width': '50rem'}" responsiveLayout="scroll"
+          styleClass="p-datatable-sm p-datatable-gridlines">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:4rem; text-align:center;">Action</th>
+              <th style="width:3rem">No</th>
+              <th *ngFor="let col of columns">
+                <div class="mb-2">{{col.header}} <span *ngIf="col.required" class="text-red-500">*</span></div>
+                <p-select [options]="excelHeaders" [(ngModel)]="columnMapping[col.field]"
+                  (onChange)="updateMapping(col.field)" placeholder="Select column" [showClear]="true" appendTo="body"
+                  styleClass="w-full"></p-select>
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+            <tr>
+              <td style="text-align:center">
+                <button pButton pRipple type="button" icon="pi pi-trash"
+                  class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteRow(ri)"></button>
+              </td>
+              <td style="text-align: center; color: #6c757d;">{{rowData.rowNo}}</td>
+              <td *ngFor="let col of columns" [pEditableColumn]="rowData" [pEditableColumnField]="col.field">
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <input pInputText type="text" [(ngModel)]="rowData[col.field]" (change)="validateAll()" />
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span>{{rowData[col.field]}}</span>
+                      <i *ngIf="getCellError(rowData, col.field)" class="pi pi-exclamation-circle text-red-500 ms-2"
+                        [pTooltip]="getCellError(rowData, col.field)" tooltipPosition="top"></i>
+                    </div>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Step 2: Review and Edit -->
+    <div *ngIf="currentStep === 2">
+      <p-table [value]="mappedData" [tableStyle]="{'min-width': '50rem'}" responsiveLayout="scroll"
+        styleClass="p-datatable-sm p-datatable-gridlines">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width:4rem; text-align:center;">Action</th>
+            <th style="width:3rem">No</th>
+            <th *ngFor="let col of columns">{{col.header}}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-ri="rowIndex">
+          <tr>
+            <td style="text-align:center">
+              <button pButton pRipple type="button" icon="pi pi-trash"
+                class="p-button-rounded p-button-text p-button-danger p-button-sm" (click)="deleteRow(ri)"></button>
+            </td>
+            <td style="text-align: center; color: #6c757d;">{{rowData.rowNo}}</td>
+            <td *ngFor="let col of columns">{{rowData[col.field]}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button *ngIf="currentStep === 1 && excelHeaders.length > 0" pButton pRipple label="Next" icon="pi pi-angle-right"
+      class="p-button-text" (click)="goToReview()"></button>
+    <button *ngIf="currentStep === 2" pButton pRipple label="Back" icon="pi pi-angle-left" class="p-button-text"
+      (click)="currentStep = 1"></button>
+    <button *ngIf="currentStep === 2" pButton pRipple label="Import" icon="pi pi-check" class="p-button-text"
+      (click)="submit()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showErrorModal" [style]="{width: '50vw'}" header="Validation Errors" [modal]="true">
+  <p-table [value]="validationErrors" [paginator]="true" [rows]="10" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5rem">Row</th>
+        <th>Error Message</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-err>
+      <tr>
+        <td>{{err.row}}</td>
+        <td class="text-red-500">{{err.message}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>

@@ -39,4 +39,16 @@ export class ProductApiService {
         let params = new HttpParams().set('searchTerm', searchTerm || '');
         return this.http.get<ProductDto[]>(`${this.basePath}/GetSuggestions`, { params });
     }
+
+    export(filter?: ProductFilterDto): Observable<Blob> {
+        let params = new HttpParams();
+        if (filter?.searchTerm) {
+            params = params.set('searchTerm', filter.searchTerm);
+        }
+        return this.http.get(`${this.basePath}/Export`, { params, responseType: 'blob' });
+    }
+
+    import(dtos: any[]): Observable<any> {
+        return this.http.post<any>(`${this.basePath}/Import`, dtos);
+    }
 }

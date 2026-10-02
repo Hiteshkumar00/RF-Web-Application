@@ -6,6 +6,7 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDialogService } from '../../services/product-dialog.service';
+import { ProductImportExportService } from '../../services/product-import-export.service';
 
 @Component({
   selector: 'app-product-list',
@@ -52,6 +53,8 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  importMenuItems: MenuItem[] = [];
+
   updateExportMenu(): void {
     this.exportMenuItems = [
       {
@@ -64,7 +67,14 @@ export class ProductListComponent implements OnInit {
       },
       { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
     ];
+
+    this.importMenuItems = [
+      { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
+    ];
   }
+
+  private importExportService = inject(ProductImportExportService);
+
 
   exportToExcel(onlySelected: boolean = false): void {
     const source = onlySelected ? this.selectedProducts : this.products;
@@ -78,6 +88,14 @@ export class ProductListComponent implements OnInit {
       'Image URL': item.imageLink || '-'
     }));
     this.excelService.exportAsExcelFile(data, onlySelected ? 'Products_Selected' : 'Products');
+  }
+
+  exportForImport(): void {
+    this.importExportService.exportForImport(this.products);
+  }
+
+  openImportWizard(): void {
+    this.importExportService.openImportWizard(() => this.loadProducts());
   }
 
   onSearch(): void {

@@ -51,11 +51,16 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
 import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+import { ImportExcelWizardComponent } from './components/import-excel-wizard/import-excel-wizard.component';
+import { ImportResultDialogComponent } from './components/import-result-dialog/import-result-dialog.component';
+
 @NgModule({
-  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent],
+  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent, ImportExcelWizardComponent, ImportResultDialogComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -96,7 +101,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     RfDatePipe,
     RfShortDatePipe,
     TabsModule,
-    AvatarModule
+    AvatarModule,
+    BadgeModule,
+    DynamicDialogModule
   ],
   exports: [
     CommonModule,
@@ -147,8 +154,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ImagePreviewComponent,
     StatisticsCardsComponent,
     TabsModule,
-    AvatarModule
+    AvatarModule,
+    BadgeModule,
+    DynamicDialogModule,
+    ImportExcelWizardComponent,
+    ImportResultDialogComponent
   ],
-  providers: []
+  providers: [DialogService]
 })
 export class SharedModule { }

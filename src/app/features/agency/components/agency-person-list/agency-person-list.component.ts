@@ -10,6 +10,7 @@ import { AgencyPersonTableColumns } from '../../constants/agency-person-table.co
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { AgencyDialogService } from '../../services/agency-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { AgencyPersonImportExportService } from '../../services/agency-person-import-export.service';
 
 @Component({
     selector: 'app-agency-person-list',
@@ -100,5 +101,23 @@ export class AgencyPersonListComponent implements OnInit {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: AgencyPersonMessages.DELETED });
             }
         });
+    }
+
+    private importExportService = inject(AgencyPersonImportExportService);
+
+    importMenuItems = [
+        { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
+    ];
+
+    exportToExcel(): void {
+        this.importExportService.exportToExcel();
+    }
+
+    exportForImport(): void {
+        this.importExportService.exportForImport(this.agencyPersons);
+    }
+
+    openImportWizard(): void {
+        this.importExportService.openImportWizard(() => this.loadAgencyPersons());
     }
 }

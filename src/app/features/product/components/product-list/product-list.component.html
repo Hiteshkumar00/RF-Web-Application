@@ -16,6 +16,7 @@
                 </p-iconField>
                 <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                     [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
+                <p-splitButton icon="pi pi-upload" label="Import" (onClick)="openImportWizard()" [model]="importMenuItems" severity="info" size="small" [outlined]="true" />
             </div>
         </div>
     </div>

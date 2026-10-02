@@ -9,6 +9,7 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
 
 import { AgencyDialogService } from '../../services/agency-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { AgencyImportExportService } from '../../services/agency-import-export.service';
 
 @Component({
     selector: 'app-agency-list',
@@ -84,5 +85,23 @@ export class AgencyListComponent implements OnInit {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: AgencyMessages.DELETED });
             }
         });
+    }
+
+    private importExportService = inject(AgencyImportExportService);
+
+    importMenuItems = [
+        { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
+    ];
+
+    exportToExcel(): void {
+        this.importExportService.exportToExcel();
+    }
+
+    exportForImport(): void {
+        this.importExportService.exportForImport(this.agencies);
+    }
+
+    openImportWizard(): void {
+        this.importExportService.openImportWizard(() => this.loadAgencies());
     }
 }
