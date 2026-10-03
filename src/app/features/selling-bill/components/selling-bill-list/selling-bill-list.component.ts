@@ -147,6 +147,8 @@ export class SellingBillListComponent implements OnInit {
     }
 
     loadStatistics(): void {
+        if (!this.accountDetails.showStatistics) return;
+
         this.apiService.getStatistics(this.customerId).subscribe(stats => {
             this.totalSellingAmount = stats.totalSellingAmount;
             this.totalReceivedAmount = stats.totalReceivedAmount;
