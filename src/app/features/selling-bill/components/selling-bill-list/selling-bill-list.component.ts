@@ -56,7 +56,7 @@ export class SellingBillListComponent implements OnInit {
         data: [],
         totalRecords: 0,
         loading: false,
-        showLoader: true,
+        showLoader: false,
         rows: 10,
         rowsPerPageOptions: [10, 25, 50],
         globalSearchTerm: '',
