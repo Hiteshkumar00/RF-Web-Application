@@ -9,6 +9,7 @@ export interface GridAction {
   tooltip: string;
   severity: 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null | undefined;
   onClick: (item: any) => void;
+  visible?: (item: any) => boolean;
 }
 
 export interface ColumnDef {
@@ -21,7 +22,11 @@ export interface ColumnDef {
   actions?: GridAction[]; // Used when type is 'action'
   imageFallbackIcon?: string; // Used when type is 'image'
   prefix?: string; // Useful for things like '#' before ID
+  icon?: string; // Icon class to prepend before text
   exportable?: boolean; // Set to false to exclude from export
+  pipe?: 'currency' | 'rfDate';
+  pipeArgs?: string; // e.g., 'INR'
+  cellClass?: string | ((item: any) => string); // Apply custom class to td or value
 }
 
 export interface GridConfig {
@@ -163,6 +168,10 @@ export class RfGridComponent implements AfterContentInit, OnInit, OnDestroy {
     if (this.lastLazyLoadEvent) {
         this.loadData(this.lastLazyLoadEvent);
     }
+  }
+
+  isFunction(val: any): boolean {
+      return typeof val === 'function';
   }
 
   onSelectionChange(event: any) {

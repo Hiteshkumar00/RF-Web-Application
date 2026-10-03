@@ -13,7 +13,9 @@ import { EmailService } from '../../../../shared/services/email.service';
 import { StatisticCard } from '../../../../shared/models/statistic-card.model';
 
 import { SellingBillDialogService } from '../../services/selling-bill-dialog.service';
-import { ActivatedRoute } from '@angular/router';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { map } from 'rxjs/operators';
+import { GridConfig } from '../../../../shared/components/rf-grid/rf-grid.component';
 
 @Component({
     selector: 'app-selling-bill-list',
@@ -32,7 +34,6 @@ export class SellingBillListComponent implements OnInit {
         public accountDetails: AccountDetailsService,
         private whatsAppService: WhatsAppService,
         private emailService: EmailService,
-        private route: ActivatedRoute,
         private sellingBillDialogService: SellingBillDialogService
     ) {}
 
@@ -48,12 +49,67 @@ export class SellingBillListComponent implements OnInit {
     @Input() customerId?: number;
     @Output() closeDialog = new EventEmitter<void>();
 
+    reloadGrid = new EventEmitter<void>();
+
+    gridConfig: GridConfig | any = {
+        reloadEvent: this.reloadGrid,
+        data: [],
+        totalRecords: 0,
+        loading: false,
+        showLoader: true,
+        rows: 10,
+        rowsPerPageOptions: [10, 25, 50],
+        globalSearchTerm: '',
+        enableSelection: true,
+        selection: this.selectedBills,
+        scrollable: true,
+        scrollHeight: 'calc(100vh - 235px)',
+        resizableColumns: true,
+        columnResizeMode: 'expand',
+        styleClass: 'p-datatable-sm p-datatable-striped p-datatable-gridlines',
+        title: this.title,
+        showAddButton: false, // Will set based on !isDialog
+        onAdd: () => this.openCreateDialog(),
+        showSearch: true,
+        showExport: false, // Will set based on accountDetails
+        dataFetcher: (event: TableLazyLoadEvent) => {
+            return this.apiService.getAll(event, this.customerId).pipe(
+                map(res => {
+                    this.bills = res.data;
+                    return res;
+                })
+            );
+        },
+        columns: [
+            { field: 'id', header: 'ID', sortable: true, type: 'numeric', width: '90px', prefix: '#', cellClass: 'fw-bold text-muted small' },
+            { field: 'actions', header: 'Action', type: 'action', width: '200px', exportable: false, actions: [
+                { icon: 'pi pi-eye', tooltip: 'View', severity: 'secondary', onClick: (item: any) => this.openViewDialog(item) },
+                { icon: 'pi pi-whatsapp', tooltip: 'Send on WhatsApp', severity: 'success', visible: () => this.canSendWhatsApp, onClick: (item: any) => this.sendWhatsApp(item) },
+                { icon: 'pi pi-envelope', tooltip: 'Send on Email', severity: 'help', visible: () => this.canSendEmail, onClick: (item: any) => this.sendEmail(item) },
+                { icon: 'pi pi-download', tooltip: 'Download', severity: 'info', onClick: (item: any) => this.downloadPdf(item) },
+                { icon: 'pi pi-wallet', tooltip: 'Add Payment', severity: 'success', visible: (item: any) => item.remainingAmount > 0, onClick: (item: any) => this.openPaymentDialog(item) },
+                { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', visible: () => !this.isDialog, onClick: (item: any) => this.openEditDialog(item) },
+                { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', visible: () => !this.isDialog, onClick: (item: any) => this.confirmDelete(item) }
+            ]},
+            { field: 'billNo', header: this.labels.BILL_NO, sortable: true, type: 'text', width: '170px', cellClass: 'fw-semibold text-muted' },
+            { field: 'customerId', header: 'Cust ID', sortable: true, type: 'numeric', width: '110px', prefix: '#', cellClass: 'fw-semibold text-muted' },
+            { field: 'customerName', header: this.labels.CUSTOMER_NAME, sortable: true, type: 'text', width: '300px', cellClass: 'fw-semibold' },
+            { field: 'phoneNo', header: this.labels.PHONE_NO, sortable: true, type: 'text', width: '200px', icon: 'pi pi-phone small me-1', cellClass: 'small text-muted' },
+            { field: 'date', header: this.labels.DATE, sortable: true, type: 'date', width: '170px', pipe: 'rfDate', cellClass: 'small' },
+            { field: 'totalAmount', header: this.labels.TOTAL_AMOUNT, sortable: true, type: 'numeric', width: '190px', pipe: 'currency', pipeArgs: 'INR', cellClass: 'text-end fw-semibold' },
+            { field: 'discount', header: this.labels.DISCOUNT, sortable: true, type: 'numeric', width: '190px', pipe: 'currency', pipeArgs: 'INR', cellClass: 'text-end fw-semibold text-warning' },
+            { field: 'netAmount', header: this.labels.NET_AMOUNT, sortable: true, type: 'numeric', width: '190px', pipe: 'currency', pipeArgs: 'INR', cellClass: 'text-end fw-semibold text-info' },
+            { field: 'paidAmount', header: this.labels.PAID_AMOUNT, sortable: true, type: 'numeric', width: '190px', pipe: 'currency', pipeArgs: 'INR', cellClass: 'text-end text-success fw-semibold' },
+            { field: 'remainingAmount', header: this.labels.REMAINING_AMOUNT, sortable: true, type: 'numeric', width: '190px', pipe: 'currency', pipeArgs: 'INR', cellClass: (item: any) => `text-end fw-bold ${item.remainingAmount > 0 ? 'text-danger' : 'text-success'}` }
+        ]
+    };
+
     openPaymentDialog(item: SellingBillListDto): void {
         this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => {});
     }
 
     onPaymentSaved(): void {
-        this.loadData();
+        this.reloadGrid.emit();
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payments updated successfully' });
     }
 
@@ -87,13 +143,12 @@ export class SellingBillListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.data.subscribe(data => {
-            if (data['data']) {
-                this.bills = data['data'];
-            } else {
-                this.loadData();
-            }
-        });
+        this.gridConfig.showAddButton = !this.isDialog;
+        this.gridConfig.showExport = this.accountDetails.enableMigration;
+        if (this.isDialog) {
+            this.gridConfig.scrollHeight = 'flex';
+        }
+        
         this.updateExportMenu();
         this.updateSendMessageMenu();
     }
@@ -176,22 +231,9 @@ export class SellingBillListComponent implements OnInit {
         });
     }
 
+    // loadData is handled by grid dataFetcher now
     loadData(): void {
-        if (this.customerId) {
-            this.apiService.getByCustomerId(this.customerId).subscribe({
-                next: (data) => {
-                    this.bills = data ?? [];
-                    this.updateExportMenu();
-                }
-            });
-        } else {
-            this.apiService.getAll().subscribe({
-                next: (data) => {
-                    this.bills = data ?? [];
-                    this.updateExportMenu();
-                }
-            });
-        }
+        this.reloadGrid.emit();
     }
 
     openCreateDialog(): void {
@@ -309,5 +351,10 @@ export class SellingBillListComponent implements OnInit {
             [this.labels.REMAINING_AMOUNT]: item.remainingAmount
         }));
         this.excelService.exportAsExcelFile(data, onlySelected ? 'Selling_Bills_Selected' : 'Selling_Bills');
+    }
+
+    onSelectionChange(selection: any[]) {
+        this.selectedBills = selection;
+        this.updateExportMenu();
     }
 }

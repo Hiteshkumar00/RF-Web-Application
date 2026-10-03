@@ -86,14 +86,22 @@
             </td>
             <td *ngFor="let col of config.columns" [ngClass]="{'fw-bold text-muted small': col.prefix}">
                 
-                <ng-container *ngIf="!col.type || col.type === 'text' || col.type === 'numeric'">
-                    {{ col.prefix ? col.prefix : '' }}{{ item[col.field] }}
+                <ng-container *ngIf="!col.type || col.type === 'text' || col.type === 'numeric' || col.type === 'date'">
+                    <span [ngClass]="col.cellClass ? (isFunction(col.cellClass) ? $any(col.cellClass)(item) : col.cellClass) : ''">
+                        <i *ngIf="col.icon && item[col.field]" [class]="col.icon"></i>
+                        {{ col.prefix ? col.prefix : '' }}
+                        <ng-container *ngIf="!col.pipe">{{ item[col.field] != null && item[col.field] !== '' ? item[col.field] : '—' }}</ng-container>
+                        <ng-container *ngIf="col.pipe === 'currency'">{{ item[col.field] | currency:(col.pipeArgs || 'USD') }}</ng-container>
+                        <ng-container *ngIf="col.pipe === 'rfDate'">{{ item[col.field] | rfDate }}</ng-container>
+                    </span>
                 </ng-container>
 
                 <ng-container *ngIf="col.type === 'action'">
                     <div class="d-flex justify-content-center gap-1">
-                        <p-button *ngFor="let action of col.actions" [icon]="action.icon" [text]="true" [rounded]="true" [severity]="action.severity"
-                            (onClick)="action.onClick(item)" [pTooltip]="action.tooltip" tooltipPosition="top" />
+                        <ng-container *ngFor="let action of col.actions">
+                            <p-button *ngIf="!action.visible || action.visible(item)" [icon]="action.icon" [text]="true" [rounded]="true" [severity]="action.severity"
+                                (onClick)="action.onClick(item)" [pTooltip]="action.tooltip" tooltipPosition="top" />
+                        </ng-container>
                     </div>
                 </ng-container>
 
