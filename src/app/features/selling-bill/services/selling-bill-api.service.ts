@@ -22,6 +22,14 @@ export class SellingBillApiService {
         return this.http.post<{ data: SellingBillListDto[], totalRecords: number }>(url, request);
     }
 
+    getStatistics(customerId?: number): Observable<{ totalSellingAmount: number, totalReceivedAmount: number, totalRemainingAmount: number }> {
+        let url = `${this.basePath}/GetStatistics`;
+        if (customerId) {
+            url += `?customerId=${customerId}`;
+        }
+        return this.http.get<{ totalSellingAmount: number, totalReceivedAmount: number, totalRemainingAmount: number }>(url);
+    }
+
     getById(id: number): Observable<SellingBillDetailsDto> {
         return this.http.get<SellingBillDetailsDto>(`${this.basePath}/GetById/${id}`);
     }

@@ -122,17 +122,9 @@ export class SellingBillListComponent implements OnInit {
     }
 
     // Summary totals
-    get totalSellingAmount(): number {
-        return this.bills.reduce((sum, b) => sum + (b.netAmount || 0), 0);
-    }
-
-    get totalReceivedAmount(): number {
-        return this.bills.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
-    }
-
-    get totalRemainingAmount(): number {
-        return this.bills.reduce((sum, b) => sum + (b.remainingAmount || 0), 0);
-    }
+    totalSellingAmount: number = 0;
+    totalReceivedAmount: number = 0;
+    totalRemainingAmount: number = 0;
 
     get statisticCards(): StatisticCard[] {
         return [
@@ -143,6 +135,7 @@ export class SellingBillListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadStatistics();
         this.gridConfig.showAddButton = !this.isDialog;
         this.gridConfig.showExport = this.accountDetails.enableMigration;
         if (this.isDialog) {
@@ -151,6 +144,14 @@ export class SellingBillListComponent implements OnInit {
         
         this.updateExportMenu();
         this.updateSendMessageMenu();
+    }
+
+    loadStatistics(): void {
+        this.apiService.getStatistics(this.customerId).subscribe(stats => {
+            this.totalSellingAmount = stats.totalSellingAmount;
+            this.totalReceivedAmount = stats.totalReceivedAmount;
+            this.totalRemainingAmount = stats.totalRemainingAmount;
+        });
     }
 
     public updateExportMenu(): void {
@@ -233,6 +234,7 @@ export class SellingBillListComponent implements OnInit {
 
     // loadData is handled by grid dataFetcher now
     loadData(): void {
+        this.loadStatistics();
         this.reloadGrid.emit();
     }
 
@@ -249,8 +251,8 @@ export class SellingBillListComponent implements OnInit {
     }
 
     onFormSaved(mode: 'create' | 'update' | 'view'): void {
-        this.loadData();
         if (mode !== 'view') {
+            this.loadData();
             const msg = mode === 'create'
                 ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
                 : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);

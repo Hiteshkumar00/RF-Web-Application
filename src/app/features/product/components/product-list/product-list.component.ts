@@ -99,20 +99,22 @@ export class ProductListComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    this.productDialogService.openForm('create', undefined, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
   }
 
   openEditDialog(product: ProductDto): void {
-    this.productDialogService.openForm('update', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('update', product.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
   }
 
   openViewDialog(product: ProductDto): void {
-    this.productDialogService.openForm('view', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('view', product.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
   }
 
 
-  onFormSaved(): void {
-    this.reloadGrid.emit();
+  onFormSaved(mode: 'create' | 'update' | 'view'): void {
+    if (mode !== 'view') {
+      this.reloadGrid.emit();
+    }
   }
 
   onFormDialogClosed(): void {
