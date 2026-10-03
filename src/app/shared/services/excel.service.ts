@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import * as FileSaver from 'file-saver';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
 import { MessageService } from 'primeng/api';
 
 @Injectable({
@@ -12,7 +12,7 @@ export class ExcelService {
   fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   fileExtension = '.xlsx';
 
-  public exportAsExcelFile(json: any[], excelFileName: string): void {
+  public exportAsExcelFile(json: any[], excelFileName: string, applyFilter: boolean = true): void {
     if (!json || json.length === 0) {
       this.messageService.add({ 
         severity: 'warn', 
@@ -26,9 +26,11 @@ export class ExcelService {
       // Create worksheet from JSON
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
       
-      // Auto-filter for all columns
+      // Auto-filter for all columns if requested
       const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-      worksheet['!autofilter'] = { ref: XLSX.utils.encode_range(range) };
+      if (applyFilter) {
+          worksheet['!autofilter'] = { ref: XLSX.utils.encode_range(range) };
+      }
 
       // Set dynamic column widths
       const colWidths = this.calculateColumnWidths(json);

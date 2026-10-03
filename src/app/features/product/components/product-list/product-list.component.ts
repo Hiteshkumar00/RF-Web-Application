@@ -88,7 +88,7 @@ export class ProductListComponent implements OnInit {
   private importExportService = inject(ProductImportExportService);
 
   exportForImport(): void {
-    this.importExportService.exportForImport(this.gridConfig.data);
+    this.importExportService.exportForImport();
   }
 
   openImportWizard(): void {

@@ -26,7 +26,7 @@ export class AgencyListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private route: ActivatedRoute,
         private agencyDialogService: AgencyDialogService
-    ) {}
+    ) { }
 
     labels = AgencyLabels;
     columns = AgencyTableColumns.COLUMNS;
@@ -96,11 +96,11 @@ export class AgencyListComponent implements OnInit {
     ];
 
     exportToExcel(): void {
-        this.importExportService.exportToExcel();
+        this.importExportService.exportToExcel(this.agencies);
     }
 
     exportForImport(): void {
-        this.importExportService.exportForImport(this.agencies);
+        this.importExportService.exportForImport();
     }
 
     openImportWizard(): void {

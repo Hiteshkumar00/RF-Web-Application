@@ -107,11 +107,11 @@ export class PaymentAccountListComponent implements OnInit {
     ];
 
     exportToExcel(): void {
-        this.importExportService.exportToExcel();
+        this.importExportService.exportToExcel(this.paymentAccounts);
     }
 
     exportForImport(): void {
-        this.importExportService.exportForImport(this.paymentAccounts);
+        this.importExportService.exportForImport();
     }
 
     openImportWizard(): void {

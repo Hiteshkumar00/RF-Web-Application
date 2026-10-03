@@ -4,6 +4,7 @@ import { ImportExcelWizardComponent, ColumnConfig } from '../../../shared/compon
 import { PaymentAccountApiService } from './payment-account-api.service';
 import { MessageService } from 'primeng/api';
 import { ExcelService } from '../../../shared/services/excel.service';
+import { PaymentAccountDto } from '../models/payment-account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,27 +15,29 @@ export class PaymentAccountImportExportService {
   private messageService = inject(MessageService);
   private excelService = inject(ExcelService);
 
-  exportToExcel(): void {
+  exportToExcel(accounts: PaymentAccountDto[]): void {
+    const data = accounts.map(item => ({
+      'ID': item.id,
+      'Method Name': item.methodName || '',
+      'Account Person Name': item.accountPersonName || ''
+    }));
+    this.excelService.exportAsExcelFile(data, 'BankAccounts');
+  }
+
+  exportForImport(): void {
     this.apiService.export().subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'BankAccounts.xlsx';
+        a.download = 'BankAccounts_Import_Template.xlsx';
         a.click();
         window.URL.revokeObjectURL(url);
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export bank accounts' });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export bank accounts template' });
       }
     });
-  }
-
-  exportForImport(accounts: any[]): void {
-    const data = accounts.map(item => ({
-      'Method Name': item.methodName || ''
-    }));
-    this.excelService.exportAsExcelFile(data, 'BankAccounts_Import_Template');
   }
 
   async openImportWizard(onSuccess: () => void): Promise<void> {

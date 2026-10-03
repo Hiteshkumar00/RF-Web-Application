@@ -112,11 +112,11 @@ export class AgencyPersonListComponent implements OnInit {
     ];
 
     exportToExcel(): void {
-        this.importExportService.exportToExcel();
+        this.importExportService.exportToExcel(this.agencyPersons);
     }
 
     exportForImport(): void {
-        this.importExportService.exportForImport(this.agencyPersons);
+        this.importExportService.exportForImport();
     }
 
     openImportWizard(): void {

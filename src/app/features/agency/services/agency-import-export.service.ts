@@ -4,6 +4,7 @@ import { ImportExcelWizardComponent, ColumnConfig } from '../../../shared/compon
 import { AgencyApiService } from './agency-api.service';
 import { MessageService } from 'primeng/api';
 import { ExcelService } from '../../../shared/services/excel.service';
+import { AgencyDto } from '../models/agency.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,22 @@ export class AgencyImportExportService {
   private messageService = inject(MessageService);
   private excelService = inject(ExcelService);
 
-  exportToExcel(): void {
+  exportToExcel(agencies: AgencyDto[]): void {
+    const data = agencies.map(item => ({
+      'ID': item.id,
+      'Agency Name': item.agencyName || '',
+      'Address': item.address || ''
+    }));
+    this.excelService.exportAsExcelFile(data, 'Agencies');
+  }
+
+  exportForImport(): void {
     this.apiService.export().subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Agencies.xlsx';
+        a.download = 'Agencies_Import_Template.xlsx';
         a.click();
         window.URL.revokeObjectURL(url);
       },
@@ -28,14 +38,6 @@ export class AgencyImportExportService {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export agencies' });
       }
     });
-  }
-
-  exportForImport(agencies: any[]): void {
-    const data = agencies.map(item => ({
-      'Agency Name': item.agencyName || '',
-      'Address': item.address || ''
-    }));
-    this.excelService.exportAsExcelFile(data, 'Agencies_Import_Template');
   }
 
   async openImportWizard(onSuccess: () => void): Promise<void> {

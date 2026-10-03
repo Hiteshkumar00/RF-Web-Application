@@ -4,6 +4,7 @@ import { ImportExcelWizardComponent, ColumnConfig } from '../../../shared/compon
 import { AgencyPersonApiService } from './agency-person-api.service';
 import { MessageService } from 'primeng/api';
 import { ExcelService } from '../../../shared/services/excel.service';
+import { AgencyPersonDto } from '../models/agency-person.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,24 +15,9 @@ export class AgencyPersonImportExportService {
   private messageService = inject(MessageService);
   private excelService = inject(ExcelService);
 
-  exportToExcel(): void {
-    this.apiService.export().subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'AgencyPersons.xlsx';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      },
-      error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export agency persons' });
-      }
-    });
-  }
-
-  exportForImport(persons: any[]): void {
+  exportToExcel(persons: AgencyPersonDto[]): void {
     const data = persons.map(item => ({
+      'ID': item.id || '',
       'Person Name': item.name || '',
       'Agency Name': item.agencyName || '',
       'Mobile No': item.phoneNo || '',
@@ -39,7 +25,23 @@ export class AgencyPersonImportExportService {
       'Position': item.personOccupation || '',
       'Address': item.address || ''
     }));
-    this.excelService.exportAsExcelFile(data, 'AgencyPersons_Import_Template');
+    this.excelService.exportAsExcelFile(data, 'AgencyPersons');
+  }
+
+  exportForImport(): void {
+    this.apiService.export().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'AgencyPersons_Import_Template.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export agency persons template' });
+      }
+    });
   }
 
   async openImportWizard(onSuccess: () => void): Promise<void> {

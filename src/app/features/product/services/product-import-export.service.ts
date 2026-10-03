@@ -3,7 +3,6 @@ import { DialogManagerService } from '../../../core/services/dialog-manager.serv
 import { ImportExcelWizardComponent, ColumnConfig } from '../../../shared/components/import-excel-wizard/import-excel-wizard.component';
 import { ProductApiService } from './product-api.service';
 import { MessageService } from 'primeng/api';
-import { ExcelService } from '../../../shared/services/excel.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,33 +11,22 @@ export class ProductImportExportService {
   private dialogManager = inject(DialogManagerService);
   private apiService = inject(ProductApiService);
   private messageService = inject(MessageService);
-  private excelService = inject(ExcelService);
 
-  exportToExcel(filter?: any): void {
-    this.apiService.export(filter).subscribe({
+
+  exportForImport(): void {
+    this.apiService.export().subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'Products.xlsx';
+        a.download = 'Products_Import_Template.xlsx';
         a.click();
         window.URL.revokeObjectURL(url);
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export products' });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to export products template' });
       }
     });
-  }
-
-  exportForImport(products: any[]): void {
-    const data = products.map(item => ({
-      'Product Name': item.productName || '',
-      'Warranty Year': item.warrantyYear || 0,
-      'Warranty Month': item.warrantyMonth || 0,
-      'Warranty Day': item.warrantyDay || 0,
-      'Image Link': item.imageLink || ''
-    }));
-    this.excelService.exportAsExcelFile(data, 'Products_Import_Template');
   }
 
   async openImportWizard(onSuccess: () => void): Promise<void> {
