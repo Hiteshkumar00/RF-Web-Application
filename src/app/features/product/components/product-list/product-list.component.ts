@@ -112,9 +112,7 @@ export class ProductListComponent implements OnInit {
 
 
   onFormSaved(mode: 'create' | 'update' | 'view'): void {
-    if (mode !== 'view') {
-      this.reloadGrid.emit();
-    }
+    this.reloadGrid.emit();
   }
 
   onFormDialogClosed(): void {

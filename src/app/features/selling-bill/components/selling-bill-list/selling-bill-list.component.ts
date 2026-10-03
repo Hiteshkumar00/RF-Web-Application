@@ -88,8 +88,8 @@ export class SellingBillListComponent implements OnInit {
                 { icon: 'pi pi-envelope', tooltip: 'Send on Email', severity: 'help', visible: () => this.canSendEmail, onClick: (item: any) => this.sendEmail(item) },
                 { icon: 'pi pi-download', tooltip: 'Download', severity: 'info', onClick: (item: any) => this.downloadPdf(item) },
                 { icon: 'pi pi-wallet', tooltip: 'Add Payment', severity: 'success', visible: (item: any) => item.remainingAmount > 0, onClick: (item: any) => this.openPaymentDialog(item) },
-                { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', visible: () => !this.isDialog, onClick: (item: any) => this.openEditDialog(item) },
-                { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', visible: () => !this.isDialog, onClick: (item: any) => this.confirmDelete(item) }
+                { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', onClick: (item: any) => this.openEditDialog(item) },
+                { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', onClick: (item: any) => this.confirmDelete(item) }
             ]},
             { field: 'billNo', header: this.labels.BILL_NO, sortable: true, type: 'text', width: '170px', cellClass: 'fw-semibold text-muted' },
             { field: 'customerId', header: 'Cust ID', sortable: true, type: 'numeric', width: '110px', prefix: '#', cellClass: 'fw-semibold text-muted' },
@@ -136,7 +136,6 @@ export class SellingBillListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadStatistics();
-        this.gridConfig.showAddButton = !this.isDialog;
         this.gridConfig.showExport = this.accountDetails.enableMigration;
         if (this.isDialog) {
             this.gridConfig.scrollHeight = 'flex';
@@ -253,13 +252,11 @@ export class SellingBillListComponent implements OnInit {
     }
 
     onFormSaved(mode: 'create' | 'update' | 'view'): void {
-        if (mode !== 'view') {
-            this.loadData();
-            const msg = mode === 'create'
-                ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
-                : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
-        }
+        this.loadData();
+        const msg = mode === 'create'
+            ? SellingBillConstants.MESSAGES.CREATE_SUCCESS(this.title)
+            : SellingBillConstants.MESSAGES.UPDATE_SUCCESS(this.title);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
     }
 
     onFormDialogClosed(): void {
