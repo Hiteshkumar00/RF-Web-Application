@@ -42,7 +42,7 @@ export class PaymentAccountImportExportService {
 
   async openImportWizard(onSuccess: () => void): Promise<void> {
     const columns: ColumnConfig[] = [
-      { field: 'methodName', header: 'Method Name', type: 'text', required: true, unique: true }
+      { field: 'methodName', header: 'Method Name', type: 'text', required: true }
     ];
 
     const validateFn = (row: any): string[] => {
