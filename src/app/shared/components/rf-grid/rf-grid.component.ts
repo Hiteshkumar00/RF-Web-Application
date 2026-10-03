@@ -137,6 +137,7 @@ export class RfGridComponent implements AfterContentInit, OnInit, OnDestroy {
     if (this.config && this.config.globalSearchTerm) {
         event.filters = event.filters || {};
         event.filters['global'] = [{ value: this.config.globalSearchTerm, matchMode: 'contains' }];
+        event.globalFilter = this.config.globalSearchTerm;
     }
     
     this.lastLazyLoadEvent = event;
