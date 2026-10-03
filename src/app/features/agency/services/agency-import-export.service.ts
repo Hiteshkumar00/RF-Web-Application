@@ -52,6 +52,11 @@ export class AgencyImportExportService {
       return errors;
     };
 
+    const dummyData = [{
+      'Agency Name': 'Sample Agency',
+      'Address': '123 Main Street, City'
+    }];
+
     const ref = await this.dialogManager.openAsync(
       ImportExcelWizardComponent,
       {
@@ -62,6 +67,7 @@ export class AgencyImportExportService {
           validateRowFn: validateFn,
           importFn: (data: any[]) => this.apiService.import(data),
           successLabel: 'Agencies',
+          templateDummyData: dummyData,
           onImportSuccess: () => { onSuccess(); this.dialogManager.destroy(ref); },
           onClose: () => this.dialogManager.destroy(ref)
         }

@@ -50,6 +50,14 @@ export class ProductImportExportService {
       return errors;
     };
 
+    const dummyData = [{
+      'Product Name': 'Sample Furniture',
+      'Warranty Year': 1,
+      'Warranty Month': 6,
+      'Warranty Day': 0,
+      'Image Link': 'https://example.com/image.jpg'
+    }];
+
     const ref = await this.dialogManager.openAsync(
       ImportExcelWizardComponent,
       {
@@ -60,6 +68,7 @@ export class ProductImportExportService {
           validateRowFn: validateFn,
           importFn: (data: any[]) => this.apiService.import(data),
           successLabel: 'Products',
+          templateDummyData: dummyData,
           onImportSuccess: () => { onSuccess(); this.dialogManager.destroy(ref); },
           onClose: () => this.dialogManager.destroy(ref)
         }

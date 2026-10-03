@@ -51,6 +51,10 @@ export class PaymentAccountImportExportService {
       return errors;
     };
 
+    const dummyData = [{
+      'Method Name': 'HDFC Bank'
+    }];
+
     const ref = await this.dialogManager.openAsync(
       ImportExcelWizardComponent,
       {
@@ -61,6 +65,7 @@ export class PaymentAccountImportExportService {
           validateRowFn: validateFn,
           importFn: (data: any[]) => this.apiService.import(data),
           successLabel: 'Bank Accounts',
+          templateDummyData: dummyData,
           onImportSuccess: () => { onSuccess(); this.dialogManager.destroy(ref); },
           onClose: () => this.dialogManager.destroy(ref)
         }

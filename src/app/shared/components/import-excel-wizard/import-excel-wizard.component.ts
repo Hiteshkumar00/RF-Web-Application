@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ImportResult, ImportResultDialogComponent } from '../import-result-dialog/import-result-dialog.component';
 import * as XLSX from 'xlsx';
+import { ExcelService } from '../../services/excel.service';
 
 export interface ColumnConfig {
   field: string;
@@ -34,6 +35,8 @@ export class ImportExcelWizardComponent implements OnDestroy {
   @Input() onClose?: () => void;
   /** Human-readable label for the entity, e.g. "Agencies" or "Products". Used in the success toast. */
   @Input() successLabel = 'Records';
+  /** Dummy data to export when the user clicks 'Download Template'. */
+  @Input() templateDummyData?: any[];
 
   isSubmitting = false;
   currentStep = 1;
@@ -49,8 +52,9 @@ export class ImportExcelWizardComponent implements OnDestroy {
 
   constructor(
     private messageService: MessageService,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private excelService: ExcelService
+  ) { }
 
   ngOnDestroy() {
     this.importSub?.unsubscribe();
@@ -273,11 +277,12 @@ export class ImportExcelWizardComponent implements OnDestroy {
   }
 
   downloadTemplate() {
-    const header = this.columns.map(c => c.header);
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([header]);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Template');
-    XLSX.writeFile(wb, `${this.title.replace(/\s+/g, '_')}_Template.xlsx`);
+    if (this.templateDummyData && this.templateDummyData.length > 0) {
+      this.excelService.exportAsExcelFile(
+        this.templateDummyData,
+        `${this.title.replace(/\s+/g, '_')}_Template`
+      );
+    }
   }
 
   submit() {
