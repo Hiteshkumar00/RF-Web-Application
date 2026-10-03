@@ -29,7 +29,7 @@ export class BuyingBillDialogService {
         resolve: {
           agencyOptions: this.dropdownService.getAgencyOptions(),
           paymentAccountOptions: this.dropdownService.getPaymentAccountOptions(),
-          products: this.productApiService.getAll(),
+          products: this.productApiService.getSuggestions(''),
           expenseTypeSuggestions: this.accountDetailsService.enableSuggestions ? this.buyingBillApiService.getExpenceTypeSuggestions() : Promise.resolve([]),
           billDetails: (mode === 'update' || mode === 'view') && id ? this.buyingBillApiService.getById(id) : Promise.resolve(null)
         },

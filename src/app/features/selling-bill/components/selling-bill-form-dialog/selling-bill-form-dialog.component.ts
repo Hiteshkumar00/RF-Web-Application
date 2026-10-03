@@ -38,6 +38,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
     private productDialogService = inject(ProductDialogService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -143,7 +144,24 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.addItem();
             }
             this.initProductOptions();
+            this.fetchInitialProducts();
         }
+    }
+
+    private fetchInitialProducts(): void {
+        const selectedProductIds = new Set<number>(
+            this.items.controls
+                .map(c => c.get('productId')?.value)
+                .filter(id => id != null)
+        );
+        const includeIds = Array.from(selectedProductIds);
+        
+        this.productApiService.getSuggestions('', includeIds).subscribe(products => {
+            const existingIds = new Set(this.products.map(p => p.id));
+            const newProducts = products.filter(p => !existingIds.has(p.id));
+            this.products = [...this.products, ...newProducts];
+            this.initProductOptions();
+        });
     }
 
     private initProductOptions(): void {
@@ -162,14 +180,38 @@ export class SellingBillFormDialogComponent implements OnChanges {
         });
     }
 
+    onProductSearch(event: any): void {
+        const query = (event.filter || '').trim();
+        this.productApiService.getSuggestions(query).subscribe(newProducts => {
+            // Merge new products with existing ones to preserve selected options
+            const existingIds = new Set(this.products.map(p => p.id));
+            const productsToAdd = newProducts.filter(p => !existingIds.has(p.id));
+            this.products = [...this.products, ...productsToAdd];
+            
+            // Or alternatively, to keep the list small but still include selected items:
+            // Find all currently selected product IDs
+            const selectedProductIds = new Set(
+                this.items.controls
+                    .map(c => c.get('productId')?.value)
+                    .filter(id => id != null)
+            );
+            
+            // Keep currently selected products + newly fetched products
+            const selectedProducts = this.products.filter(p => selectedProductIds.has(p.id));
+            const selectedProductIdsSet = new Set(selectedProducts.map(p => p.id));
+            const additionalProducts = newProducts.filter(p => !selectedProductIdsSet.has(p.id));
+            
+            this.products = [...selectedProducts, ...additionalProducts];
+            this.initProductOptions();
+        });
+    }
+
     openAddProductDialog(): void {
         this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
     }
 
     onProductSave(): void {
-        // Product reload will be handled by the parent component or the next open instance,
-        // since the component should be re-instantiated. For now, we do nothing as the parent 
-        // doesn't refresh the inputs dynamically.
+        this.fetchInitialProducts();
     }
 
 

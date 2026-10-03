@@ -1,0 +1,126 @@
+<div class="card border-0 shadow-sm">
+    <div class="card-header py-3 border-0" *ngIf="config.title || config.showSearch || config.showExport || config.showAddButton || toolbarStartTemplate || toolbarEndTemplate">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <h5 *ngIf="config.title" class="mb-0 fw-bold border-start border-4 border-primary ps-2 m-0">{{ config.title }}</h5>
+                
+                <p-button *ngIf="config.showAddButton" icon="pi pi-plus" [rounded]="true" 
+                    [pTooltip]="config.addButtonTooltip || 'Add'" tooltipPosition="top"
+                    (onClick)="config.onAdd && config.onAdd()" size="small" />
+
+                <ng-container *ngIf="toolbarStartTemplate">
+                    <ng-container *ngTemplateOutlet="toolbarStartTemplate"></ng-container>
+                </ng-container>
+            </div>
+            
+            <div class="d-flex align-items-center gap-2">
+                <p-iconField iconPosition="left" *ngIf="config.showSearch !== false">
+                    <p-inputIcon styleClass="pi pi-search" />
+                    <input type="text" pInputText [placeholder]="config.searchPlaceholder || 'Search...'"
+                        (input)="onGlobalSearch($any($event.target).value)"
+                        class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
+                </p-iconField>
+                
+                <p-splitButton *ngIf="config.showExport" icon="pi pi-file-excel" label="Export" 
+                    (onClick)="exportData(false)"
+                    [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
+
+                <ng-container *ngIf="toolbarEndTemplate">
+                    <ng-container *ngTemplateOutlet="toolbarEndTemplate"></ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body p-0">
+        <p-table 
+    #dt
+    [value]="config.data" 
+    [lazy]="config.lazy !== false" 
+    (onLazyLoad)="loadData($event)" 
+    [paginator]="config.paginator !== false" 
+    [rows]="config.rows || 10" 
+    [totalRecords]="config.totalRecords" 
+    [loading]="config.showLoader ? config.loading : false"
+    [rowsPerPageOptions]="config.rowsPerPageOptions || [10, 25, 50]"
+    [(selection)]="config.selection"
+    (selectionChange)="onSelectionChange($event)"
+    [resizableColumns]="config.resizableColumns !== false"
+    [columnResizeMode]="config.columnResizeMode || 'expand'"
+    [scrollable]="config.scrollable || false"
+    [scrollHeight]="config.scrollHeight || ''"
+    [styleClass]="config.styleClass || 'p-datatable-sm p-datatable-striped p-datatable-gridlines'"
+    [showCurrentPageReport]="config.showCurrentPageReport !== false"
+    [currentPageReportTemplate]="config.currentPageReportTemplate || 'Showing {first} to {last} of {totalRecords} entries'"
+    [globalFilterFields]="config.globalFilterFields || []">
+
+    <ng-container *ngIf="headerTemplate">
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    </ng-container>
+    
+    <ng-template pTemplate="header" *ngIf="!headerTemplate">
+        <tr class="text-uppercase small">
+            <th pResizableColumn style="width: 4rem" *ngIf="config.enableSelection">
+                <p-tableHeaderCheckbox />
+            </th>
+            <th pResizableColumn *ngFor="let col of config.columns" [pSortableColumn]="col.sortable ? col.field : undefined" [style.width]="col.width">
+                <div class="d-flex align-items-center gap-1">
+                    {{ col.header }} 
+                    <p-sortIcon *ngIf="col.sortable" [field]="col.field"></p-sortIcon>
+                    <p-columnFilter *ngIf="col.type && col.type !== 'image' && col.type !== 'action' && col.type !== 'custom'" [type]="col.type" [field]="col.field" display="menu" class="ms-auto" [matchMode]="col.matchMode || 'contains'"></p-columnFilter>
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-container *ngIf="bodyTemplate">
+        <ng-template pTemplate="body" let-item>
+            <ng-container *ngTemplateOutlet="bodyTemplate; context: {$implicit: item}"></ng-container>
+        </ng-template>
+    </ng-container>
+
+    <ng-template pTemplate="body" let-item *ngIf="!bodyTemplate">
+        <tr>
+            <td *ngIf="config.enableSelection">
+                <p-tableCheckbox [value]="item" />
+            </td>
+            <td *ngFor="let col of config.columns" [ngClass]="{'fw-bold text-muted small': col.prefix}">
+                
+                <ng-container *ngIf="!col.type || col.type === 'text' || col.type === 'numeric'">
+                    {{ col.prefix ? col.prefix : '' }}{{ item[col.field] }}
+                </ng-container>
+
+                <ng-container *ngIf="col.type === 'action'">
+                    <div class="d-flex justify-content-center gap-1">
+                        <p-button *ngFor="let action of col.actions" [icon]="action.icon" [text]="true" [rounded]="true" [severity]="action.severity"
+                            (onClick)="action.onClick(item)" [pTooltip]="action.tooltip" tooltipPosition="top" />
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="col.type === 'image'">
+                    <p-image *ngIf="item[col.field]" [src]="item[col.field]" [alt]="col.header" [preview]="true"
+                        [imageStyle]="{ 'width': '40px', 'height': '40px', 'object-fit': 'cover', 'border-radius': '4px' }"
+                        styleClass="shadow-sm border rounded" />
+                    <div *ngIf="!item[col.field]"
+                        style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;"
+                        class="border">
+                        <i [class]="col.imageFallbackIcon || 'pi pi-image'" class="text-muted" style="font-size: 1.2rem;"></i>
+                    </div>
+                </ng-container>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td [attr.colspan]="config.columns.length + (config.enableSelection ? 1 : 0)" class="text-center p-4">
+                <div class="py-4">
+                    <i class="pi pi-inbox fs-1 text-muted mb-3 d-block"></i>
+                    <span class="text-muted">No records found.</span>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+    </div>
+</div>

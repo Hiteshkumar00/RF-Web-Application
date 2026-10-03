@@ -33,6 +33,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private accountDetailsService = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private productDialogService = inject(ProductDialogService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -135,7 +136,24 @@ export class BuyingBillFormDialogComponent implements OnChanges {
             }
 
             this.initProductOptions();
+            this.fetchInitialProducts();
         }
+    }
+
+    private fetchInitialProducts(): void {
+        const selectedProductIds = new Set<number>(
+            this.stocks.controls
+                .map(c => c.get('productId')?.value)
+                .filter(id => id != null)
+        );
+        const includeIds = Array.from(selectedProductIds);
+        
+        this.productApiService.getSuggestions('', includeIds).subscribe(products => {
+            const existingIds = new Set(this.products.map(p => p.id));
+            const newProducts = products.filter(p => !existingIds.has(p.id));
+            this.products = [...this.products, ...newProducts];
+            this.initProductOptions();
+        });
     }
 
     private initProductOptions(): void {
@@ -154,12 +172,30 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         });
     }
 
+    onProductSearch(event: any): void {
+        const query = (event.filter || '').trim();
+        this.productApiService.getSuggestions(query).subscribe(newProducts => {
+            const selectedProductIds = new Set(
+                this.stocks.controls
+                    .map(c => c.get('productId')?.value)
+                    .filter(id => id != null)
+            );
+            
+            const selectedProducts = this.products.filter(p => selectedProductIds.has(p.id));
+            const selectedProductIdsSet = new Set(selectedProducts.map(p => p.id));
+            const additionalProducts = newProducts.filter(p => !selectedProductIdsSet.has(p.id));
+            
+            this.products = [...selectedProducts, ...additionalProducts];
+            this.initProductOptions();
+        });
+    }
+
     openAddProductDialog(): void {
         this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
     }
 
     onProductSave(): void {
-        // Handled by parent
+        this.fetchInitialProducts();
     }
 
     onProductChange(event: any, index: number): void {

@@ -72,7 +72,7 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-select [options]="productOptions" formControlName="productId"
-                                    (onChange)="onProductChange($event, i)" placeholder="Select Product"
+                                    (onChange)="onProductChange($event, i)" (onFilter)="onProductSearch($event)" placeholder="Select Product"
                                     styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
                                     optionLabel="label" optionValue="value" [autofocus]="true">
                                     <ng-template let-item pTemplate="item">

@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ProductDto, CreateProductDto, UpdateProductDto, ProductFilterDto } from '../models/product.dto';
+import { SKIP_LOADER } from '../../../core/interceptors/api.interceptor';
 
 @Injectable({
     providedIn: 'root'
@@ -11,12 +12,8 @@ export class ProductApiService {
     private readonly basePath = `${environment.apiUrl}/Product`;
     private http = inject(HttpClient);
 
-    getAll(filter?: ProductFilterDto): Observable<ProductDto[]> {
-        let params = new HttpParams();
-        if (filter?.searchTerm) {
-            params = params.set('searchTerm', filter.searchTerm);
-        }
-        return this.http.get<ProductDto[]>(`${this.basePath}/GetAll`, { params });
+    getAll(request: any): Observable<{ data: ProductDto[], totalRecords: number }> {
+        return this.http.post<{ data: ProductDto[], totalRecords: number }>(`${this.basePath}/GetAll`, request);
     }
 
     getById(id: number): Observable<ProductDto> {
@@ -35,9 +32,19 @@ export class ProductApiService {
         return this.http.delete<boolean>(`${this.basePath}/Delete/${id}`);
     }
 
-    getSuggestions(searchTerm: string): Observable<ProductDto[]> {
-        let params = new HttpParams().set('searchTerm', searchTerm || '');
-        return this.http.get<ProductDto[]>(`${this.basePath}/GetSuggestions`, { params });
+    getSuggestions(searchTerm: string, includeIds?: number[]): Observable<ProductDto[]> {
+        let params = new HttpParams();
+        if (searchTerm) {
+            params = params.set('searchTerm', searchTerm);
+        }
+        if (includeIds && includeIds.length > 0) {
+            includeIds.forEach(id => {
+                params = params.append('includeIds', id.toString());
+            });
+        }
+        return this.http.get<ProductDto[]>(`${this.basePath}/GetSuggestions`, { 
+            params
+        });
     }
 
     export(filter?: ProductFilterDto): Observable<Blob> {

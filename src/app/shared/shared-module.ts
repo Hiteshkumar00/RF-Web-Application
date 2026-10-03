@@ -58,9 +58,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ImportExcelWizardComponent } from './components/import-excel-wizard/import-excel-wizard.component';
 import { ImportResultDialogComponent } from './components/import-result-dialog/import-result-dialog.component';
+import { RfGridComponent } from './components/rf-grid/rf-grid.component';
 
 @NgModule({
-  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent, ImportExcelWizardComponent, ImportResultDialogComponent],
+  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent, ImportExcelWizardComponent, ImportResultDialogComponent, RfGridComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -158,7 +159,8 @@ import { ImportResultDialogComponent } from './components/import-result-dialog/i
     BadgeModule,
     DynamicDialogModule,
     ImportExcelWizardComponent,
-    ImportResultDialogComponent
+    ImportResultDialogComponent,
+    RfGridComponent
   ],
   providers: [DialogService]
 })
