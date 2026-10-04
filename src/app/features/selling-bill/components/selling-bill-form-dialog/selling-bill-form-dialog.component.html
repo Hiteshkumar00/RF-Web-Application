@@ -1,5 +1,5 @@
-<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="true" [resizable]="true"
-    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1000px' }" [draggable]="true"
+    [resizable]="true" [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
@@ -15,19 +15,20 @@
             <div class="col-md-4">
                 <div class="field">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <label class="font-semibold m-0">{{ labels.CUSTOMER_NAME }} <span class="text-danger">*</span></label>
+                        <label class="font-semibold m-0">{{ labels.CUSTOMER_NAME }} <span
+                                class="text-danger">*</span></label>
                         <div class="form-check form-switch m-0" *ngIf="mode !== 'view'">
-                            <input class="form-check-input" type="checkbox" role="switch" id="isNewCustomer" 
+                            <input class="form-check-input" type="checkbox" role="switch" id="isNewCustomer"
                                 [checked]="isNewCustomer" (change)="onToggleCustomerMode($any($event.target).checked)">
                             <label class="form-check-label extra-small text-muted" for="isNewCustomer">New?</label>
                         </div>
                     </div>
-                    
+
                     <!-- Existing Customer Selector -->
                     <p-select *ngIf="!isNewCustomer" [options]="customerOptions" formControlName="customerId"
                         (onChange)="onCustomerChange($event)" placeholder="Select Customer"
-                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
-                        optionLabel="label" optionValue="value">
+                        styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small" optionLabel="label"
+                        optionValue="value">
                     </p-select>
                     <p-message severity="error" text="Customer is required" variant="simple" size="small"
                         *ngIf="!isNewCustomer && form.get('customerId')?.invalid && form.get('customerId')?.touched" />
@@ -138,28 +139,33 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td class="text-center">
                                 <div class="d-flex align-items-center justify-content-center">
-                                    <p-image *ngIf="getProductImage(control.get('productId')?.value)" [src]="getProductImage(control.get('productId')?.value)!" [preview]="true"
+                                    <p-image *ngIf="getProductImage(control.get('productId')?.value)"
+                                        [src]="getProductImage(control.get('productId')?.value)!" [preview]="true"
                                         [imageStyle]="{ 'width': '35px', 'height': '35px', 'object-fit': 'cover', 'border-radius': '4px' }"
                                         styleClass="shadow-sm border rounded" />
                                     <div *ngIf="!getProductImage(control.get('productId')?.value)"
                                         style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 4px; margin: 0 auto;"
-                                        class="border bg-light">
+                                        class="border">
                                         <i class="pi pi-image text-muted"></i>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 <p-select [options]="productOptions" formControlName="productId"
-                                    (onChange)="onProductChange($event, i)" (onFilter)="onProductSearch($event)" placeholder="Select Product"
-                                    styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
-                                    optionLabel="label" optionValue="value" [autofocus]="true">
+                                    (onChange)="onProductChange($event, i)" (onFilter)="onProductSearch($event)"
+                                    placeholder="Select Product" styleClass="w-100 text-start" [filter]="true"
+                                    appendTo="body" size="small" optionLabel="label" optionValue="value"
+                                    [autofocus]="true">
                                     <ng-template let-item pTemplate="item">
                                         <div class="d-flex justify-content-between align-items-center w-100">
                                             <div class="d-flex align-items-center gap-2">
-                                                <span class="badge bg-secondary-subtle text-secondary small border">#{{ item.data.id }}</span>
+                                                <span class="badge bg-secondary-subtle text-secondary small border">#{{
+                                                    item.data.id }}</span>
                                                 <span>{{ item.label }}</span>
                                             </div>
-                                            <span *ngIf="item.data.price" class="ms-auto fw-bold text-success small">{{ item.data.price | rfCurrency }}</span>
+                                            &nbsp;&nbsp;
+                                            <span *ngIf="item.data.price" class="ms-auto fw-bold text-success small">{{
+                                                item.data.price | rfCurrency }}</span>
                                         </div>
                                     </ng-template>
                                 </p-select>
@@ -307,8 +313,8 @@
             </div>
 
             <div class="d-flex gap-2" *ngIf="mode !== 'view'">
-                <p-button label="Add Product" icon="pi pi-plus" (onClick)="openAddProductDialog()"
-                    severity="secondary" size="small" [outlined]="true" />
+                <p-button label="Add Product" icon="pi pi-plus" (onClick)="openAddProductDialog()" severity="secondary"
+                    size="small" [outlined]="true" />
             </div>
 
             <div class="ms-auto d-flex gap-3 align-items-center">
@@ -337,4 +343,3 @@
     </ng-template>
 
 </p-dialog>
-

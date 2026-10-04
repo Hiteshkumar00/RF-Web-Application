@@ -22,20 +22,38 @@
                 <tr class="text-uppercase small">
                     <th pResizableColumn style="width: 80px" class="text-center">History</th>
                     <th pResizableColumn style="width: 70px">Product image</th>
-                    <th pResizableColumn pSortableColumn="productName">Product name <p-sortIcon field="productName" />
+                    <th pResizableColumn pSortableColumn="productName">
+                        Product name <p-sortIcon field="productName" />
+                        <p-columnFilter type="text" field="productName" display="menu" class="ms-1" />
                     </th>
-                    <th pResizableColumn pSortableColumn="totalPurchaseCount" class="text-end">Buyed Quentity
-                        <p-sortIcon field="totalPurchaseCount" /></th>
-                    <th pResizableColumn pSortableColumn="totalSoldCount" class="text-end">Selled quantity <p-sortIcon
-                            field="totalSoldCount" /></th>
-                    <th pResizableColumn pSortableColumn="totalBuyingAmount" class="text-end">Total buying amount <p-sortIcon field="totalBuyingAmount" /></th>
-                    <th pResizableColumn pSortableColumn="totalPurchaseCost" class="text-end">Total buying amount for sold product <p-sortIcon field="totalPurchaseCost" /></th>
-                    <th pResizableColumn pSortableColumn="totalSellingAmount" class="text-end">Total selling amount
-                        <p-sortIcon field="totalSellingAmount" /></th>
-                    <th pResizableColumn pSortableColumn="totalProfit" class="text-end">Total profit by product
-                        <p-sortIcon field="totalProfit" /></th>
-                    <th pResizableColumn pSortableColumn="availableStock" class="text-center">Current stock <p-sortIcon
-                            field="availableStock" /></th>
+                    <th pResizableColumn pSortableColumn="totalPurchaseCount" class="text-end">
+                        Buyed Quentity <p-sortIcon field="totalPurchaseCount" />
+                        <p-columnFilter type="numeric" field="totalPurchaseCount" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalSoldCount" class="text-end">
+                        Selled quantity <p-sortIcon field="totalSoldCount" />
+                        <p-columnFilter type="numeric" field="totalSoldCount" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalBuyingAmount" class="text-end">
+                        Total buying amount <p-sortIcon field="totalBuyingAmount" />
+                        <p-columnFilter type="numeric" field="totalBuyingAmount" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalPurchaseCost" class="text-end">
+                        Total buying amount for sold product <p-sortIcon field="totalPurchaseCost" />
+                        <p-columnFilter type="numeric" field="totalPurchaseCost" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalSellingAmount" class="text-end">
+                        Total selling amount <p-sortIcon field="totalSellingAmount" />
+                        <p-columnFilter type="numeric" field="totalSellingAmount" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="totalProfit" class="text-end">
+                        Total profit by product <p-sortIcon field="totalProfit" />
+                        <p-columnFilter type="numeric" field="totalProfit" display="menu" class="ms-1" />
+                    </th>
+                    <th pResizableColumn pSortableColumn="availableStock" class="text-center">
+                        Current stock <p-sortIcon field="availableStock" />
+                        <p-columnFilter type="numeric" field="availableStock" display="menu" class="ms-1" />
+                    </th>
                 </tr>
             </ng-template>
 
