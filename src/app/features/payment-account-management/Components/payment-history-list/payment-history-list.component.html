@@ -147,7 +147,7 @@
                         </td>
                         <td class="text-end fw-bold">
                             <span [ngClass]="item.direction === 'Received' ? 'text-success' : 'text-danger'">
-                                {{ item.amount | currency:'INR' }}
+                                {{ item.amount | rfCurrency }}
                             </span>
                         </td>
                         <td class="small">{{ item.date | rfDate }}</td>

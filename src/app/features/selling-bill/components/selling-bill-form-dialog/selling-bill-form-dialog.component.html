@@ -147,6 +147,7 @@
                                                     item.data.id }}</span>
                                                 <span>{{ item.label }}</span>
                                             </div>
+                                            <span *ngIf="item.data.price" class="ms-auto fw-bold text-success small">{{ item.data.price | rfCurrency }}</span>
                                         </div>
                                     </ng-template>
                                 </p-select>
@@ -167,7 +168,7 @@
                             </td>
                             <td class="text-end fw-bold">
                                 {{ (control.get('quantity')?.value * control.get('price')?.value -
-                                control.get('discount')?.value) | currency:'INR' }}
+                                control.get('discount')?.value) | rfCurrency }}
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -254,28 +255,28 @@
 
                     <div class="d-flex justify-content-between mb-2 align-items-center">
                         <span class="text-muted">Total Amount:</span>
-                        <span class="fw-semibold">{{ totalAmount | currency:'INR' }}</span>
+                        <span class="fw-semibold">{{ totalAmount | rfCurrency }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3 align-items-center">
                         <span class="text-muted">{{ labels.DISCOUNT }}:</span>
-                        <span class="fw-semibold text-danger">- {{ totalDiscount | currency:'INR' }}</span>
+                        <span class="fw-semibold text-danger">- {{ totalDiscount | rfCurrency }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center">
                         <span class="fw-semibold">{{ labels.NET_AMOUNT }}:</span>
-                        <span class="fw-bold">{{ finalAmount | currency:'INR' }}</span>
+                        <span class="fw-bold">{{ finalAmount | rfCurrency }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 align-items-center text-success">
                         <span class="small">{{ labels.PAID_AMOUNT }}:</span>
-                        <span class="fw-semibold small">{{ paidAmount | currency:'INR' }}</span>
+                        <span class="fw-semibold small">{{ paidAmount | rfCurrency }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between pt-2 border-top mt-1"
                         [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
                         <span class="h6 mb-0 fw-bold">{{ labels.REMAINING_AMOUNT }}:</span>
-                        <span class="h5 mb-0 fw-bold">{{ remainingAmount | currency:'INR' }}</span>
+                        <span class="h5 mb-0 fw-bold">{{ remainingAmount | rfCurrency }}</span>
                     </div>
                 </div>
             </div>

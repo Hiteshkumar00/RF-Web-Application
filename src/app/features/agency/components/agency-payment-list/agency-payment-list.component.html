@@ -85,7 +85,7 @@
                     <td>
                         <div class="fw-semibold">{{ payment.agencyName }}</div>
                     </td>
-                    <td class="text-end fw-bold text-success">{{ payment.totalAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-bold text-success">{{ payment.totalAmount | rfCurrency }}</td>
                     <td>
                         <span class="small text-muted">{{ payment.description || '—' }}</span>
                     </td>

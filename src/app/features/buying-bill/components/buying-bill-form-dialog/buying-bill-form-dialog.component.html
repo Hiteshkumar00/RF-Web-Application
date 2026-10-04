@@ -1,5 +1,5 @@
-<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1100px' }" [draggable]="true" [resizable]="true"
-    [closable]="false" [closeOnEscape]="false" class="premium-dialog">
+<p-dialog [maximizable]="true" [visible]="visible" [modal]="true" [style]="{ width: '1100px' }" [draggable]="true"
+    [resizable]="true" [closable]="false" [closeOnEscape]="false" class="premium-dialog">
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
@@ -72,9 +72,10 @@
                         <tr [formGroup]="$any(control)" class="align-middle">
                             <td>
                                 <p-select [options]="productOptions" formControlName="productId"
-                                    (onChange)="onProductChange($event, i)" (onFilter)="onProductSearch($event)" placeholder="Select Product"
-                                    styleClass="w-100 text-start" [filter]="true" appendTo="body" size="small"
-                                    optionLabel="label" optionValue="value" [autofocus]="true">
+                                    (onChange)="onProductChange($event, i)" (onFilter)="onProductSearch($event)"
+                                    placeholder="Select Product" styleClass="w-100 text-start" [filter]="true"
+                                    appendTo="body" size="small" optionLabel="label" optionValue="value"
+                                    [autofocus]="true">
                                     <ng-template let-item pTemplate="item">
                                         <div class="d-flex justify-content-between align-items-center w-100">
                                             <div class="d-flex align-items-center gap-2">
@@ -82,6 +83,8 @@
                                                     item.data.id }}</span>
                                                 <span>{{ item.label }}</span>
                                             </div>
+                                            <span *ngIf="item.data.price" class="ms-auto fw-bold text-success small">{{
+                                                item.data.price | rfCurrency }}</span>
                                         </div>
                                     </ng-template>
                                 </p-select>
@@ -103,7 +106,7 @@
                             </td>
                             <td class="text-end fw-bold">
                                 {{ (control.get('quantity')?.value * control.get('purchasePrice')?.value -
-                                control.get('discount')?.value) | currency:'INR' }}
+                                control.get('discount')?.value) | rfCurrency }}
                             </td>
                             <td class="text-center" *ngIf="mode !== 'view'">
                                 <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
@@ -248,17 +251,17 @@
 
                 <div class="d-flex justify-content-between mb-2 align-items-center">
                     <span class="text-muted">{{ labels.TOTAL_AMOUNT }}:</span>
-                    <span class="fw-semibold">{{ totalItemsAmount | currency:'INR' }}</span>
+                    <span class="fw-semibold">{{ totalItemsAmount | rfCurrency }}</span>
                 </div>
 
                 <div class="d-flex justify-content-between mb-3 align-items-center">
                     <span class="text-muted">{{ labels.DISCOUNT }}:</span>
-                    <span class="fw-semibold text-danger">- {{ totalDiscountAmount | currency:'INR' }}</span>
+                    <span class="fw-semibold text-danger">- {{ totalDiscountAmount | rfCurrency }}</span>
                 </div>
 
                 <div class="d-flex justify-content-between mb-2 pt-2 border-top align-items-center text-info">
                     <span class="fw-bold">{{ labels.FINAL_AMOUNT }}:</span>
-                    <span class="fw-bold h5 mb-0">{{ netAmount | currency:'INR' }}</span>
+                    <span class="fw-bold h5 mb-0">{{ netAmount | rfCurrency }}</span>
                 </div>
 
 
@@ -273,17 +276,17 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="fw-semibold text-warning-emphasis">Total Expenses:</span>
-                    <span class="fw-semibold text-warning-emphasis">{{ totalExpenceAmount | currency:'INR' }}</span>
+                    <span class="fw-semibold text-warning-emphasis">{{ totalExpenceAmount | rfCurrency }}</span>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="fw-semibold text-success">Paid Expense:</span>
-                    <span class="fw-semibold text-success">{{ totalExpencePaidAmount | currency:'INR' }}</span>
+                    <span class="fw-semibold text-success">{{ totalExpencePaidAmount | rfCurrency }}</span>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center pt-2 border-top border-warning mt-1">
                     <span class="fw-bold text-danger">Remaining Expense:</span>
-                    <span class="fw-bold text-danger h6 mb-0">{{ totalExpenceRemainingAmount | currency:'INR' }}</span>
+                    <span class="fw-bold text-danger h6 mb-0">{{ totalExpenceRemainingAmount | rfCurrency }}</span>
                 </div>
             </div>
         </div>
@@ -298,8 +301,8 @@
             </div>
 
             <div class="d-flex gap-2" *ngIf="mode !== 'view'">
-                <p-button label="Add Product" icon="pi pi-plus" (onClick)="openAddProductDialog()"
-                    severity="secondary" size="small" [outlined]="true" />
+                <p-button label="Add Product" icon="pi pi-plus" (onClick)="openAddProductDialog()" severity="secondary"
+                    size="small" [outlined]="true" />
             </div>
 
             <div class="ms-auto d-flex gap-2">
@@ -315,5 +318,3 @@
     </ng-template>
 
 </p-dialog>
-
-

@@ -91,7 +91,7 @@
                         <i *ngIf="col.icon && item[col.field]" [class]="col.icon"></i>
                         {{ col.prefix ? col.prefix : '' }}
                         <ng-container *ngIf="!col.pipe">{{ item[col.field] != null && item[col.field] !== '' ? item[col.field] : '—' }}</ng-container>
-                        <ng-container *ngIf="col.pipe === 'currency'">{{ item[col.field] | currency:(col.pipeArgs || 'USD') }}</ng-container>
+                        <ng-container *ngIf="col.pipe === 'currency'">{{ item[col.field] | rfCurrency }}</ng-container>
                         <ng-container *ngIf="col.pipe === 'rfDate'">{{ item[col.field] | rfDate }}</ng-container>
                     </span>
                 </ng-container>

@@ -93,13 +93,13 @@
                             </div>
                         </td>
                         } @else if (col.field === 'totalAmount') {
-                        <td class="text-end fw-semibold">{{ expense.totalAmount | currency:'INR' }}</td>
+                        <td class="text-end fw-semibold">{{ expense.totalAmount | rfCurrency }}</td>
                         } @else if (col.field === 'paidAmount') {
-                        <td class="text-end fw-bold text-success">{{ expense.paidAmount | currency:'INR' }}</td>
+                        <td class="text-end fw-bold text-success">{{ expense.paidAmount | rfCurrency }}</td>
                         } @else if (col.field === 'remainingAmount') {
                         <td class="text-end fw-bold"
                             [ngClass]="{'text-danger': expense.remainingAmount > 0, 'text-success': expense.remainingAmount <= 0}">
-                            {{ expense.remainingAmount | currency:'INR' }}
+                            {{ expense.remainingAmount | rfCurrency }}
                         </td>
                         } @else if (col.field === 'date') {
                         <td>{{ expense.date | rfDate }}</td>

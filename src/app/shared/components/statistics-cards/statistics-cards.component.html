@@ -12,7 +12,7 @@
                             {{ card.amount }}
                         </ng-container>
                         <ng-container *ngIf="!card.isNumberOnly">
-                            {{ card.amount | currency:'INR' }}
+                            {{ card.amount | rfCurrency }}
                         </ng-container>
                     </div>
                 </div>

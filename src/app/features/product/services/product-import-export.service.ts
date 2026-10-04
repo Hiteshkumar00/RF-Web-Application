@@ -3,6 +3,7 @@ import { DialogManagerService } from '../../../core/services/dialog-manager.serv
 import { ImportExcelWizardComponent, ColumnConfig } from '../../../shared/components/import-excel-wizard/import-excel-wizard.component';
 import { ProductApiService } from './product-api.service';
 import { MessageService } from 'primeng/api';
+import { ProductConstants } from '../constants/product.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,7 @@ export class ProductImportExportService {
   async openImportWizard(onSuccess: () => void): Promise<void> {
     const columns: ColumnConfig[] = [
       { field: 'productName', header: 'Product Name', type: 'text', required: true, unique: true },
+      { field: 'price', header: 'Price', type: 'number' },
       { field: 'warrantyYear', header: 'Warranty Year', type: 'number' },
       { field: 'warrantyMonth', header: 'Warranty Month', type: 'number' },
       { field: 'warrantyDay', header: 'Warranty Day', type: 'number' },
@@ -40,18 +42,35 @@ export class ProductImportExportService {
 
     const validateFn = (row: any): string[] => {
       const errors: string[] = [];
-      if (!row.productName?.toString().trim()) errors.push('Product Name is required.');
-      if (row.warrantyYear !== null && row.warrantyYear !== undefined && isNaN(Number(row.warrantyYear)))
-        errors.push('Warranty Year must be numeric.');
-      if (row.warrantyMonth !== null && row.warrantyMonth !== undefined && isNaN(Number(row.warrantyMonth)))
-        errors.push('Warranty Month must be numeric.');
-      if (row.warrantyDay !== null && row.warrantyDay !== undefined && isNaN(Number(row.warrantyDay)))
-        errors.push('Warranty Day must be numeric.');
+      const msgs = ProductConstants.MESSAGES.IMPORT_ERRORS;
+
+      if (!row.productName?.toString().trim()) errors.push(msgs.PRODUCT_NAME_REQUIRED);
+      if (row.warrantyYear !== null && row.warrantyYear !== undefined) {
+        const y = Number(row.warrantyYear);
+        if (isNaN(y)) errors.push(msgs.WARRANTY_YEAR_NUMERIC);
+        else if (y < 0) errors.push(msgs.WARRANTY_YEAR_MIN);
+      }
+      if (row.warrantyMonth !== null && row.warrantyMonth !== undefined) {
+        const m = Number(row.warrantyMonth);
+        if (isNaN(m)) errors.push(msgs.WARRANTY_MONTH_NUMERIC);
+        else if (m < 0) errors.push(msgs.WARRANTY_MONTH_MIN);
+      }
+      if (row.warrantyDay !== null && row.warrantyDay !== undefined) {
+        const d = Number(row.warrantyDay);
+        if (isNaN(d)) errors.push(msgs.WARRANTY_DAY_NUMERIC);
+        else if (d < 0) errors.push(msgs.WARRANTY_DAY_MIN);
+      }
+      if (row.price !== null && row.price !== undefined) {
+        const p = Number(row.price);
+        if (isNaN(p)) errors.push(msgs.PRICE_NUMERIC);
+        else if (p < 0) errors.push(msgs.PRICE_MIN);
+      }
       return errors;
     };
 
     const dummyData = [{
       'Product Name': 'Sample Furniture',
+      'Price': 1500,
       'Warranty Year': 1,
       'Warranty Month': 6,
       'Warranty Day': 0,

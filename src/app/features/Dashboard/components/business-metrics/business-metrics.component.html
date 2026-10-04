@@ -20,7 +20,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">Gross Profit</div>
-                        <div class="fs-2 fw-bold text-success">{{ metrics.grossProfit | currency:'INR' }}</div>
+                        <div class="fs-2 fw-bold text-success">{{ metrics.grossProfit | rfCurrency }}</div>
                     </div>
                     <div class="icon-circle bg-success text-white mb-0 opacity-50">
                         <i class="pi pi-chart-bar fs-4"></i>
@@ -35,7 +35,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">Net Profit</div>
-                        <div class="fs-2 fw-bold text-success">{{ metrics.totalProfit | currency:'INR' }}</div>
+                        <div class="fs-2 fw-bold text-success">{{ metrics.totalProfit | rfCurrency }}</div>
                     </div>
                     <div class="icon-circle bg-success text-white mb-0">
                         <i class="pi pi-chart-line fs-4"></i>
@@ -49,7 +49,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_SELLING }}</div>
-                        <div class="fs-2 fw-bold text-primary">{{ metrics.totalSellingAmount | currency:'INR' }}</div>
+                        <div class="fs-2 fw-bold text-primary">{{ metrics.totalSellingAmount | rfCurrency }}</div>
                     </div>
                     <div class="icon-circle bg-primary text-white mb-0">
                         <i class="pi pi-shopping-cart fs-4"></i>
@@ -63,7 +63,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_BUYING }}</div>
-                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | currency:'INR'
+                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.totalBuyingAmount | rfCurrency
                             }}</div>
                     </div>
                     <div class="icon-circle bg-warning text-white mb-0">
@@ -78,7 +78,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.TOTAL_EXPENSE }}</div>
-                        <div class="fs-2 fw-bold text-info-emphasis">{{ metrics.totalExpenceAmount | currency:'INR' }}
+                        <div class="fs-2 fw-bold text-info-emphasis">{{ metrics.totalExpenceAmount | rfCurrency }}
                         </div>
                     </div>
                     <div class="icon-circle bg-info text-white mb-0">
@@ -93,7 +93,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">{{ labels.SELLING_PENDING }}</div>
-                        <div class="fs-2 fw-bold text-danger">{{ metrics.sellingPendingAmount | currency:'INR' }}</div>
+                        <div class="fs-2 fw-bold text-danger">{{ metrics.sellingPendingAmount | rfCurrency }}</div>
                     </div>
                     <div class="icon-circle bg-danger text-white mb-0">
                         <i class="pi pi-hourglass fs-4"></i>
@@ -109,7 +109,7 @@
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="text-muted small fw-semibold uppercase mb-1">Expense Remaining</div>
-                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.expencePendingAmount | currency:'INR'
+                        <div class="fs-2 fw-bold text-warning-emphasis">{{ metrics.expencePendingAmount | rfCurrency
                             }}</div>
                     </div>
                     <div class="icon-circle bg-warning text-white mb-0">

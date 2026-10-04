@@ -89,24 +89,24 @@
                     } @else if (col.field === 'address') {
                     <td><span class="small text-muted">{{ agency.address || '—' }}</span></td>
                     } @else if (col.field === 'totalBillsAmount') {
-                    <td class="text-end fw-semibold text-info">{{ agency.totalBillsAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-info">{{ agency.totalBillsAmount | rfCurrency }}</td>
                     } @else if (col.field === 'totalPaidAmount') {
-                    <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | currency:'INR' }}</td>
+                    <td class="text-end text-success fw-semibold">{{ agency.totalPaidAmount | rfCurrency }}</td>
                     } @else if (col.field === 'totalPendingAmount') {
                     <td class="text-end fw-bold"
                         [ngClass]="{'text-danger': agency.totalPendingAmount > 0, 'text-success': agency.totalPendingAmount === 0}">
-                        {{ agency.totalPendingAmount | currency:'INR' }}
+                        {{ agency.totalPendingAmount | rfCurrency }}
                     </td>
                     } @else if (col.field === 'totalExpenceAmount') {
-                    <td class="text-end fw-semibold text-warning-emphasis">{{ agency.totalExpenceAmount | currency:'INR'
+                    <td class="text-end fw-semibold text-warning-emphasis">{{ agency.totalExpenceAmount | rfCurrency
                         }}</td>
                     } @else if (col.field === 'totalExpencePaidAmount') {
-                    <td class="text-end fw-semibold text-success">{{ agency.totalExpencePaidAmount | currency:'INR' }}
+                    <td class="text-end fw-semibold text-success">{{ agency.totalExpencePaidAmount | rfCurrency }}
                     </td>
                     } @else if (col.field === 'totalExpencePendingAmount') {
                     <td class="text-end fw-bold"
                         [ngClass]="{'text-danger': agency.totalExpencePendingAmount > 0, 'text-success': agency.totalExpencePendingAmount === 0}">
-                        {{ agency.totalExpencePendingAmount | currency:'INR' }}
+                        {{ agency.totalExpencePendingAmount | rfCurrency }}
                     </td>
                     }
                     }

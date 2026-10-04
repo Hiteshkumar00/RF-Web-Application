@@ -56,11 +56,11 @@
                 <td>{{history.agencyName}}</td>
                 <td>{{history.date | rfDate}}</td>
                 <td class="text-center">{{history.quantity}}</td>
-                <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
-                <td class="text-end text-danger">{{history.discountPerItem | currency:'INR'}}</td>
-                <td class="text-end fw-bold text-success">{{history.netPurchasePrice | currency:'INR'}}</td>
-                <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
-                <td class="text-end fw-semibold">{{history.totalNetPurchasedAmount | currency:'INR'}}</td>
+                <td class="text-end">{{history.purchasePrice | rfCurrency}}</td>
+                <td class="text-end text-danger">{{history.discountPerItem | rfCurrency}}</td>
+                <td class="text-end fw-bold text-success">{{history.netPurchasePrice | rfCurrency}}</td>
+                <td class="text-end text-danger">{{history.discount | rfCurrency}}</td>
+                <td class="text-end fw-semibold">{{history.totalNetPurchasedAmount | rfCurrency}}</td>
                 <td class="text-center">{{history.totalSold}}</td>
                 <td class="text-center fw-bold"
                     [ngClass]="history.remainingQty > 0 ? 'text-primary bg-primary-subtle' : ''">

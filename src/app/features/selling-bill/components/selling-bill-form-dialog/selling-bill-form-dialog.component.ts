@@ -33,7 +33,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private helperService = inject(HelperService);
-    private accountDetailsService = inject(AccountDetailsService);
+    public accountDetails = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
@@ -110,15 +110,15 @@ export class SellingBillFormDialogComponent implements OnChanges {
     }
 
     get canSendWhatsApp(): boolean {
-        return this.accountDetailsService.enableWhatsApp;
+        return this.accountDetails.enableWhatsApp;
     }
 
     get canSendEmail(): boolean {
-        return this.accountDetailsService.enableEmail;
+        return this.accountDetails.enableEmail;
     }
 
     get canAutoSendWhatsApp(): boolean {
-        return this.accountDetailsService.enableAdvancedWhatsApp;
+        return this.accountDetails.enableAdvancedWhatsApp;
     }
 
     ngOnChanges(changes: SimpleChanges): void {

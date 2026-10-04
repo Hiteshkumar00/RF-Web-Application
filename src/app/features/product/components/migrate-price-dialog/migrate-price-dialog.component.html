@@ -1,0 +1,12 @@
+<p-dialog header="Migrate Price" [maximizable]="false" [(visible)]="visible" [modal]="true" [style]="{width: '400px'}" [closable]="false">
+    <div class="p-fluid">
+        <div class="field">
+            <label for="margin">Margin Percentage (%)</label>
+            <p-inputNumber id="margin" [(ngModel)]="marginPercentage" mode="decimal" [min]="0" />
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Cancel" icon="pi pi-times" (onClick)="close()" styleClass="p-button-text" />
+        <p-button label="Apply" icon="pi pi-check" (onClick)="applyMigratePrice()" [loading]="migrating" />
+    </ng-template>
+</p-dialog>

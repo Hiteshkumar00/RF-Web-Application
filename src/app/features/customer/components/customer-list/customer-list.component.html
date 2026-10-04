@@ -127,8 +127,8 @@
                         {{ customer.address || '—' }}
                     </td>
                     <td class="text-end fw-semibold text-muted">{{ customer.totalPurchases }}</td>
-                    <td class="text-end fw-semibold text-success">{{ customer.totalNetAmount | currency:'INR' }}</td>
-                    <td class="text-end fw-semibold text-danger">{{ customer.totalRemainingAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold text-success">{{ customer.totalNetAmount | rfCurrency }}</td>
+                    <td class="text-end fw-semibold text-danger">{{ customer.totalRemainingAmount | rfCurrency }}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

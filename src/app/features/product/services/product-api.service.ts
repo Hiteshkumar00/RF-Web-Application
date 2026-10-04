@@ -58,4 +58,8 @@ export class ProductApiService {
     import(dtos: any[]): Observable<any> {
         return this.http.post<any>(`${this.basePath}/Import`, dtos);
     }
+
+    migratePrice(payload: { productIds: number[], marginPercentage: number }): Observable<boolean> {
+        return this.http.post<boolean>(`${this.basePath}/MigratePrice`, payload);
+    }
 }

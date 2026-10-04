@@ -22,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { RfDatePipe } from './pipes/rf-date.pipe';
 import { RfShortDatePipe } from './pipes/rf-short-date.pipe';
+import { RfCurrencyPipe } from './pipes/rf-currency.pipe';
 import { VoiceTypingComponent } from './components/voice-typing/voice-typing.component';
 import { VoiceTypingDirective } from './directives/voice-typing.directive';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
@@ -101,6 +102,7 @@ import { RfGridComponent } from './components/rf-grid/rf-grid.component';
     MenuModule,
     RfDatePipe,
     RfShortDatePipe,
+    RfCurrencyPipe,
     TabsModule,
     AvatarModule,
     BadgeModule,
@@ -126,6 +128,7 @@ import { RfGridComponent } from './components/rf-grid/rf-grid.component';
     VoiceTypingDirective,
     RfDatePipe,
     RfShortDatePipe,
+    RfCurrencyPipe,
     ProgressSpinnerModule,
     DialogModule,
     MessageModule,

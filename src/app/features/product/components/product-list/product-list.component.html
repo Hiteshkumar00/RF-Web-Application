@@ -2,6 +2,8 @@
     [config]="gridConfig">
     
     <ng-template pTemplate="toolbarEnd">
+        <p-button *ngIf="gridConfig.selection?.length > 0" icon="pi pi-bolt" label="Migrate Price" 
+            (onClick)="openMigratePriceDialog()" severity="warn" size="small" pTooltip="Migrate price based on current stock" tooltipPosition="top" class="mr-2" />
         <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-upload" label="Import" 
             (onClick)="openImportWizard()" [model]="importMenuItems" severity="info" size="small" [outlined]="true" />
     </ng-template>

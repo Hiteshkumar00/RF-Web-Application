@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ProductApiService } from '../../services/product-api.service';
 import { CreateProductDto, UpdateProductDto, ProductDto } from '../../models/product.dto';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
   selector: 'app-product-form-dialog',
@@ -13,6 +14,7 @@ export class ProductFormDialogComponent implements OnChanges {
   private fb = inject(FormBuilder);
   private apiService = inject(ProductApiService);
   private messageService = inject(MessageService);
+  public accountDetails = inject(AccountDetailsService);
 
   @Input() visible = false;
   @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -40,7 +42,8 @@ export class ProductFormDialogComponent implements OnChanges {
             imageLink: this.productData.imageLink,
             warrantyYear: this.productData.warrantyYear || 0,
             warrantyMonth: this.productData.warrantyMonth || 0,
-            warrantyDay: this.productData.warrantyDay || 0
+            warrantyDay: this.productData.warrantyDay || 0,
+            price: this.productData.price || null
           });
           if (this.mode === 'view') {
             this.form.disable();
@@ -63,7 +66,8 @@ export class ProductFormDialogComponent implements OnChanges {
       imageLink: [''],
       warrantyYear: [0, [Validators.min(0), Validators.max(50)]],
       warrantyMonth: [0, [Validators.min(0), Validators.max(11)]],
-      warrantyDay: [0, [Validators.min(0), Validators.max(31)]]
+      warrantyDay: [0, [Validators.min(0), Validators.max(31)]],
+      price: [null, [Validators.min(0)]]
     });
   }
 
@@ -88,7 +92,8 @@ export class ProductFormDialogComponent implements OnChanges {
       imageLink: formData.imageLink,
       warrantyYear: formData.warrantyYear,
       warrantyMonth: formData.warrantyMonth,
-      warrantyDay: formData.warrantyDay
+      warrantyDay: formData.warrantyDay,
+      price: formData.price
     };
 
     if (this.mode === 'create') {

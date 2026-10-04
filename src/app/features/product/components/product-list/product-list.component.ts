@@ -70,6 +70,7 @@ export class ProductListComponent implements OnInit {
         ]
       },
       { field: 'productName', header: 'Product Name', sortable: true, type: 'text' },
+      { field: 'price', header: 'Price', type: 'numeric', pipe: 'currency' },
       { field: 'warrantyYear', header: 'Warranty (Years)', type: 'numeric' },
       { field: 'warrantyMonth', header: 'Warranty (Months)', type: 'numeric' },
       { field: 'warrantyDay', header: 'Warranty (Days)', type: 'numeric' },
@@ -139,6 +140,18 @@ export class ProductListComponent implements OnInit {
           }
         });
       }
+    });
+  }
+
+  openMigratePriceDialog(): void {
+    if (!this.gridConfig.selection || this.gridConfig.selection.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please select at least one product.' });
+      return;
+    }
+    const selectedIds = this.gridConfig.selection.map((p: any) => p.id);
+    this.productDialogService.openMigratePrice(selectedIds, () => {
+        this.gridConfig.selection = [];
+        this.reloadGrid.emit();
     });
   }
 }

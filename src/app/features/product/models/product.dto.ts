@@ -6,6 +6,7 @@ export interface ProductDto {
   warrantyYear?: number;
   warrantyMonth?: number;
   warrantyDay?: number;
+  price?: number;
 }
 
 export interface CreateProductDto {
@@ -14,6 +15,7 @@ export interface CreateProductDto {
   warrantyYear?: number;
   warrantyMonth?: number;
   warrantyDay?: number;
+  price?: number;
 }
 
 export interface UpdateProductDto extends CreateProductDto {

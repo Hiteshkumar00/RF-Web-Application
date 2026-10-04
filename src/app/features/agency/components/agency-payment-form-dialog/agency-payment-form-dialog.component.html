@@ -41,7 +41,7 @@
                         <div class="card border-0 shadow-sm border-start border-3 border-info h-100">
                             <div class="card-body p-2 text-center">
                                 <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Buying</div>
-                                <div class="fw-bold text-info" style="font-size: 0.95rem;">{{ agencySummary.totalBillsAmount | currency:'INR' }}</div>
+                                <div class="fw-bold text-info" style="font-size: 0.95rem;">{{ agencySummary.totalBillsAmount | rfCurrency }}</div>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                         <div class="card border-0 shadow-sm border-start border-3 border-success h-100">
                             <div class="card-body p-2 text-center">
                                 <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Paid</div>
-                                <div class="fw-bold text-success" style="font-size: 0.95rem;">{{ agencySummary.totalPaidAmount | currency:'INR' }}</div>
+                                <div class="fw-bold text-success" style="font-size: 0.95rem;">{{ agencySummary.totalPaidAmount | rfCurrency }}</div>
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                                 <div class="text-muted small fw-semibold mb-1 text-uppercase" style="font-size: 0.7rem;">Total Remaining</div>
                                 <div class="fw-bold" style="font-size: 0.95rem;"
                                     [ngClass]="agencySummary.totalPendingAmount > 0 ? 'text-danger' : 'text-success'">
-                                    {{ agencySummary.totalPendingAmount | currency:'INR' }}
+                                    {{ agencySummary.totalPendingAmount | rfCurrency }}
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                 <div
                     class="card border-1 p-3 shadow-sm rounded-3 d-flex justify-content-between align-items-center flex-row">
                     <span class="fw-bold text-success text-uppercase small">Total Payment Amount:</span>
-                    <span class="fw-bold text-success h5 mb-0">{{ totalPaymentAmount | currency:'INR' }}</span>
+                    <span class="fw-bold text-success h5 mb-0">{{ totalPaymentAmount | rfCurrency }}</span>
                 </div>
             </div>
         </div>

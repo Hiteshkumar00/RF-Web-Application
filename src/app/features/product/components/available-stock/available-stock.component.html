@@ -61,13 +61,13 @@
                     </td>
                     <td class="text-end fw-semibold text-secondary">{{item.totalPurchaseCount}}</td>
                     <td class="text-end fw-semibold">{{item.totalSoldCount}}</td>
-                    <td class="text-end">{{item.totalBuyingAmount | currency:'INR'}}</td>
-                    <td class="text-end">{{item.totalPurchaseCost | currency:'INR'}}</td>
-                    <td class="text-end fw-semibold">{{item.totalSellingAmount | currency:'INR'}}</td>
+                    <td class="text-end">{{item.totalBuyingAmount | rfCurrency}}</td>
+                    <td class="text-end">{{item.totalPurchaseCost | rfCurrency}}</td>
+                    <td class="text-end fw-semibold">{{item.totalSellingAmount | rfCurrency}}</td>
                     <td class="text-end">
                         <span class="fw-bold"
                             [ngClass]="item.totalProfit > 0 ? 'text-success' : (item.totalProfit < 0 ? 'text-danger' : 'text-muted')">
-                            {{item.totalProfit | currency:'INR'}}
+                            {{item.totalProfit | rfCurrency}}
                         </span>
                     </td>
                     <td class="text-center">

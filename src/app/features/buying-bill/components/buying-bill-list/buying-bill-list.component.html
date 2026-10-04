@@ -115,11 +115,11 @@
                         <div class="fw-semibold">{{ bill.agencyName }}</div>
                     </td>
                     <td class="small">{{ bill.date | rfDate }}</td>
-                    <td class="text-end fw-semibold">{{ bill.totalAmount | currency:'INR' }}</td>
-                    <td class="text-end fw-semibold text-warning">{{ bill.discount | currency:'INR' }}</td>
-                    <td class="text-end fw-semibold text-info">{{ bill.netAmount | currency:'INR' }}</td>
-                    <td class="text-end fw-semibold text-secondary">{{ bill.totalExpence | currency:'INR' }}</td>
-                    <td class="text-end fw-bold text-info">{{ bill.finalAmount | currency:'INR' }}</td>
+                    <td class="text-end fw-semibold">{{ bill.totalAmount | rfCurrency }}</td>
+                    <td class="text-end fw-semibold text-warning">{{ bill.discount | rfCurrency }}</td>
+                    <td class="text-end fw-semibold text-info">{{ bill.netAmount | rfCurrency }}</td>
+                    <td class="text-end fw-semibold text-secondary">{{ bill.totalExpence | rfCurrency }}</td>
+                    <td class="text-end fw-bold text-info">{{ bill.finalAmount | rfCurrency }}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

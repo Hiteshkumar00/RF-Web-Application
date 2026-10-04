@@ -22,6 +22,7 @@ export class AccountDetailsService {
     private _enableMigration = false;
     private _dateFormat = 'dd-MMMM-yyyy';
     private _shortDateFormat = 'dd-MMM-yyyy';
+    private _currency = 'INR';
     private accountSubscription?: any;
 
     private readonly defaultTitle = 'RF Application';
@@ -65,6 +66,10 @@ export class AccountDetailsService {
         return this._shortDateFormat;
     }
 
+    getCurrency(): string {
+        return this._currency;
+    }
+
     init() {
         if (this.accountSubscription) return; // Already initialized
 
@@ -101,6 +106,7 @@ export class AccountDetailsService {
             this._enableMigration = account.enableMigration;
             this._dateFormat = account.dateFormat || 'dd-MMMM-yyyy';
             this._shortDateFormat = account.shortDateFormat || 'dd-MMM-yyyy';
+            this._currency = account.currency || 'INR';
             
             this.headerService.setTitle(account.profileName);
             if (account.profileLogoLink) {
@@ -111,6 +117,7 @@ export class AccountDetailsService {
         } else {
             this._dateFormat = 'dd-MMMM-yyyy';
             this._shortDateFormat = 'dd-MMM-yyyy';
+            this._currency = 'INR';
             this.headerService.setTitle(this.defaultTitle);
             this.headerService.setLogo(this.defaultLogo);
         }

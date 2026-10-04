@@ -124,14 +124,14 @@
                     <ng-template pTemplate="footer" *ngIf="payments.length > 0">
                         <tr class="fw-bold bg-light">
                             <td [attr.colspan]="2" class="text-end text-muted small pe-3">Total Paid:</td>
-                            <td class="text-end text-success">{{ totalPaid | currency:'INR' }}</td>
+                            <td class="text-end text-success">{{ totalPaid | rfCurrency }}</td>
                             <td *ngIf="mode !== 'view'"></td>
                         </tr>
                         <tr class="fw-bold bg-light" *ngIf="form.get('totalAmount')?.value">
                             <td [attr.colspan]="2" class="text-end text-muted small pe-3">Remaining:</td>
                             <td class="text-end"
                                 [ngClass]="{'text-danger': remainingAmount > 0, 'text-success': remainingAmount <= 0}">
-                                {{ remainingAmount | currency:'INR' }}
+                                {{ remainingAmount | rfCurrency }}
                             </td>
                             <td *ngIf="mode !== 'view'"></td>
                         </tr>

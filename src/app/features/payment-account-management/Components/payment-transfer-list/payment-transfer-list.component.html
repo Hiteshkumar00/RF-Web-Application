@@ -63,7 +63,7 @@
                         <td class="small">{{transfer.date | rfDate}}</td>
                         <td>{{transfer.fromPaymentAccountName}}</td>
                         <td>{{transfer.toPaymentAccountName}}</td>
-                        <td class="fw-bold">{{transfer.amount | currency: 'INR'}}</td>
+                        <td class="fw-bold">{{transfer.amount | rfCurrency}}</td>
                         <td>{{transfer.description}}</td>
                     </tr>
                 </ng-template>

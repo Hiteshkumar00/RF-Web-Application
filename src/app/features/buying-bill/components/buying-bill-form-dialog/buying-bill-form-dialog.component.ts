@@ -30,7 +30,7 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private formService = inject(BuyingBillFormService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
-    private accountDetailsService = inject(AccountDetailsService);
+    public accountDetails = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private productDialogService = inject(ProductDialogService);
     private productApiService = inject(ProductApiService);

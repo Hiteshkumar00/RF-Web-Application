@@ -57,7 +57,7 @@
                         <td>{{ item.accountPersonName || '-' }}</td>
                         <td>{{ item.description || '-' }}</td>
                         <td>{{ item.date | rfDate }}</td>
-                        <td class="fw-bold text-danger">{{ item.totalAmount | currency:'INR' }}</td>
+                        <td class="fw-bold text-danger">{{ item.totalAmount | rfCurrency }}</td>
                     </tr>
                 </ng-template>
 

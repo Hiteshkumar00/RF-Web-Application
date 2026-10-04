@@ -7,6 +7,7 @@ import { ProductFormDialogComponent } from './components/product-dialog/product-
 import { AvailableStockComponent } from './components/available-stock/available-stock.component';
 import { AvailableStockResolver } from './resolvers/available-stock.resolver';
 import { ProductStockHistoryDialogComponent } from './components/product-stock-history-dialog/product-stock-history-dialog.component';
+import { MigratePriceDialogComponent } from './components/migrate-price-dialog/migrate-price-dialog.component';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -15,7 +16,8 @@ import { DialogService } from 'primeng/dynamicdialog';
     ProductListComponent,
     ProductFormDialogComponent,
     AvailableStockComponent,
-    ProductStockHistoryDialogComponent
+    ProductStockHistoryDialogComponent,
+    MigratePriceDialogComponent
   ],
   imports: [
     CommonModule,
