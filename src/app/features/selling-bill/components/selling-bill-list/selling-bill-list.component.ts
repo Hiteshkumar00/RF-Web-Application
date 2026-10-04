@@ -35,7 +35,7 @@ export class SellingBillListComponent implements OnInit {
         private whatsAppService: WhatsAppService,
         private emailService: EmailService,
         private sellingBillDialogService: SellingBillDialogService
-    ) {}
+    ) { }
 
     title = SellingBillConstants.SELLING_BILL_TITLE;
     labels = SellingBillConstants.LABELS;
@@ -68,7 +68,7 @@ export class SellingBillListComponent implements OnInit {
         columnResizeMode: 'expand',
         styleClass: 'p-datatable-sm p-datatable-striped p-datatable-gridlines',
         title: this.title,
-        showAddButton: false, // Will set based on !isDialog
+        showAddButton: true, // Will set based on !isDialog
         onAdd: () => this.openCreateDialog(),
         showSearch: true,
         showExport: false, // Will set based on accountDetails
@@ -82,15 +82,17 @@ export class SellingBillListComponent implements OnInit {
         },
         columns: [
             { field: 'id', header: 'ID', sortable: true, type: 'numeric', width: '90px', prefix: '#', cellClass: 'fw-bold text-muted small' },
-            { field: 'actions', header: 'Action', type: 'action', width: '200px', exportable: false, actions: [
-                { icon: 'pi pi-eye', tooltip: 'View', severity: 'secondary', onClick: (item: any) => this.openViewDialog(item) },
-                { icon: 'pi pi-whatsapp', tooltip: 'Send on WhatsApp', severity: 'success', visible: () => this.canSendWhatsApp, onClick: (item: any) => this.sendWhatsApp(item) },
-                { icon: 'pi pi-envelope', tooltip: 'Send on Email', severity: 'help', visible: () => this.canSendEmail, onClick: (item: any) => this.sendEmail(item) },
-                { icon: 'pi pi-download', tooltip: 'Download', severity: 'info', onClick: (item: any) => this.downloadPdf(item) },
-                { icon: 'pi pi-wallet', tooltip: 'Add Payment', severity: 'success', visible: (item: any) => item.remainingAmount > 0, onClick: (item: any) => this.openPaymentDialog(item) },
-                { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', onClick: (item: any) => this.openEditDialog(item) },
-                { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', onClick: (item: any) => this.confirmDelete(item) }
-            ]},
+            {
+                field: 'actions', header: 'Action', type: 'action', width: '200px', exportable: false, actions: [
+                    { icon: 'pi pi-eye', tooltip: 'View', severity: 'secondary', onClick: (item: any) => this.openViewDialog(item) },
+                    { icon: 'pi pi-whatsapp', tooltip: 'Send on WhatsApp', severity: 'success', visible: () => this.canSendWhatsApp, onClick: (item: any) => this.sendWhatsApp(item) },
+                    { icon: 'pi pi-envelope', tooltip: 'Send on Email', severity: 'help', visible: () => this.canSendEmail, onClick: (item: any) => this.sendEmail(item) },
+                    { icon: 'pi pi-download', tooltip: 'Download', severity: 'info', onClick: (item: any) => this.downloadPdf(item) },
+                    { icon: 'pi pi-wallet', tooltip: 'Add Payment', severity: 'success', visible: (item: any) => item.remainingAmount > 0, onClick: (item: any) => this.openPaymentDialog(item) },
+                    { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', onClick: (item: any) => this.openEditDialog(item) },
+                    { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', onClick: (item: any) => this.confirmDelete(item) }
+                ]
+            },
             { field: 'billNo', header: this.labels.BILL_NO, sortable: true, type: 'text', width: '170px', cellClass: 'fw-semibold text-muted' },
             { field: 'customerId', header: 'Cust ID', sortable: true, type: 'numeric', width: '110px', prefix: '#', cellClass: 'fw-semibold text-muted' },
             { field: 'customerName', header: this.labels.CUSTOMER_NAME, sortable: true, type: 'text', width: '300px', cellClass: 'fw-semibold' },
@@ -105,7 +107,7 @@ export class SellingBillListComponent implements OnInit {
     };
 
     openPaymentDialog(item: SellingBillListDto): void {
-        this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => {});
+        this.sellingBillDialogService.openPayment(item, () => this.onPaymentSaved(), () => { });
     }
 
     onPaymentSaved(): void {
@@ -140,7 +142,7 @@ export class SellingBillListComponent implements OnInit {
         if (this.isDialog) {
             this.gridConfig.scrollHeight = 'flex';
         }
-        
+
         this.updateExportMenu();
         this.updateSendMessageMenu();
     }
@@ -215,7 +217,7 @@ export class SellingBillListComponent implements OnInit {
                                 detail: `Successfully sent WhatsApp messages for ${billIds.length} bills.`
                             });
                         },
-                        error: () => {}
+                        error: () => { }
                     });
                 } else if (type === 'email') {
                     this.apiService.bulkSendEmailMessages(billIds).subscribe({
@@ -226,7 +228,7 @@ export class SellingBillListComponent implements OnInit {
                                 detail: `Successfully sent Emails for ${billIds.length} bills.`
                             });
                         },
-                        error: () => {}
+                        error: () => { }
                     });
                 }
             }
