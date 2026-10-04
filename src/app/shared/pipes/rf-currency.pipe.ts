@@ -11,7 +11,7 @@ export class RfCurrencyPipe implements PipeTransform {
   private currencyPipe = new CurrencyPipe('en-IN');
 
   transform(value: any, currencyCode?: string, display?: 'code' | 'symbol' | 'narrowSymbol' | string | boolean, digitsInfo?: string, locale?: string): string | null {
-    if (value === null || value === undefined || value === '') return null;
+    if (value === null || value === undefined || value === '') return '-';
     
     // Use provided currency or fallback to account settings
     const finalCurrencyCode = currencyCode || this.accountDetailsService.getCurrency() || 'INR';

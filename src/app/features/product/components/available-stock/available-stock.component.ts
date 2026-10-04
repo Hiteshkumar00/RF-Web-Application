@@ -83,7 +83,8 @@ export class AvailableStockComponent implements OnInit {
         inputs: {
           visible: true,
           productId: product.productId,
-          productName: product.productName
+          productName: product.productName,
+          imageLink: product.imageLink
         },
         outputs: {
           onClose: () => {
