@@ -9,6 +9,8 @@ import { AgencyTableColumns } from '../../constants/agency-table.constants';
 
 import { AgencyDialogService } from '../../services/agency-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { AgencyImportExportService } from '../../services/agency-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-agency-list',
@@ -16,6 +18,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './agency-list.component.html'
 })
 export class AgencyListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private agencyApiService: AgencyApiService,
         private confirmationService: ConfirmationService,
@@ -23,7 +26,7 @@ export class AgencyListComponent implements OnInit {
         public globalConfig: GlobalConfigService,
         private route: ActivatedRoute,
         private agencyDialogService: AgencyDialogService
-    ) {}
+    ) { }
 
     labels = AgencyLabels;
     columns = AgencyTableColumns.COLUMNS;
@@ -84,5 +87,23 @@ export class AgencyListComponent implements OnInit {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: AgencyMessages.DELETED });
             }
         });
+    }
+
+    private importExportService = inject(AgencyImportExportService);
+
+    importMenuItems = [
+        { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
+    ];
+
+    exportToExcel(): void {
+        this.importExportService.exportToExcel(this.agencies);
+    }
+
+    exportForImport(): void {
+        this.importExportService.exportForImport();
+    }
+
+    openImportWizard(): void {
+        this.importExportService.openImportWizard(() => this.loadAgencies());
     }
 }

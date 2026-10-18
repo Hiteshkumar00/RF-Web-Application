@@ -7,6 +7,7 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-payment-transfer-list',
@@ -14,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './payment-transfer-list.component.html'
 })
 export class PaymentTransferListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     private apiService = inject(PaymentAccountApiService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);

@@ -34,4 +34,12 @@ export class AgencyPersonApiService {
         const params = new HttpParams().set('id', id.toString());
         return this.http.delete<void>(`${this.basePath}/Delete`, { params });
     }
+
+    export(): Observable<Blob> {
+        return this.http.get(`${this.basePath}/Export`, { responseType: 'blob' });
+    }
+
+    import(dtos: any[]): Observable<any> {
+        return this.http.post<any>(`${this.basePath}/Import`, dtos);
+    }
 }

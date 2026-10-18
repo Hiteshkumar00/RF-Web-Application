@@ -7,6 +7,7 @@ import { AgencyPaymentListDto } from '../../models/agency-payment.model';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { HelperService } from '../../../../core/services/helper.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-agency-payment-list',
@@ -14,6 +15,7 @@ import { HelperService } from '../../../../core/services/helper.service';
     templateUrl: './agency-payment-list.component.html'
 })
 export class AgencyPaymentListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     private apiService = inject(AgencyPaymentApiService);
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);

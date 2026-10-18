@@ -30,9 +30,10 @@ export class BuyingBillFormDialogComponent implements OnChanges {
     private formService = inject(BuyingBillFormService);
     private confirmationService = inject(ConfirmationService);
     private helperService = inject(HelperService);
-    private accountDetailsService = inject(AccountDetailsService);
+    public accountDetails = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private productDialogService = inject(ProductDialogService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -135,31 +136,67 @@ export class BuyingBillFormDialogComponent implements OnChanges {
             }
 
             this.initProductOptions();
+            this.fetchInitialProducts();
         }
     }
 
+    private fetchInitialProducts(): void {
+        const selectedProductIds = new Set<number>(
+            this.stocks.controls
+                .map(c => c.get('productId')?.value)
+                .filter(id => id != null)
+        );
+        const includeIds = Array.from(selectedProductIds);
+
+        this.productApiService.getSuggestions('', includeIds).subscribe(products => {
+            const existingIds = new Set(this.products.map(p => p.id));
+            const newProducts = products.filter(p => !existingIds.has(p.id));
+            this.products = [...newProducts, ...this.products];
+            this.initProductOptions();
+        });
+    }
+
     private initProductOptions(): void {
-        this.productOptions = (this.products || []).map(p => {
-            const warrantyParts = [];
-            if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
-            if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
-            if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
-            const warrantyStr = warrantyParts.join(' ');
-            const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
-            return {
-                label: label,
-                value: p.id,
-                data: p
-            };
+        this.productOptions = (this.products || [])
+            .map(p => {
+                const warrantyParts = [];
+                if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
+                if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
+                if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
+                const warrantyStr = warrantyParts.join(' ');
+                const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
+                return {
+                    label: label,
+                    value: p.id,
+                    data: p
+                };
+            });
+    }
+
+    onProductSearch(event: any): void {
+        const query = (event.filter || '').trim();
+        this.productApiService.getSuggestions(query).subscribe(newProducts => {
+            const selectedProductIds = new Set(
+                this.stocks.controls
+                    .map(c => c.get('productId')?.value)
+                    .filter(id => id != null)
+            );
+
+            const selectedProducts = this.products.filter(p => selectedProductIds.has(p.id));
+            const selectedProductIdsSet = new Set(selectedProducts.map(p => p.id));
+            const additionalProducts = newProducts.filter(p => !selectedProductIdsSet.has(p.id));
+
+            this.products = [...selectedProducts, ...additionalProducts];
+            this.initProductOptions();
         });
     }
 
     openAddProductDialog(): void {
-        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
+        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => { });
     }
 
     onProductSave(): void {
-        // Handled by parent
+        this.fetchInitialProducts();
     }
 
     onProductChange(event: any, index: number): void {
@@ -170,7 +207,8 @@ export class BuyingBillFormDialogComponent implements OnChanges {
             const itemForm = this.stocks.at(index);
             itemForm.patchValue({
                 productId: product.id,
-                productName: product.productName
+                productName: product.productName,
+                purchasePrice: product.price || 0
             });
         }
     }
@@ -184,6 +222,11 @@ export class BuyingBillFormDialogComponent implements OnChanges {
         if (p.warrantyMonth) parts.push(`${p.warrantyMonth}M`);
         if (p.warrantyDay) parts.push(`${p.warrantyDay}D`);
         return parts.length > 0 ? parts.join(' ') : null;
+    }
+
+    getProductImage(productId: number): string | null {
+        const option = this.productOptions.find(o => o.value === productId);
+        return option?.data?.imageLink || null;
     }
 
 

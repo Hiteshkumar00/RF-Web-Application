@@ -1,11 +1,15 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, EventEmitter } from '@angular/core';
 import { ProductApiService } from '../../services/product-api.service';
 import { ProductDto, ProductFilterDto } from '../../models/product.dto';
 import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { GlobalConfigService } from '../../../../core/services/global-config.service';
 import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
+import { TableLazyLoadEvent } from 'primeng/table';
 import { ProductDialogService } from '../../services/product-dialog.service';
+import { ProductImportExportService } from '../../services/product-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
+import { RfGridComponent, GridConfig } from '../../../../shared/components/rf-grid/rf-grid.component';
 
 @Component({
   selector: 'app-product-list',
@@ -13,6 +17,7 @@ import { ProductDialogService } from '../../services/product-dialog.service';
   templateUrl: './product-list.component.html'
 })
 export class ProductListComponent implements OnInit {
+  public accountDetails = inject(AccountDetailsService);
   private productApiService = inject(ProductApiService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
@@ -21,84 +26,94 @@ export class ProductListComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private productDialogService = inject(ProductDialogService);
 
-  products: ProductDto[] = [];
-  selectedProducts: ProductDto[] = [];
-  exportMenuItems: MenuItem[] = [];
-  filter: ProductFilterDto = { searchTerm: '' };
-  loading: boolean = false;
+  reloadGrid = new EventEmitter<void>();
+
+  importMenuItems: MenuItem[] = [];
+
+  gridConfig: GridConfig | any = {
+    reloadEvent: this.reloadGrid,
+    data: [],
+    totalRecords: 0,
+    loading: false,
+    showLoader: false,
+    rows: 10,
+    rowsPerPageOptions: [10, 25, 50],
+    globalSearchTerm: '',
+    enableSelection: true,
+    selection: [],
+    scrollable: true,
+    scrollHeight: 'calc(100vh - 235px)',
+    resizableColumns: true,
+    columnResizeMode: 'expand',
+    styleClass: 'p-datatable-sm p-datatable-striped p-datatable-gridlines',
+    title: 'Product Management',
+    showAddButton: true,
+    addButtonTooltip: 'New Product',
+    onAdd: () => this.openCreateDialog(),
+    showSearch: true,
+    searchPlaceholder: 'Search products...',
+    showExport: false, // will be set in ngOnInit
+    exportFilename: 'Products',
+    dataFetcher: (event: TableLazyLoadEvent) => this.productApiService.getAll(event),
+    columns: [
+      { field: 'id', header: 'ID', sortable: true, width: '80px', prefix: '#' },
+      {
+        field: 'actions',
+        header: 'Action',
+        type: 'action',
+        width: '120px',
+        exportable: false,
+        actions: [
+          { icon: 'pi pi-eye', tooltip: 'View Details', severity: 'secondary', onClick: (item: any) => this.openViewDialog(item) },
+          { icon: 'pi pi-pencil', tooltip: 'Edit', severity: 'primary', onClick: (item: any) => this.openEditDialog(item) },
+          { icon: 'pi pi-trash', tooltip: 'Delete', severity: 'danger', onClick: (item: any) => this.deleteProduct(item) }
+        ]
+      },
+      { field: 'productName', header: 'Product Name', sortable: true, type: 'text' },
+      { field: 'price', header: 'Price', type: 'numeric', pipe: 'currency' },
+      { field: 'warrantyYear', header: 'Warranty (Years)', type: 'numeric' },
+      { field: 'warrantyMonth', header: 'Warranty (Months)', type: 'numeric' },
+      { field: 'warrantyDay', header: 'Warranty (Days)', type: 'numeric' },
+      { field: 'imageLink', header: 'Image URL', type: 'image', width: '100px', imageFallbackIcon: 'pi pi-image', exportable: false }
+    ]
+  };
 
   ngOnInit(): void {
-    this.route.data.subscribe(data => {
-      if (data['data']) {
-        this.products = data['data'];
-      } else {
-        this.loadProducts();
-      }
-    });
-    this.updateExportMenu();
-  }
-
-  loadProducts(): void {
-    this.loading = true;
-    this.productApiService.getAll(this.filter).subscribe({
-      next: (data) => {
-        this.products = data;
-        this.loading = false;
-        this.updateExportMenu();
-      },
-      error: () => {
-        this.loading = false;
-      }
-    });
-  }
-
-  updateExportMenu(): void {
-    this.exportMenuItems = [
-      {
-        label: 'Export Selected',
-        icon: 'pi pi-check-square',
-        badge: this.selectedProducts.length > 0 ? this.selectedProducts.length.toString() : undefined,
-        badgeStyleClass: 'p-badge-success',
-        command: () => this.exportToExcel(true),
-        disabled: this.selectedProducts.length === 0
-      },
-      { label: 'Export All', icon: 'pi pi-copy', command: () => this.exportToExcel(false) }
+    // The grid automatically triggers its first load using the dataFetcher.
+    this.gridConfig.showExport = this.accountDetails.enableMigration;
+    this.importMenuItems = [
+      { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
     ];
   }
 
-  exportToExcel(onlySelected: boolean = false): void {
-    const source = onlySelected ? this.selectedProducts : this.products;
+  private importExportService = inject(ProductImportExportService);
 
-    const data = source.map(item => ({
-      'Product ID': item.id,
-      'Product Name': item.productName,
-      'Warranty (Years)': item.warrantyYear || 0,
-      'Warranty (Months)': item.warrantyMonth || 0,
-      'Warranty (Days)': item.warrantyDay || 0,
-      'Image URL': item.imageLink || '-'
-    }));
-    this.excelService.exportAsExcelFile(data, onlySelected ? 'Products_Selected' : 'Products');
+  exportForImport(): void {
+    this.importExportService.exportForImport();
   }
 
-  onSearch(): void {
-    this.loadProducts();
+  openImportWizard(): void {
+    // Reload logic for import wizard might need to trigger grid reload manually
+    this.importExportService.openImportWizard(() => {
+      this.reloadGrid.emit();
+    });
   }
 
   openCreateDialog(): void {
-    this.productDialogService.openForm('create', undefined, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('create', undefined, () => this.onFormSaved('create'), () => this.onFormDialogClosed());
   }
 
   openEditDialog(product: ProductDto): void {
-    this.productDialogService.openForm('update', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('update', product.id, () => this.onFormSaved('update'), () => this.onFormDialogClosed());
   }
 
   openViewDialog(product: ProductDto): void {
-    this.productDialogService.openForm('view', product.id, () => this.onFormSaved(), () => this.onFormDialogClosed());
+    this.productDialogService.openForm('view', product.id, () => this.onFormSaved('view'), () => this.onFormDialogClosed());
   }
 
 
-  onFormSaved(): void {
-    this.loadProducts();
+  onFormSaved(mode: 'create' | 'update' | 'view'): void {
+    this.reloadGrid.emit();
   }
 
   onFormDialogClosed(): void {
@@ -116,8 +131,8 @@ export class ProductListComponent implements OnInit {
         this.productApiService.delete(product.id).subscribe({
           next: (res: any) => {
             if (res !== null) {
-              this.loadProducts();
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product deleted' });
+              this.reloadGrid.emit();
             }
           },
           error: () => {
@@ -125,6 +140,18 @@ export class ProductListComponent implements OnInit {
           }
         });
       }
+    });
+  }
+
+  openMigratePriceDialog(): void {
+    if (!this.gridConfig.selection || this.gridConfig.selection.length === 0) {
+      this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please select at least one product.' });
+      return;
+    }
+    const selectedIds = this.gridConfig.selection.map((p: any) => p.id);
+    this.productDialogService.openMigratePrice(selectedIds, () => {
+        this.gridConfig.selection = [];
+        this.reloadGrid.emit();
     });
   }
 }

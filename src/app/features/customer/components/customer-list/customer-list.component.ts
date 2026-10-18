@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , inject} from '@angular/core';
 import { ConfirmationService, MessageService, MenuItem } from 'primeng/api';
 import { CustomerApiService } from '../../services/customer-api.service';
 import { CustomerListDto } from '../../models/customer.model';
@@ -8,6 +8,7 @@ import { ExcelService } from '../../../../shared/services/excel.service';
 
 import { CustomerDialogService } from '../../services/customer-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -15,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './customer-list.component.html'
 })
 export class CustomerListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
   customers: CustomerListDto[] = [];
   selectedCustomers: CustomerListDto[] = [];
   exportMenuItems: MenuItem[] = [];

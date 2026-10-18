@@ -3,7 +3,13 @@
 
     <ng-template pTemplate="header">
         <div class="d-flex align-items-center justify-content-between w-100 pe-3">
-            <span class="p-dialog-title m-0">Stock History: {{productName}}</span>
+            <div class="d-flex align-items-center gap-3">
+                <img *ngIf="imageLink" [src]="imageLink" width="35" height="35" class="rounded object-fit-cover shadow-sm border border-secondary-subtle" />
+                <div *ngIf="!imageLink" class="rounded border bg-light d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                    <i class="pi pi-image text-muted small"></i>
+                </div>
+                <span class="p-dialog-title m-0">Stock History: {{productName}}</span>
+            </div>
             <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" (onClick)="close()"
                 styleClass="p-0 transition-all hover:bg-gray-100" [style]="{ width: '2rem', height: '2rem' }" />
         </div>
@@ -56,11 +62,11 @@
                 <td>{{history.agencyName}}</td>
                 <td>{{history.date | rfDate}}</td>
                 <td class="text-center">{{history.quantity}}</td>
-                <td class="text-end">{{history.purchasePrice | currency:'INR'}}</td>
-                <td class="text-end text-danger">{{history.discountPerItem | currency:'INR'}}</td>
-                <td class="text-end fw-bold text-success">{{history.netPurchasePrice | currency:'INR'}}</td>
-                <td class="text-end text-danger">{{history.discount | currency:'INR'}}</td>
-                <td class="text-end fw-semibold">{{history.totalNetPurchasedAmount | currency:'INR'}}</td>
+                <td class="text-end">{{history.purchasePrice | rfCurrency}}</td>
+                <td class="text-end text-danger">{{history.discountPerItem | rfCurrency}}</td>
+                <td class="text-end fw-bold text-success">{{history.netPurchasePrice | rfCurrency}}</td>
+                <td class="text-end text-danger">{{history.discount | rfCurrency}}</td>
+                <td class="text-end fw-semibold">{{history.totalNetPurchasedAmount | rfCurrency}}</td>
                 <td class="text-center">{{history.totalSold}}</td>
                 <td class="text-center fw-bold"
                     [ngClass]="history.remainingQty > 0 ? 'text-primary bg-primary-subtle' : ''">

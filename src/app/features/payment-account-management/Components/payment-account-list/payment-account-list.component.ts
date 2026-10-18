@@ -11,6 +11,8 @@ import { GlobalConfigService } from '../../../../core/services/global-config.ser
 
 import { PaymentAccountDialogService } from '../../Services/payment-account-dialog.service';
 import { ActivatedRoute } from '@angular/router';
+import { PaymentAccountImportExportService } from '../../Services/payment-account-import-export.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-payment-account-list',
@@ -18,6 +20,7 @@ import { ActivatedRoute } from '@angular/router';
     standalone: false
 })
 export class PaymentAccountListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private paymentAccountApiService: PaymentAccountApiService,
         private accountPersonApiService: AccountPersonApiService,
@@ -95,5 +98,23 @@ export class PaymentAccountListComponent implements OnInit {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: PaymentAccountMessages.DELETED });
             }
         });
+    }
+
+    private importExportService = inject(PaymentAccountImportExportService);
+
+    importMenuItems = [
+        { label: 'Export for Import', icon: 'pi pi-download', command: () => this.exportForImport() }
+    ];
+
+    exportToExcel(): void {
+        this.importExportService.exportToExcel(this.paymentAccounts);
+    }
+
+    exportForImport(): void {
+        this.importExportService.exportForImport();
+    }
+
+    openImportWizard(): void {
+        this.importExportService.openImportWizard(() => this.loadPaymentAccounts());
     }
 }

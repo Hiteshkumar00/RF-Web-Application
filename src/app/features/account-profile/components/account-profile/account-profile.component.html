@@ -162,13 +162,21 @@
                                                 [icon]="account.enableVoiceTyping ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
                                         </div>
 
-                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
+                                        <div class="info-item p-3 border-bottom d-flex justify-content-between align-items-center">
                                             <span class="text-muted fw-semibold"><i
                                                     class="pi pi-chart-bar me-2"></i>Show
                                                 Statistics</span>
                                             <p-tag [severity]="account.showStatistics ? 'success' : 'secondary'"
                                                 [value]="account.showStatistics ? 'Enabled' : 'Disabled'"
                                                 [icon]="account.showStatistics ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
+                                        </div>
+
+                                        <div class="info-item p-3 d-flex justify-content-between align-items-center">
+                                            <span class="text-muted fw-semibold"><i
+                                                    class="pi pi-cloud-upload me-2"></i>Enable Migration</span>
+                                            <p-tag [severity]="account.enableMigration ? 'success' : 'secondary'"
+                                                [value]="account.enableMigration ? 'Enabled' : 'Disabled'"
+                                                [icon]="account.enableMigration ? 'pi pi-check-circle' : 'pi pi-times-circle'" />
                                         </div>
                                     </p-tabpanel>
 

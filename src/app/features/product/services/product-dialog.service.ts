@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DialogManagerService } from '../../../core/services/dialog-manager.service';
 import { ProductFormDialogComponent } from '../components/product-dialog/product-dialog.component';
+import { MigratePriceDialogComponent } from '../components/migrate-price-dialog/migrate-price-dialog.component';
 import { ProductApiService } from './product-api.service';
 
 @Injectable({
@@ -30,6 +31,27 @@ export class ProductDialogService {
           },
           onClose: () => {
             onClose();
+            this.dialogManager.destroy(ref);
+          }
+        }
+      }
+    );
+  }
+
+  async openMigratePrice(
+    productIds: number[],
+    onSave: () => void
+  ): Promise<void> {
+    const ref = await this.dialogManager.openAsync(
+      MigratePriceDialogComponent,
+      {
+        inputs: { visible: true, productIds },
+        outputs: {
+          onSave: () => {
+            onSave();
+            this.dialogManager.destroy(ref);
+          },
+          onClose: () => {
             this.dialogManager.destroy(ref);
           }
         }

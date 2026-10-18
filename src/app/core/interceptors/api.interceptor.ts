@@ -1,10 +1,11 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpResponse, HttpContextToken } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, map, catchError, finalize, throwError } from 'rxjs';
 import { LoaderService } from '../services/loader.service';
 import { ErrorDialogService } from '../services/error-dialog.service';
 import { ServiceResponse } from '../../shared/models/service-response.model';
 
+export const SKIP_LOADER = new HttpContextToken<boolean>(() => false);
 
 
 export const apiInterceptor: HttpInterceptorFn = (
@@ -21,8 +22,11 @@ export const apiInterceptor: HttpInterceptorFn = (
         ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
         : req;
 
-    // 2. Show global loader
-    loader.show();
+    // 2. Show global loader if not skipped
+    const skipLoader = req.context.get(SKIP_LOADER);
+    if (!skipLoader) {
+        loader.show();
+    }
 
     return next(authReq).pipe(
         // 3. Unwrap ServiceResponse<T> — pass only .data to subscribers
@@ -50,6 +54,10 @@ export const apiInterceptor: HttpInterceptorFn = (
             errorDialog.show(raw);
             return throwError(() => err);
         }),
-        finalize(() => loader.hide())
+        finalize(() => {
+            if (!skipLoader) {
+                loader.hide();
+            }
+        })
     );
 };

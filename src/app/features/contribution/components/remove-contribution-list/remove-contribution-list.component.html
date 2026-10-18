@@ -9,7 +9,7 @@
                         (onClick)="openCreateDialog()" size="small" />
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <td>{{ item.accountPersonName || '-' }}</td>
                         <td>{{ item.description || '-' }}</td>
                         <td>{{ item.date | rfDate }}</td>
-                        <td class="fw-bold text-danger">{{ item.totalAmount | currency:'INR' }}</td>
+                        <td class="fw-bold text-danger">{{ item.totalAmount | rfCurrency }}</td>
                     </tr>
                 </ng-template>
 

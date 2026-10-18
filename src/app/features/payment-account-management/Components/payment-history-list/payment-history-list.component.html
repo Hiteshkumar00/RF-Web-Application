@@ -11,7 +11,7 @@
                             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             class="p-inputtext-sm shadow-sm" style="width: 250px;" appVoiceTyping />
                     </p-iconField>
-                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true"
                         pTooltip="Export to Excel" tooltipPosition="top" />
                 </div>
@@ -147,7 +147,7 @@
                         </td>
                         <td class="text-end fw-bold">
                             <span [ngClass]="item.direction === 'Received' ? 'text-success' : 'text-danger'">
-                                {{ item.amount | currency:'INR' }}
+                                {{ item.amount | rfCurrency }}
                             </span>
                         </td>
                         <td class="small">{{ item.date | rfDate }}</td>

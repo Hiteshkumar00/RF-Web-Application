@@ -14,16 +14,24 @@ export class SellingBillApiService {
     private readonly basePath = `${environment.apiUrl}/SellingBill`;
     private http = inject(HttpClient);
 
-    getAll(): Observable<SellingBillListDto[]> {
-        return this.http.get<SellingBillListDto[]>(`${this.basePath}/GetAll`);
+    getAll(request: any, customerId?: number): Observable<{ data: SellingBillListDto[], totalRecords: number }> {
+        let url = `${this.basePath}/GetAll`;
+        if (customerId) {
+            url += `?customerId=${customerId}`;
+        }
+        return this.http.post<{ data: SellingBillListDto[], totalRecords: number }>(url, request);
+    }
+
+    getStatistics(customerId?: number): Observable<{ totalSellingAmount: number, totalReceivedAmount: number, totalRemainingAmount: number }> {
+        let url = `${this.basePath}/GetStatistics`;
+        if (customerId) {
+            url += `?customerId=${customerId}`;
+        }
+        return this.http.get<{ totalSellingAmount: number, totalReceivedAmount: number, totalRemainingAmount: number }>(url);
     }
 
     getById(id: number): Observable<SellingBillDetailsDto> {
         return this.http.get<SellingBillDetailsDto>(`${this.basePath}/GetById/${id}`);
-    }
-
-    getByCustomerId(customerId: number): Observable<SellingBillListDto[]> {
-        return this.http.get<SellingBillListDto[]>(`${this.basePath}/GetByCustomerId/${customerId}`);
     }
 
     create(dto: CreateSellingBillDto): Observable<number> {

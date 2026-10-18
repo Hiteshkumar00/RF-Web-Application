@@ -20,7 +20,7 @@
                             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
                             class="p-inputtext-sm shadow-sm" style="width: 250px;" />
                     </p-iconField>
-                    <p-splitButton icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
+                    <p-splitButton *ngIf="accountDetails.enableMigration" icon="pi pi-file-excel" label="Export" (onClick)="exportToExcel(false)"
                         [model]="exportMenuItems" severity="success" size="small" [outlined]="true" />
                 </div>
             </div>
@@ -93,13 +93,13 @@
                             </div>
                         </td>
                         } @else if (col.field === 'totalAmount') {
-                        <td class="text-end fw-semibold">{{ expense.totalAmount | currency:'INR' }}</td>
+                        <td class="text-end fw-semibold">{{ expense.totalAmount | rfCurrency }}</td>
                         } @else if (col.field === 'paidAmount') {
-                        <td class="text-end fw-bold text-success">{{ expense.paidAmount | currency:'INR' }}</td>
+                        <td class="text-end fw-bold text-success">{{ expense.paidAmount | rfCurrency }}</td>
                         } @else if (col.field === 'remainingAmount') {
                         <td class="text-end fw-bold"
                             [ngClass]="{'text-danger': expense.remainingAmount > 0, 'text-success': expense.remainingAmount <= 0}">
-                            {{ expense.remainingAmount | currency:'INR' }}
+                            {{ expense.remainingAmount | rfCurrency }}
                         </td>
                         } @else if (col.field === 'date') {
                         <td>{{ expense.date | rfDate }}</td>

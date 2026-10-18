@@ -13,6 +13,7 @@ export class ProductStockHistoryDialogComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() productId!: number;
   @Input() productName: string = '';
+  @Input() imageLink?: string;
   @Output() onClose = new EventEmitter<void>();
 
   productHistory: any[] = [];

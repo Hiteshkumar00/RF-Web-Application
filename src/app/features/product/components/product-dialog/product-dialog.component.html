@@ -26,6 +26,13 @@
 
             <div class="col-12">
                 <div class="field">
+                    <label for="price" class="block mb-2 font-semibold">Price</label>
+                    <p-inputNumber id="price" formControlName="price" mode="currency" [currency]="accountDetails.getCurrency()" locale="en-IN" class="w-100" styleClass="w-100" inputStyleClass="w-100 p-inputtext-sm shadow-sm" />
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
                     <label class="block mb-2 font-semibold">Default Warranty</label>
                     <div class="d-flex gap-2">
                         <div class="flex-grow-1">

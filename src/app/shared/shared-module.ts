@@ -22,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { RfDatePipe } from './pipes/rf-date.pipe';
 import { RfShortDatePipe } from './pipes/rf-short-date.pipe';
+import { RfCurrencyPipe } from './pipes/rf-currency.pipe';
 import { VoiceTypingComponent } from './components/voice-typing/voice-typing.component';
 import { VoiceTypingDirective } from './directives/voice-typing.directive';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
@@ -51,11 +52,17 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
 import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+import { ImportExcelWizardComponent } from './components/import-excel-wizard/import-excel-wizard.component';
+import { ImportResultDialogComponent } from './components/import-result-dialog/import-result-dialog.component';
+import { RfGridComponent } from './components/rf-grid/rf-grid.component';
+
 @NgModule({
-  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent],
+  declarations: [ThemeSwitcher, HeaderComponent, SidebarComponent, LoaderComponent, ErrorDialogComponent, VoiceTypingComponent, VoiceTypingDirective, ImagePreviewComponent, StatisticsCardsComponent, ImportExcelWizardComponent, ImportResultDialogComponent, RfGridComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -95,8 +102,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     MenuModule,
     RfDatePipe,
     RfShortDatePipe,
+    RfCurrencyPipe,
     TabsModule,
-    AvatarModule
+    AvatarModule,
+    BadgeModule,
+    DynamicDialogModule
   ],
   exports: [
     CommonModule,
@@ -118,6 +128,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     VoiceTypingDirective,
     RfDatePipe,
     RfShortDatePipe,
+    RfCurrencyPipe,
     ProgressSpinnerModule,
     DialogModule,
     MessageModule,
@@ -147,8 +158,13 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     ImagePreviewComponent,
     StatisticsCardsComponent,
     TabsModule,
-    AvatarModule
+    AvatarModule,
+    BadgeModule,
+    DynamicDialogModule,
+    ImportExcelWizardComponent,
+    ImportResultDialogComponent,
+    RfGridComponent
   ],
-  providers: []
+  providers: [DialogService]
 })
 export class SharedModule { }

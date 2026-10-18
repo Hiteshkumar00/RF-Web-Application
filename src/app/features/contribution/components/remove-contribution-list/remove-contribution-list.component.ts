@@ -8,6 +8,7 @@ import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
 
 import { ContributionDialogService } from '../../services/contribution-dialog.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-remove-contribution-list',
@@ -15,6 +16,7 @@ import { ContributionDialogService } from '../../services/contribution-dialog.se
     templateUrl: './remove-contribution-list.component.html'
 })
 export class RemoveContributionListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private apiService: RemoveContributionApiService,
         private confirmationService: ConfirmationService,

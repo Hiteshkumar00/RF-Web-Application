@@ -31,7 +31,7 @@ export class SellingBillDialogService {
         resolve: {
           allCustomers: this.customerApiService.getAll(),
           accountOptions: this.dropdownService.getPaymentAccountOptions(),
-          products: this.productApiService.getAll(),
+          products: this.productApiService.getSuggestions(''),
           billDetails: (mode === 'update' || mode === 'view') && id ? this.sellingBillApiService.getById(id) : Promise.resolve(null)
         },
         outputs: {

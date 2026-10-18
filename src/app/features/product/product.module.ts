@@ -5,9 +5,9 @@ import { SharedModule } from '../../shared/shared-module';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductFormDialogComponent } from './components/product-dialog/product-dialog.component';
 import { AvailableStockComponent } from './components/available-stock/available-stock.component';
-import { ProductListResolver } from './resolvers/product-list.resolver';
 import { AvailableStockResolver } from './resolvers/available-stock.resolver';
 import { ProductStockHistoryDialogComponent } from './components/product-stock-history-dialog/product-stock-history-dialog.component';
+import { MigratePriceDialogComponent } from './components/migrate-price-dialog/migrate-price-dialog.component';
 
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -16,13 +16,14 @@ import { DialogService } from 'primeng/dynamicdialog';
     ProductListComponent,
     ProductFormDialogComponent,
     AvailableStockComponent,
-    ProductStockHistoryDialogComponent
+    ProductStockHistoryDialogComponent,
+    MigratePriceDialogComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     RouterModule.forChild([
-      { path: 'manage', component: ProductListComponent, resolve: { data: ProductListResolver } },
+      { path: 'manage', component: ProductListComponent },
       { path: 'available-stock', component: AvailableStockComponent, resolve: { data: AvailableStockResolver } }
     ])
   ],

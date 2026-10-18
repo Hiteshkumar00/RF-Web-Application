@@ -51,5 +51,13 @@ export class AgencyApiService {
         const params = new HttpParams().set('agencyId', agencyId.toString());
         return this.http.get<AgencySummaryDto>(`${this.basePath}/GetSummary`, { params });
     }
+
+    export(): Observable<Blob> {
+        return this.http.get(`${this.basePath}/Export`, { responseType: 'blob' });
+    }
+
+    import(dtos: any[]): Observable<any> {
+        return this.http.post<any>(`${this.basePath}/Import`, dtos);
+    }
 }
 

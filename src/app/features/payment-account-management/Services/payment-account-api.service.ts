@@ -59,4 +59,12 @@ export class PaymentAccountApiService {
     getTransferById(id: number): Observable<PaymentTransfer> {
         return this.http.get<PaymentTransfer>(`${this.apiUrl}/GetTransferById`, { params: { id } });
     }
+
+    export(): Observable<Blob> {
+        return this.http.get(`${this.apiUrl}/Export`, { responseType: 'blob' });
+    }
+
+    import(dtos: any[]): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/Import`, dtos);
+    }
 }

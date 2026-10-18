@@ -33,11 +33,12 @@ export class SellingBillFormDialogComponent implements OnChanges {
     private confirmationService = inject(ConfirmationService);
     private messageService = inject(MessageService);
     private helperService = inject(HelperService);
-    private accountDetailsService = inject(AccountDetailsService);
+    public accountDetails = inject(AccountDetailsService);
     private downloadService = inject(BillDownloadService);
     private whatsAppService = inject(WhatsAppService);
     private emailService = inject(EmailService);
     private productDialogService = inject(ProductDialogService);
+    private productApiService = inject(ProductApiService);
 
     @Input() visible = false;
     @Input() mode: 'create' | 'update' | 'view' = 'create';
@@ -109,22 +110,22 @@ export class SellingBillFormDialogComponent implements OnChanges {
     }
 
     get canSendWhatsApp(): boolean {
-        return this.accountDetailsService.enableWhatsApp;
+        return this.accountDetails.enableWhatsApp;
     }
 
     get canSendEmail(): boolean {
-        return this.accountDetailsService.enableEmail;
+        return this.accountDetails.enableEmail;
     }
 
     get canAutoSendWhatsApp(): boolean {
-        return this.accountDetailsService.enableAdvancedWhatsApp;
+        return this.accountDetails.enableAdvancedWhatsApp;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['visible']?.currentValue === true) {
             this.isClosing = false;
             this.form = this.formService.createForm();
-            
+
             this.customerOptions = this.allCustomers.map(c => ({
                 label: c.customerName + (c.phoneNo ? ` (${c.phoneNo})` : ''),
                 value: c.id
@@ -143,33 +144,75 @@ export class SellingBillFormDialogComponent implements OnChanges {
                 this.addItem();
             }
             this.initProductOptions();
+            this.fetchInitialProducts();
         }
     }
 
+    private fetchInitialProducts(): void {
+        const selectedProductIds = new Set<number>(
+            this.items.controls
+                .map(c => c.get('productId')?.value)
+                .filter(id => id != null)
+        );
+        const includeIds = Array.from(selectedProductIds);
+
+        this.productApiService.getSuggestions('', includeIds).subscribe(products => {
+            const existingIds = new Set(this.products.map(p => p.id));
+            const newProducts = products.filter(p => !existingIds.has(p.id));
+            this.products = [...newProducts, ...this.products];
+            this.initProductOptions();
+        });
+    }
+
     private initProductOptions(): void {
-        this.productOptions = (this.products || []).map(p => {
-            const warrantyParts = [];
-            if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
-            if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
-            if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
-            const warrantyStr = warrantyParts.join(' ');
-            const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
-            return {
-                label: label,
-                value: p.id,
-                data: p
-            };
+        this.productOptions = (this.products || [])
+            .map(p => {
+                const warrantyParts = [];
+                if (p.warrantyYear) warrantyParts.push(`${p.warrantyYear}Y`);
+                if (p.warrantyMonth) warrantyParts.push(`${p.warrantyMonth}M`);
+                if (p.warrantyDay) warrantyParts.push(`${p.warrantyDay}D`);
+                const warrantyStr = warrantyParts.join(' ');
+                const label = warrantyStr ? `${p.productName} (🔰 ${warrantyStr})` : p.productName;
+                return {
+                    label: label,
+                    value: p.id,
+                    data: p
+                };
+            });
+    }
+
+    onProductSearch(event: any): void {
+        const query = (event.filter || '').trim();
+        this.productApiService.getSuggestions(query).subscribe(newProducts => {
+            // Merge new products with existing ones to preserve selected options
+            const existingIds = new Set(this.products.map(p => p.id));
+            const productsToAdd = newProducts.filter(p => !existingIds.has(p.id));
+            this.products = [...this.products, ...productsToAdd];
+
+            // Or alternatively, to keep the list small but still include selected items:
+            // Find all currently selected product IDs
+            const selectedProductIds = new Set(
+                this.items.controls
+                    .map(c => c.get('productId')?.value)
+                    .filter(id => id != null)
+            );
+
+            // Keep currently selected products + newly fetched products
+            const selectedProducts = this.products.filter(p => selectedProductIds.has(p.id));
+            const selectedProductIdsSet = new Set(selectedProducts.map(p => p.id));
+            const additionalProducts = newProducts.filter(p => !selectedProductIdsSet.has(p.id));
+
+            this.products = [...selectedProducts, ...additionalProducts];
+            this.initProductOptions();
         });
     }
 
     openAddProductDialog(): void {
-        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => {});
+        this.productDialogService.openForm('create', undefined, () => this.onProductSave(), () => { });
     }
 
     onProductSave(): void {
-        // Product reload will be handled by the parent component or the next open instance,
-        // since the component should be re-instantiated. For now, we do nothing as the parent 
-        // doesn't refresh the inputs dynamically.
+        this.fetchInitialProducts();
     }
 
 
@@ -183,7 +226,8 @@ export class SellingBillFormDialogComponent implements OnChanges {
             const itemForm = this.items.at(index);
             itemForm.patchValue({
                 productId: product.id,
-                productName: product.productName
+                productName: product.productName,
+                price: product.price || 0
             });
         }
     }
@@ -197,6 +241,11 @@ export class SellingBillFormDialogComponent implements OnChanges {
         if (p.warrantyMonth) parts.push(`${p.warrantyMonth}M`);
         if (p.warrantyDay) parts.push(`${p.warrantyDay}D`);
         return parts.length > 0 ? parts.join(' ') : null;
+    }
+
+    getProductImage(productId: number): string | null {
+        const option = this.productOptions.find(o => o.value === productId);
+        return option?.data?.imageLink || null;
     }
 
 
@@ -217,7 +266,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
         this.isNewCustomer = isNew;
         const nameControl = this.form.get('customerName');
         const idControl = this.form.get('customerId');
-        
+
         if (isNew) {
             nameControl?.setValidators([Validators.required, Validators.maxLength(250)]);
             idControl?.clearValidators();
@@ -225,7 +274,7 @@ export class SellingBillFormDialogComponent implements OnChanges {
             nameControl?.clearValidators();
             idControl?.setValidators([Validators.required]);
         }
-        
+
         nameControl?.updateValueAndValidity();
         idControl?.updateValueAndValidity();
 

@@ -8,6 +8,7 @@ import { ExcelService } from '../../../../shared/services/excel.service';
 import { ActivatedRoute } from '@angular/router';
 
 import { ContributionDialogService } from '../../services/contribution-dialog.service';
+import { AccountDetailsService } from '../../../../core/services/account-details.service';
 
 @Component({
     selector: 'app-add-contribution-list',
@@ -15,6 +16,7 @@ import { ContributionDialogService } from '../../services/contribution-dialog.se
     templateUrl: './add-contribution-list.component.html'
 })
 export class AddContributionListComponent implements OnInit {
+    public accountDetails = inject(AccountDetailsService);
     constructor(
         private apiService: AddContributionApiService,
         private confirmationService: ConfirmationService,

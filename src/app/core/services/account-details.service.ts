@@ -19,8 +19,10 @@ export class AccountDetailsService {
     private _enableEmail = false;
     private _enableVoiceTyping = false;
     private _showStatistics = false;
+    private _enableMigration = false;
     private _dateFormat = 'dd-MMMM-yyyy';
     private _shortDateFormat = 'dd-MMM-yyyy';
+    private _currency = 'INR';
     private accountSubscription?: any;
 
     private readonly defaultTitle = 'RF Application';
@@ -52,12 +54,20 @@ export class AccountDetailsService {
         return this._showStatistics;
     }
 
+    get enableMigration(): boolean {
+        return this._enableMigration;
+    }
+
     get dateFormat(): string {
         return this._dateFormat;
     }
 
     get shortDateFormat(): string {
         return this._shortDateFormat;
+    }
+
+    getCurrency(): string {
+        return this._currency;
     }
 
     init() {
@@ -93,8 +103,10 @@ export class AccountDetailsService {
             this._enableEmail = account.enableEmail;
             this._enableVoiceTyping = account.enableVoiceTyping;
             this._showStatistics = account.showStatistics;
+            this._enableMigration = account.enableMigration;
             this._dateFormat = account.dateFormat || 'dd-MMMM-yyyy';
             this._shortDateFormat = account.shortDateFormat || 'dd-MMM-yyyy';
+            this._currency = account.currency || 'INR';
             
             this.headerService.setTitle(account.profileName);
             if (account.profileLogoLink) {
@@ -105,6 +117,7 @@ export class AccountDetailsService {
         } else {
             this._dateFormat = 'dd-MMMM-yyyy';
             this._shortDateFormat = 'dd-MMM-yyyy';
+            this._currency = 'INR';
             this.headerService.setTitle(this.defaultTitle);
             this.headerService.setLogo(this.defaultLogo);
         }
